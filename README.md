@@ -1,7 +1,10 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # find-jobs-app
 =======
+=======
+>>>>>>> 1909047 (first init with clean architecture)
 =======
 >>>>>>> 1909047 (first init with clean architecture)
 # find_job_app
@@ -21,6 +24,9 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 1909047 (first init with clean architecture)
+=======
 >>>>>>> 1909047 (first init with clean architecture)
 =======
 >>>>>>> 1909047 (first init with clean architecture)
