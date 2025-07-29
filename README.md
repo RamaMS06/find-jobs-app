@@ -1,8 +1,4 @@
-
-# find_job_app
-=======
 # 🧳 Workly – Find Jobs Effortlessly
->>>>>>> 87d9186 (Add readme and push to v1.0.1-beta.1)
 
 **Workly** is a modern job search application built with Flutter, designed to help users discover job opportunities with ease. Users can sign in using their **Google account** for a personalized experience with special roles, or continue as a **guest** for quick browsing.
 
@@ -88,3 +84,4 @@ Workly supports **Google Sign-In** using Firebase Authentication.
 | Clean Architecture | Separation of concerns + scalability    |
 
 ---
+
