@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:find_job_app/core/common/common.dart';
 import 'package:find_job_app/core/common/components/text/text.vertical.widget.dart';
@@ -6,6 +5,7 @@ import 'package:find_job_app/core/shared_data/auth/presentation/controller/auth.
 import 'package:find_job_app/features/home/presentation/controller/home.controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -67,9 +67,8 @@ class _HomePageState extends ConsumerState<HomePage>
     super.dispose();
   }
 
-  Widget _buildHeader() {
-    final user = ref.watch(authControllerProvider.notifier).currentUser;
-    inspect(user);
+  Future<Widget> _buildHeader() async {
+    final user = await ref.watch(authControllerProvider.notifier).currentUser;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -111,10 +110,7 @@ class _HomePageState extends ConsumerState<HomePage>
           width: 40,
           height: 40,
           child: user?.photoUrl == null
-              ? Lottie.asset(
-                  'assets/lottie/person.json',
-                  repeat: false
-                )
+              ? Lottie.asset('assets/lottie/person.json', repeat: false)
               : Image.network(user?.photoUrl ?? ''),
         ),
       ],
@@ -164,7 +160,6 @@ class _HomePageState extends ConsumerState<HomePage>
           height: 16,
         ),
         jobs.when(success: (value) {
-          inspect(value);
           return Container(
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.all(16),
@@ -187,7 +182,7 @@ class _HomePageState extends ConsumerState<HomePage>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
+                    SizedBox(
                         height: 40,
                         width: 40,
                         child: Image.network(
@@ -210,6 +205,11 @@ class _HomePageState extends ConsumerState<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(authControllerProvider, (previous, next) {
+      if (next is SignOutSuccess) {
+        context.go('/');
+      }
+    });
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -219,7 +219,12 @@ class _HomePageState extends ConsumerState<HomePage>
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildHeader(),
+                FutureBuilder(
+                  future: _buildHeader(),
+                  builder: (context, snapshot) {
+                    return snapshot.data ?? const SizedBox.shrink();
+                  },
+                ),
                 const SizedBox(
                   height: 24,
                 ),
@@ -228,12 +233,12 @@ class _HomePageState extends ConsumerState<HomePage>
                   height: 16,
                 ),
                 _buildBody(),
-                // RMButton(
-                //   text: 'Sign Out',
-                //   onPressed: () {
-                //     ref.read(signOutControllerProvider.notifier).signOut();
-                //   },
-                // )
+                RMButton(
+                  text: 'Sign Out',
+                  onPressed: () {
+                    ref.read(authControllerProvider.notifier).signOut();
+                  },
+                )
               ],
             ),
           ),

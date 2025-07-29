@@ -1,34 +1,46 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:find_job_app/features/home/home.dart';
-import 'package:find_job_app/features/login/login.dart';
+part of 'provider.dart';
 
-final GoRouter router = GoRouter(
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const LoginPage(),
-    ),
-    GoRoute(
-      path: '/home',
-      pageBuilder: (context, state) => _buildFadeTransitionPage(
-        key: state.pageKey,
-        child: const HomePage(),
-      ),
-    ),
-    // GoRoute(
-    //   path: '/user/:id',
-    //   builder: (context, state) {
-    //     final userId = state.pathParameters['id']!;
-    //     return UserDetailPage(userId: userId);
-    //   },
-    // ),
-  ],
-  errorBuilder: (context, state) => Scaffold(
-    appBar: AppBar(title: const Text("404")),
-    body: Center(child: Text("Page not found: ${state.uri}")),
-  ),
+typedef GoRouterRedirect = FutureOr<String?> Function(
+  BuildContext context,
+  GoRouterState state,
 );
+
+final routerProvider = Provider<GoRouter>((ref) {
+  final authUser = ref.read(currentUserProvider);
+  final authRole = ref.read(currentRoleProvider);
+  return _routeConfig(redirect: (context, state) async {
+    final isLoggedIn = authUser.value?.name != null;
+    final isGuest = authRole.value?.role == UserRoleEnum.guest;
+    if (isLoggedIn && !isGuest) {
+      return '/home';
+    }
+    if (isGuest) {
+      null;
+    }
+    return null;
+  });
+});
+
+GoRouter _routeConfig({GoRouterRedirect? redirect}) => GoRouter(
+      redirect: redirect,
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => const LoginPage(),
+        ),
+        GoRoute(
+          path: '/home',
+          pageBuilder: (context, state) => _buildFadeTransitionPage(
+            key: state.pageKey,
+            child: const HomePage(),
+          ),
+        ),
+      ],
+      errorBuilder: (context, state) => Scaffold(
+        appBar: AppBar(title: const RMText("404")),
+        body: Center(child: RMText("Page not found: ${state.uri}")),
+      ),
+    );
 
 CustomTransitionPage _buildFadeTransitionPage({
   required LocalKey key,
