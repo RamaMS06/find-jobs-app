@@ -1,3 +1,4 @@
+import 'package:find_job_app/core/util/extension.dart';
 import 'package:flutter/material.dart';
 import '../../common.dart';
 
@@ -12,6 +13,8 @@ class RMButton extends StatefulWidget {
 
   final Widget? trailingIcon;
 
+  final bool fillWidth;
+
   final VoidCallback? onPressed;
 
   const RMButton({
@@ -22,6 +25,7 @@ class RMButton extends StatefulWidget {
     this.onPressed,
     this.leadingIcon,
     this.trailingIcon,
+    this.fillWidth = false,
   });
 
   @override
@@ -57,6 +61,7 @@ class _RMButtonState extends State<RMButton> {
                 : Matrix4.identity(),
             duration: const Duration(milliseconds: 125),
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            constraints: const BoxConstraints(maxHeight: 45, minHeight: 45),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 color: widget.bgColor ?? RMColor.background.success,
@@ -64,8 +69,10 @@ class _RMButtonState extends State<RMButton> {
                     ? []
                     : [
                         BoxShadow(
-                          color: RMColor.background.dark.withOpacity(0.8),
-                          offset: const Offset(2, 4),
+                          color: darken(
+                              (widget.bgColor ?? RMColor.background.dark),
+                              0.35),
+                          offset: const Offset(4, 4),
                         ),
                       ]),
             child: Center(

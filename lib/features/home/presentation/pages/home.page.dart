@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:find_job_app/core/common/common.dart';
-import 'package:find_job_app/core/shared_data/session/controller/session.controller.dart';
-import 'package:find_job_app/features/login/data/providers/google.signin.provider.dart';
+import 'package:find_job_app/core/common/components/text/text.vertical.widget.dart';
+import 'package:find_job_app/core/shared_data/auth/presentation/controller/auth.controller.dart';
+import 'package:find_job_app/features/home/presentation/controller/home.controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -52,6 +55,10 @@ class _HomePageState extends ConsumerState<HomePage>
     );
 
     _controllerTop.forward();
+
+    Future.microtask(() {
+      ref.read(homeControllerProvider.notifier).findJobs();
+    });
   }
 
   @override
@@ -61,7 +68,8 @@ class _HomePageState extends ConsumerState<HomePage>
   }
 
   Widget _buildHeader() {
-    final user = ref.watch(currentUserGoogleProvider);
+    final user = ref.watch(authControllerProvider.notifier).currentUser;
+    inspect(user);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -79,7 +87,7 @@ class _HomePageState extends ConsumerState<HomePage>
                 height: 6,
               ),
               RMTypewriterText(
-                text: user?.name ?? '',
+                text: user?.name ?? 'Workaholic!',
                 textStyle: RMFont.heading.h3,
                 loop: false,
               ),
@@ -102,24 +110,106 @@ class _HomePageState extends ConsumerState<HomePage>
           ),
           width: 40,
           height: 40,
-          child: Image.network(user?.photoUrl ?? ''),
+          child: user?.photoUrl == null
+              ? Lottie.asset(
+                  'assets/lottie/person.json',
+                  repeat: false
+                )
+              : Image.network(user?.photoUrl ?? ''),
         ),
+      ],
+    );
+  }
+
+  Widget _buildBody() {
+    final jobs = ref.watch(homeControllerProvider);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        jobs.when(success: (value) {
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RMText(
+                'There are ',
+                style: RMFont.subheading.h6,
+              ),
+              RMCountingText(
+                from: 0,
+                to: 100,
+                textStyle: RMFont.subheading.h6.copyWith(
+                  color: RMColor.background.info,
+                ),
+                duration: const Duration(seconds: 4),
+                decimalPlaces: 0,
+              ),
+              RMText(
+                ' jobs in the world',
+                style: RMFont.subheading.h6,
+              ),
+            ],
+          );
+        }, loading: () {
+          return const SizedBox(
+            height: 24,
+            width: 24,
+            child: CircularProgressIndicator(),
+          );
+        }, failed: (message) {
+          return Text(message);
+        }, initial: () {
+          return const SizedBox.shrink();
+        }),
+        const SizedBox(
+          height: 16,
+        ),
+        jobs.when(success: (value) {
+          inspect(value);
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: RMColor.background.white,
+              border: Border.all(color: RMColor.background.dark, width: 1),
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: [
+                BoxShadow(
+                  color: RMColor.background.dark,
+                  offset: const Offset(4, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                        height: 40,
+                        width: 40,
+                        child: Image.network(
+                            'https://remotive.com/job/1919265/logo')),
+                  ],
+                )
+              ],
+            ),
+          );
+        }, loading: () {
+          return const SizedBox.shrink();
+        }, failed: (message) {
+          return Text(message);
+        }, initial: () {
+          return const SizedBox.shrink();
+        }),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(signOutControllerProvider, (previous, next) {
-      next.when(
-          success: (value) {
-            context.go('/');
-          },
-          loading: () {},
-          failed: (message) {
-            RMAlert.showAlert(context, message, type: RMAlertType.error);
-          });
-    });
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -137,30 +227,7 @@ class _HomePageState extends ConsumerState<HomePage>
                 const SizedBox(
                   height: 16,
                 ),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'There are ',
-                        style: RMFont.subheading.h6,
-                      ),
-                      TextSpan(
-                        text: '1200+',
-                        style: RMFont.subheading.h6.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: RMColor.text.info,
-                        ),
-                      ),
-                      TextSpan(
-                        text: ' jobs available',
-                        style: RMFont.subheading.h6,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
+                _buildBody(),
                 // RMButton(
                 //   text: 'Sign Out',
                 //   onPressed: () {

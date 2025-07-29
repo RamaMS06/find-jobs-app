@@ -1,0 +1,11 @@
+import 'package:find_job_app/core/shared_data/auth/data/datasources/auth.datasource.dart';
+import 'package:find_job_app/core/shared_data/auth/data/datasources/auth.datasource.impl.dart';
+import 'package:find_job_app/core/shared_data/auth/data/repositories/auth.repository.impl.dart';
+import 'package:find_job_app/core/shared_data/auth/domain/repositories/auth.repository.dart';
+import 'package:find_job_app/core/shared_data/auth/domain/usecases/current.user.dart';
+import 'package:find_job_app/core/shared_data/auth/domain/usecases/sign.in.dart';
+import 'package:find_job_app/core/shared_data/auth/domain/usecases/sign.out.dart';
+import 'package:get_it/get_it.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+part 'injection.container.main.dart';

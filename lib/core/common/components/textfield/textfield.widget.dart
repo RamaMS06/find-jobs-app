@@ -53,8 +53,9 @@ class _RMSearchFieldState extends State<RMSearchField> {
           prefixIcon: Container(
             height: 40,
             decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(5),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(5),
+                bottomLeft: Radius.circular(5),
               ),
               color: RMColor.background.success,
               border: Border.all(
