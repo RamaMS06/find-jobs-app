@@ -1,7 +1,11 @@
+import 'package:find_job_app/core/services/injection.container.dart';
 import 'package:find_job_app/core/services/result.dart';
 import 'package:find_job_app/core/shared_data/auth/data/datasources/auth.datasource.dart';
 import 'package:find_job_app/core/shared_data/auth/data/models/user.model.dart';
+import 'package:find_job_app/core/shared_data/auth/data/models/user.role.model.dart';
+import 'package:find_job_app/core/shared_data/auth/domain/entities/user.role.entitiy.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthDataSourceImpl implements AuthDataSource {
   final GoogleSignIn _googleSignIn;
@@ -23,8 +27,8 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  UserModel? get currentUser {
-    final user = _googleSignIn.currentUser;
+  Future<UserModel?> get currentUser async {
+    final user = await _googleSignIn.signInSilently();
     return UserModel(
       id: user?.id,
       name: user?.displayName,
@@ -35,8 +39,19 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Future<Result<UserModel?>> signOut() async {
-    await _googleSignIn.disconnect();
+    await _googleSignIn.signOut();
 
     return const Result.success(null);
+  }
+
+  @override
+  UserRoleModel? get currentRole  {
+    final role = sl<SharedPreferences>().getString('user_role');
+    return UserRoleModel(role: UserRoleEnum.values.byName(role ?? UserRoleEnum.guest.name));
+  }
+
+  @override
+  void saveRole(UserRoleModel role) {
+    sl<SharedPreferences>().setString('user_role', role.role.name);
   }
 }

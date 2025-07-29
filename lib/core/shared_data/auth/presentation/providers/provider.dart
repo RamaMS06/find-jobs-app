@@ -1,3 +1,4 @@
+
 import 'package:find_job_app/core/shared_data/auth/data/datasources/auth.datasource.impl.dart';
 import 'package:find_job_app/core/shared_data/auth/data/repositories/auth.repository.impl.dart';
 import 'package:find_job_app/core/shared_data/auth/domain/entities/user.entity.dart';
@@ -18,9 +19,9 @@ final signInUseCaseProvider = Provider<SignInUseCase>((ref) {
   return SignInUseCase(repository);
 });
 
-final currentUserProvider = Provider<UserEntity?>((ref) {
+final currentUserProvider = FutureProvider<UserEntity?>((ref) async {
   final repository = ref.watch(authRepositoryProvider);
-  return repository.currentUser;
+  return await repository.currentUser;
 });
 
 final signOutUseCaseProvider = Provider<SignOutUseCase>((ref) {

@@ -15,9 +15,14 @@ class AuthLoading extends AuthState {
   const AuthLoading();
 }
 
-class AuthSuccess<T> extends AuthState {
+class SignInSuccess<T> extends AuthState {
   final T? data;
-  const AuthSuccess(this.data);
+  const SignInSuccess(this.data);
+}
+
+class SignOutSuccess<T> extends AuthState {
+  final T? data;
+  const SignOutSuccess(this.data);
 }
 
 class AuthFailed extends AuthState {
