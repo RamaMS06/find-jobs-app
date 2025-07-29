@@ -126,7 +126,7 @@ class BackgroundSecondaryColor extends Color {
 /// Represents the info background color variations.
 class BackgroundInfoColor extends Color {
   /// Creates a [BackgroundInfoColor] instance with the default color.
-  BackgroundInfoColor() : super(0xFF047CDD);
+  BackgroundInfoColor() : super(0xFF3498DB);
 
   /// Hover state color for info background.
   final Color pressed = const Color(0xFF0363B1);

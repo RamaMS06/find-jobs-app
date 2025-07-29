@@ -119,27 +119,34 @@ class ShadesColor {
   /// ```dart
   /// UIColor.blue[400]
   /// ```
+  /// Blue Color Swatch
+  ///
+  /// Reference: Primary hex #3498DB
+  /// Example usage:
+  /// ```dart
+  /// UIColor.blue[400]
+  /// ```
   final MaterialColor blue = const MaterialColor(
     _bluePrimaryValue,
     <int, Color>{
       0: Color(0xFFFFFFFF),
-      50: Color(0xFFE6F2FC),
-      100: Color(0xFFCDE5F8),
-      150: Color(0xFFB4D8F5),
-      200: Color(0xFF9BCBF1),
-      300: Color(0xFF68B0EB),
-      400: Color(0xFF3696E4),
-      500: Color(_bluePrimaryValue),
-      600: Color(0xFF0363B1),
-      700: Color(0xFF024A85),
-      800: Color(0xFF023258),
-      850: Color(0xFF012542),
-      900: Color(0xFF01192C),
-      950: Color(0xFF000C16),
+      50: Color(0xFFEAF6FD),
+      100: Color(0xFFD5ECFA),
+      150: Color(0xFFBFE2F6),
+      200: Color(0xFFA9D8F3),
+      300: Color(0xFF7CC3EB),
+      400: Color(0xFF4FAEE3),
+      500: Color(_bluePrimaryValue), // #3498DB
+      600: Color(0xFF2D86C2),
+      700: Color(0xFF266FA3),
+      800: Color(0xFF1F587F),
+      850: Color(0xFF194664),
+      900: Color(0xFF133349),
+      950: Color(0xFF0C1B27),
     },
   );
 
-  static const int _bluePrimaryValue = 0xFF047CDD;
+  static const int _bluePrimaryValue = 0xFF3498DB; // #3498DB
 
   /// Yellow Color Swatch
   ///
