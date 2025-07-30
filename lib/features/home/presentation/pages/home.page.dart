@@ -18,8 +18,6 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controllerTop;
-  late Animation<Offset> _slideTopAnimation;
-  late Animation<Offset> _slideLeftAnimation;
 
   @override
   void initState() {
@@ -29,30 +27,8 @@ class _HomePageState extends ConsumerState<HomePage>
       vsync: this,
     );
     // Text animates in first (0.0 - 0.5 of controller)
-    _slideTopAnimation = Tween<Offset>(
-      begin: const Offset(0, -1.5),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controllerTop,
-        curve: Curves.easeOutCubic,
-      ),
-    );
 
     // For left animation, use a different interval for duration effect
-    _slideLeftAnimation = Tween<Offset>(
-      begin: const Offset(-1.5, 0),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controllerTop,
-        curve: const Interval(
-          0.0,
-          0.7, // Adjust this for different duration relative to controller
-          curve: Curves.easeOutCubic,
-        ),
-      ),
-    );
 
     _controllerTop.forward();
 

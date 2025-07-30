@@ -90,7 +90,7 @@ class _RMCountingTextState extends State<RMCountingText>
 
 /// The main application widget, displaying the animated counter.
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();

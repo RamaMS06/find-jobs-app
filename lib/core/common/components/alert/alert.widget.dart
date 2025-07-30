@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_void_to_null, prefer_null_aware_method_calls,
 // ignore_for_file: cascade_invocations, inference_failure_on_untyped_parameter
 
-import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../common.dart';
 

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:find_job_app/core/core.dart';
 import 'package:find_job_app/core/services/injection.container.dart';
 import 'package:find_job_app/core/shared_data/auth/domain/entities/user.entity.dart';
 import 'package:find_job_app/core/shared_data/auth/domain/entities/user.role.entitiy.dart';
