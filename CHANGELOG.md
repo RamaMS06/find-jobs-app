@@ -1,3 +1,6 @@
+# 1.0.1-beta.1+3
+- Handling CI/CD
+
 # 1.0.1-beta.1+2
 - Add google-service into android file
 - Refactor router function with redirect & riverpod
