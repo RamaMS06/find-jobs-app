@@ -1,4 +1,3 @@
-
 import 'package:find_job_app/core/common/common.dart';
 import 'package:find_job_app/core/common/components/text/text.vertical.widget.dart';
 import 'package:find_job_app/core/shared_data/auth/presentation/controller/auth.controller.dart';
@@ -93,7 +92,61 @@ class _HomePageState extends ConsumerState<HomePage>
     );
   }
 
-  Widget _buildBody() {
+  @override
+  Widget build(BuildContext context) {
+    ref.listen(authControllerProvider, (previous, next) {
+      if (next is SignOutSuccess) {
+        context.go('/');
+      }
+    });
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FutureBuilder(
+                  future: _buildHeader(),
+                  builder: (context, snapshot) {
+                    return snapshot.data ?? const SizedBox.shrink();
+                  },
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                const RMSearchField(),
+                const SizedBox(
+                  height: 16,
+                ),
+                const _HomePageBody(),
+                RMButton(
+                  text: 'Sign Out',
+                  onPressed: () {
+                    ref.read(authControllerProvider.notifier).signOut();
+                  },
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HomePageBody extends ConsumerStatefulWidget {
+  const _HomePageBody({super.key});
+
+  @override
+  ConsumerState<_HomePageBody> createState() => _HomePageBodyState();
+}
+
+class _HomePageBodyState extends ConsumerState<_HomePageBody> {
+  @override
+  Widget build(BuildContext context) {
     final jobs = ref.watch(homeControllerProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,50 +229,6 @@ class _HomePageState extends ConsumerState<HomePage>
           return const SizedBox.shrink();
         }),
       ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    ref.listen(authControllerProvider, (previous, next) {
-      if (next is SignOutSuccess) {
-        context.go('/');
-      }
-    });
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                FutureBuilder(
-                  future: _buildHeader(),
-                  builder: (context, snapshot) {
-                    return snapshot.data ?? const SizedBox.shrink();
-                  },
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
-                const RMSearchField(),
-                const SizedBox(
-                  height: 16,
-                ),
-                _buildBody(),
-                RMButton(
-                  text: 'Sign Out',
-                  onPressed: () {
-                    ref.read(authControllerProvider.notifier).signOut();
-                  },
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

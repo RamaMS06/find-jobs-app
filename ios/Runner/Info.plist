@@ -28,6 +28,8 @@
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
 		<string>Main</string>
+		<key>FirebaseAppDelegateProxyEnabled</key>
+		<false/>
 		<key>GIDClientID</key>
 		<string>991357644816-2ag4j8v5rvo1m9vrrikre4g5njjdg78j.apps.googleusercontent.com</string>
 		<key>CFBundleURLTypes</key>

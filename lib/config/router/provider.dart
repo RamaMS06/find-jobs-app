@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:find_job_app/core/shared_data/auth/domain/entities/user.entity.dart';
 import 'package:find_job_app/core/shared_data/auth/domain/entities/user.role.entitiy.dart';
 import 'package:find_job_app/core/shared_data/auth/presentation/controller/auth.controller.dart';
@@ -11,12 +13,12 @@ import 'dart:async';
 
 part 'app.router.dart';
 
-final currentUserProvider = StreamProvider<UserEntity?>((ref) async* {
+final currentUserProvider = Provider<UserEntity?>((ref) {
   final auth = ref.watch(authControllerProvider.notifier);
-  yield await auth.currentUser;
+  return auth.currentUser;
 });
 
-final currentRoleProvider = StreamProvider<UserRoleEntity?>((ref) async* {
+final currentRoleProvider = Provider<UserRoleEntity?>((ref) {
   final auth = ref.watch(authControllerProvider.notifier);
-  yield auth.currentRole;
+  return auth.currentRole;
 });

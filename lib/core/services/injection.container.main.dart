@@ -3,6 +3,14 @@ part of 'injection.container.dart';
 GetIt sl = GetIt.instance;
 
 Future<void> init() async {
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: FirebaseEnv.apiKey,
+      appId: Platform.isIOS ? FirebaseEnv.appIdIos : FirebaseEnv.appIdAndroid,
+      messagingSenderId: FirebaseEnv.messagingSenderId,
+      projectId: FirebaseEnv.projectId,
+    ),
+  );
   final prefs = await SharedPreferences.getInstance();
   sl.registerSingleton(prefs);
   await _authInit();

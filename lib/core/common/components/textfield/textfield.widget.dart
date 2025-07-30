@@ -57,7 +57,7 @@ class _RMSearchFieldState extends State<RMSearchField> {
                 topLeft: Radius.circular(5),
                 bottomLeft: Radius.circular(5),
               ),
-              color: RMColor.background.success,
+              color: RMColor.background.info,
               border: Border.all(
                 color: RMColor.background.dark,
                 width: 2,

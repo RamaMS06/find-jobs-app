@@ -8,10 +8,11 @@ typedef GoRouterRedirect = FutureOr<String?> Function(
 final routerProvider = Provider<GoRouter>((ref) {
   final authUser = ref.read(currentUserProvider);
   final authRole = ref.read(currentRoleProvider);
-  return _routeConfig(redirect: (context, state) async {
-    final isLoggedIn = authUser.value?.name != null;
-    final isGuest = authRole.value?.role == UserRoleEnum.guest;
-    if (isLoggedIn && !isGuest) {
+  return _routeConfig(redirect: (context, state) {
+    final isUserReady = authUser?.name != null;
+    final isGuest = authRole?.role == UserRoleEnum.guest;
+    inspect(authUser);
+    if (isUserReady && !isGuest) {
       return '/home';
     }
     if (isGuest) {

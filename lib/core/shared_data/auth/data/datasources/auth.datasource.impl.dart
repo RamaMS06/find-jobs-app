@@ -1,9 +1,11 @@
+
 import 'package:find_job_app/core/services/injection.container.dart';
 import 'package:find_job_app/core/services/result.dart';
 import 'package:find_job_app/core/shared_data/auth/data/datasources/auth.datasource.dart';
 import 'package:find_job_app/core/shared_data/auth/data/models/user.model.dart';
 import 'package:find_job_app/core/shared_data/auth/data/models/user.role.model.dart';
 import 'package:find_job_app/core/shared_data/auth/domain/entities/user.role.entitiy.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,36 +20,47 @@ class AuthDataSourceImpl implements AuthDataSource {
     if (account == null) {
       return const Result.failure('User cancelled');
     }
+
+    final auth = await account.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: auth.accessToken,
+      idToken: auth.idToken,
+    );
+
+    final user = await FirebaseAuth.instance.signInWithCredential(credential);
     return Result.success(UserModel(
-      id: account.id,
-      name: account.displayName,
-      email: account.email,
-      photoUrl: account.photoUrl,
+      id: user.user?.uid,
+      name: user.user?.displayName,
+      email: user.user?.email,
+      photoUrl: user.user?.photoURL,
     ));
   }
 
   @override
-  Future<UserModel?> get currentUser async {
-    final user = await _googleSignIn.signInSilently();
+  UserModel? get currentUser {
+    final user = FirebaseAuth.instance.currentUser;
     return UserModel(
-      id: user?.id,
+      id: user?.uid,
       name: user?.displayName,
       email: user?.email,
-      photoUrl: user?.photoUrl,
+      photoUrl: user?.photoURL,
     );
   }
 
   @override
   Future<Result<UserModel?>> signOut() async {
+    await FirebaseAuth.instance.signOut();
     await _googleSignIn.signOut();
+    sl<SharedPreferences>().clear();
 
     return const Result.success(null);
   }
 
   @override
-  UserRoleModel? get currentRole  {
+  UserRoleModel? get currentRole {
     final role = sl<SharedPreferences>().getString('user_role');
-    return UserRoleModel(role: UserRoleEnum.values.byName(role ?? UserRoleEnum.guest.name));
+    return UserRoleModel(
+        role: UserRoleEnum.values.byName(role ?? UserRoleEnum.guest.name));
   }
 
   @override

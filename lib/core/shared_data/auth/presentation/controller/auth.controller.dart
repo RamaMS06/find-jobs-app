@@ -41,7 +41,7 @@ class AuthController extends _$AuthController {
     state = const AuthLoading();
     final result = await _sigIn.call();
     result.when(success: (value) {
-      state = SignInSuccess(value);
+      state = SignUpSuccess(value);
       _saveRole.call(UserRoleEntity(role: UserRoleEnum.authenticated));
     }, loading: () {
       state = const AuthLoading();
@@ -52,7 +52,7 @@ class AuthController extends _$AuthController {
     });
   }
 
-  Future<UserEntity?> get currentUser async => await _user.currentUser;
+  UserEntity? get currentUser => _user.currentUser;
 
   Future<void> signOut() async {
     state = const AuthLoading();

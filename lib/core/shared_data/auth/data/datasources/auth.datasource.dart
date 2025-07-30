@@ -5,7 +5,7 @@ import 'package:find_job_app/core/shared_data/auth/data/models/user.role.model.d
 abstract class AuthDataSource {
   Future<Result<UserModel>> signInWithGoogle();
 
-  Future<UserModel?> get currentUser;
+  UserModel? get currentUser;
 
   Future<Result<UserModel?>> signOut();
 

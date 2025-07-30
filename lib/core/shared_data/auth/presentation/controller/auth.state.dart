@@ -5,6 +5,8 @@ sealed class AuthState extends Equatable {
 
   @override
   List<Object?> get props => [];
+
+  get currentUser => null;
 }
 
 class AuthInitial extends AuthState {
@@ -15,9 +17,9 @@ class AuthLoading extends AuthState {
   const AuthLoading();
 }
 
-class SignInSuccess<T> extends AuthState {
+class SignUpSuccess<T> extends AuthState {
   final T? data;
-  const SignInSuccess(this.data);
+  const SignUpSuccess(this.data);
 }
 
 class SignOutSuccess<T> extends AuthState {

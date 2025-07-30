@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:find_job_app/core/common/common.dart';
 import 'package:find_job_app/core/core.dart';
@@ -18,17 +20,12 @@ class LoginPage extends ConsumerWidget {
     final loginState = ref.watch(authControllerProvider);
 
     ref.listen(authControllerProvider, (previous, next) {
-      if (next is SignInSuccess) {
+      if (next is SignUpSuccess) {
         context.go('/home');
       } else if (next is AuthFailed) {
         RMAlert.showAlert(context, next.message, type: RMAlertType.error);
       }
     });
-
-    // The problem is that the Positioned widget is being returned inside the TweenAnimationBuilder's builder,
-    // but the builder is not a child of Stack, so the Positioned is not being interpreted correctly.
-    // Instead, you should use the 'child' parameter of TweenAnimationBuilder and only animate the position.
-    // Let's fix this by moving the Positioned outside and only animating the left property.
 
     return Scaffold(
       body: Stack(
@@ -143,10 +140,11 @@ class LoginPage extends ConsumerWidget {
                                 textColor: RMColor.text.white,
                                 bgColor: RMColor.shades.blue[400],
                                 onPressed: () async {
-                                  loginController.saveRole(UserRoleEntity(
+                                  await loginController.saveRole(UserRoleEntity(
                                     role: UserRoleEnum.guest,
-                                  ));
-                                  context.go('/home');
+                                  )).whenComplete(() {
+                                    context.go('/home');
+                                  });
                                 },
                                 trailingIcon: Icon(
                                   EvaIcons.person,

@@ -25,6 +25,11 @@ jobs:
           mkdir -p lib/env
           echo "${{ secrets.APP_ENV_FILE }}" > lib/env/app.env.dart
 
+      - name: Write firebase.env.dart from secret
+        run: |
+          mkdir -p lib/env
+          echo "${{ secrets.FIREBASE_ENV_FILE }}" > lib/env/firebase.env.dart
+
       - name: Install dependencies
         run: flutter pub get
 

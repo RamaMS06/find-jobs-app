@@ -47,6 +47,8 @@ dependencies:
   lottie: ^3.2.0
   shared_preferences: ^2.5.3
   flutter_native_splash: ^2.4.4
+  firebase_core: ^4.0.0
+  firebase_auth: ^6.0.0
 
 dev_dependencies:
   build_runner: ^2.4.13

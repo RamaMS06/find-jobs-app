@@ -6,5 +6,5 @@ class CurrentUserUseCase {
 
   CurrentUserUseCase(this.repository);
 
-  Future<UserEntity?> get currentUser async => await repository.currentUser;
+  UserEntity? get currentUser => repository.currentUser;
 }

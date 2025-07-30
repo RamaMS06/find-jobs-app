@@ -4,7 +4,7 @@ import '../../../../services/result.dart';
 
 abstract class AuthRepository {
   Future<Result<UserEntity?>> signInWithGoogle();
-  Future<UserEntity?> get currentUser;
+  UserEntity? get currentUser;
   Future<Result<UserEntity?>> signOut();
   void saveRole(UserRoleEntity role);
   UserRoleEntity? get currentRole;
