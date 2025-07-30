@@ -31,20 +31,49 @@ jobs:
       - name: Analyze code
         run: flutter analyze
 
+      ############################
+      ## ANDROID BUILD SECTION ##
+      ############################
+
       - name: Build APK
         run: flutter build apk --release
 
-      - name: Decode Firebase service account
-        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > firebase-key.json
+      - name: Build AAB
+        run: flutter build appbundle --release
 
-      - name: Install Firebase CLI
-        run: |
-          curl -sL https://firebase.tools | bash
+      - name: Upload Android to Firebase
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: Testers
+          file: build/app/outputs/flutter-apk/app-release.apk
 
-      - name: Upload to Firebase App Distribution
+      ########################
+      ## iOS BUILD SECTION ##
+      ########################
+
+      - name: Install provisioning profile
         run: |
-          firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
-            --app ${{ secrets.FIREBASE_APP_ID }} \
-            --token ${{ secrets.FIREBASE_TOKEN }} \
-            --release-notes "New build from GitHub Actions" \
-            --groups "testers"
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/app.mobileprovision
+
+      - name: Set up certificate
+        run: |
+          echo "${{ secrets.IOS_CERTIFICATE_BASE64 }}" | base64 --decode > certificate.p12
+          security create-keychain -p "" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "" build.keychain
+          security import certificate.p12 -k build.keychain -P "${{ secrets.IOS_CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+
+      - name: Build iOS IPA
+        run: flutter build ipa --release --no-codesign
+
+      - name: Upload iOS to Firebase
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_IOS_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: Testers
+          file: build/ios/ipa/*.ipa
