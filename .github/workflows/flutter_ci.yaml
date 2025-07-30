@@ -19,6 +19,11 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.3'
+      
+      - name: Write app.env.dart from secret
+        run: |
+          mkdir -p lib/env
+          echo "${{ secrets.APP_ENV_FILE }}" > lib/env/app.env.dart
 
       - name: Install dependencies
         run: flutter pub get
@@ -28,12 +33,6 @@ jobs:
 
       - name: Run tests
         run: flutter test
-
-      - name: Write app.env.dart from secret
-        run: |
-          mkdir -p lib/env
-          echo "${{ secrets.APP_ENV_FILE }}" > lib/env/app.env.dart
-
 
       - name: Build APK
         run: flutter build apk --release
