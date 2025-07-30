@@ -29,6 +29,12 @@ jobs:
       - name: Run tests
         run: flutter test
 
+      - name: Write app.env.dart from secret
+        run: |
+          mkdir -p lib/env
+          echo "${{ secrets.APP_ENV_FILE }}" > lib/env/app.env.dart
+
+
       - name: Build APK
         run: flutter build apk --release
 
