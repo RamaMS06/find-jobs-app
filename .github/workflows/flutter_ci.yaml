@@ -1,0 +1,48 @@
+# .github/workflows/flutter_ci.yaml
+
+name: Flutter CI & Firebase Distribution
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  build:
+    name: Build and Distribute APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.x'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze code
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Decode Firebase service account
+        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > firebase-key.json
+
+      - name: Install Firebase CLI
+        run: |
+          curl -sL https://firebase.tools | bash
+
+      - name: Upload to Firebase App Distribution
+        run: |
+          firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
+            --app 1:991357644816:ios:b30d9a66c9a1f47d49da95 \
+            --token "$(cat firebase-key.json | jq -r .token)" \
+            --release-notes "New build from GitHub Actions" \
+            --groups "testers"
