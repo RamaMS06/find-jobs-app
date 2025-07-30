@@ -34,6 +34,9 @@ Future<void> _authInit() async {
       () => SaveRoleUserUseCase(sl()),
     )
     ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()))
-    ..registerLazySingleton<AuthDataSource>(() => AuthDataSourceImpl(sl()))
-    ..registerLazySingleton<GoogleSignIn>(() => GoogleSignIn());
+    ..registerLazySingleton<AuthDataSource>(
+      () => AuthDataSourceImpl(sl(), sl()),
+    )
+    ..registerLazySingleton<GoogleSignIn>(() => GoogleSignIn())
+    ..registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
 }

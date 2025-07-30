@@ -11,8 +11,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthDataSourceImpl implements AuthDataSource {
   final GoogleSignIn _googleSignIn;
+  final FirebaseAuth _firebaseAuth;
 
-  AuthDataSourceImpl(this._googleSignIn);
+  AuthDataSourceImpl(this._googleSignIn, this._firebaseAuth);
 
   @override
   Future<Result<UserModel>> signInWithGoogle() async {
@@ -27,7 +28,7 @@ class AuthDataSourceImpl implements AuthDataSource {
       idToken: auth.idToken,
     );
 
-    final user = await FirebaseAuth.instance.signInWithCredential(credential);
+    final user = await _firebaseAuth.signInWithCredential(credential);
     return Result.success(UserModel(
       id: user.user?.uid,
       name: user.user?.displayName,
@@ -38,7 +39,7 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   UserModel? get currentUser {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = _firebaseAuth.currentUser;
     return UserModel(
       id: user?.uid,
       name: user?.displayName,
@@ -49,7 +50,7 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Future<Result<UserModel?>> signOut() async {
-    await FirebaseAuth.instance.signOut();
+    await _firebaseAuth.signOut();
     await _googleSignIn.signOut();
     sl<SharedPreferences>().clear();
 

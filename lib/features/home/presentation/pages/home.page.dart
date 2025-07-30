@@ -43,7 +43,7 @@ class _HomePageState extends ConsumerState<HomePage>
   }
 
   Future<Widget> _buildHeader() async {
-    final user = await ref.watch(authControllerProvider.notifier).currentUser;
+    final user = ref.watch(authControllerProvider.notifier).currentUser;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

@@ -1,5 +1,7 @@
 # 1.0.1-beta.1+3
 - Handling CI/CD
+- Adding FirebaseAuth into project
+- Handle authentication to store all signIn method user to FirebaseAuth
 
 # 1.0.1-beta.1+2
 - Add google-service into android file
