@@ -8,17 +8,17 @@ import 'package:find_job_app/core/shared_data/auth/domain/repositories/auth.repo
 import '../../domain/entities/user.entity.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthDataSource _authDataSource;
+  final AuthRemoteDataSource _authDataSource;
 
   AuthRepositoryImpl(this._authDataSource);
 
   @override
-  Future<Result<UserEntity?>> signInWithGoogle() async {
+  Future<Result<UserEntity>> signInWithGoogle() async {
     final account = await _authDataSource.signInWithGoogle();
     return account.when(
           success: (data) => Result.success(data.toEntity()),
           loading: () => const Result.loading(),
-          failed: (error) => Result.failure(error),
+          failed: (error) => Result.failed(error),
         ) ??
         const Result.initial();
   }
@@ -35,7 +35,7 @@ class AuthRepositoryImpl implements AuthRepository {
     return result.when(
           success: (data) => Result.success(data?.toEntity()),
           loading: () => const Result.loading(),
-          failed: (error) => Result.failure(error),
+          failed: (error) => Result.failed(error),
         ) ??
         const Result.initial();
   }

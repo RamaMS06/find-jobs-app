@@ -1,28 +1,38 @@
 import 'package:flutter/material.dart';
 import '../../common.dart';
 
-class RMText extends StatelessWidget {
+class RText extends StatelessWidget {
   final String text;
   final TextStyle? style;
   final Color? color;
   final TextOverflow? overflow;
-
-  const RMText(
+  final TextAlign? textAlign;
+  final int? maxLength;
+  final int? maxLines;
+  
+  const RText(
     this.text, {
     super.key,
     this.style,
     this.color,
     this.overflow,
+    this.textAlign,
+    this.maxLength,
+    this.maxLines,
   });
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      text,
-      style: (style ?? RMFont.body.bold).copyWith(
-        color: color ?? RMColor.text.dark,
-        overflow: overflow ?? TextOverflow.ellipsis,
+      text.length > (maxLength ?? 200)
+          ? text.substring(0, maxLength ?? 200)
+          : text,
+      textAlign: textAlign,
+      style: (style ?? RFont.body.bold).copyWith(
+        color: color ?? RColor.text.dark,
+        overflow: overflow,
       ),
+      maxLines: maxLines,
     );
   }
 }

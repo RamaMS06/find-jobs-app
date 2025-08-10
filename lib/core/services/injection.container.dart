@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:find_job_app/core/shared_data/auth/data/datasources/auth.datasource.dart';
 import 'package:find_job_app/core/shared_data/auth/data/datasources/auth.datasource.impl.dart';
 import 'package:find_job_app/core/shared_data/auth/data/repositories/auth.repository.impl.dart';
@@ -9,7 +10,18 @@ import 'package:find_job_app/core/shared_data/auth/domain/usecases/get.role.dart
 import 'package:find_job_app/core/shared_data/auth/domain/usecases/save.role.dart';
 import 'package:find_job_app/core/shared_data/auth/domain/usecases/sign.in.dart';
 import 'package:find_job_app/core/shared_data/auth/domain/usecases/sign.out.dart';
+import 'package:find_job_app/core/shared_data/country/data/datasources/country.datasource.dart';
+import 'package:find_job_app/core/shared_data/country/data/datasources/country.datasource.impl.dart';
+import 'package:find_job_app/core/shared_data/country/data/repositories/country.repository.impl.dart';
+import 'package:find_job_app/core/shared_data/country/domain/repositories/country.repository.dart';
+import 'package:find_job_app/core/shared_data/country/domain/usecase/get.country.dart';
+import 'package:find_job_app/core/shared_data/country/domain/usecase/search.country.dart';
 import 'package:find_job_app/env/firebase.env.dart';
+import 'package:find_job_app/features/home/data/datasources/job.remote.datasource.dart';
+import 'package:find_job_app/features/home/data/datasources/job.remote.datasource.impl.dart';
+import 'package:find_job_app/features/home/data/repositories/job.repository.impl.dart';
+import 'package:find_job_app/features/home/domain/repositories/job.repository.dart';
+import 'package:find_job_app/features/home/domain/usecase/search.job.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';

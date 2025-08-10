@@ -11,8 +11,9 @@ final routerProvider = Provider<GoRouter>((ref) {
   return _routeConfig(redirect: (context, state) {
     final isUserReady = authUser?.name != null;
     final isGuest = authRole?.role == UserRoleEnum.guest;
-    inspect(authUser);
-    if (isUserReady && !isGuest) {
+    final location = state.uri.toString();
+
+    if (isUserReady && !isGuest && location == '/') {
       return '/home';
     }
     if (isGuest) {
@@ -31,38 +32,15 @@ GoRouter _routeConfig({GoRouterRedirect? redirect}) => GoRouter(
         ),
         GoRoute(
           path: '/home',
-          pageBuilder: (context, state) => _buildFadeTransitionPage(
-            key: state.pageKey,
-            child: const HomePage(),
-          ),
+          builder: (context, state) => const HomePage(),
+        ),
+        GoRoute(
+          path: '/detail-job',
+          builder: (context, state) => const DetailJobPage(),
         ),
       ],
       errorBuilder: (context, state) => Scaffold(
-        appBar: AppBar(title: const RMText("404")),
-        body: Center(child: RMText("Page not found: ${state.uri}")),
+        appBar: AppBar(title: const RText("404")),
+        body: Center(child: RText("Page not found: ${state.uri}")),
       ),
     );
-
-CustomTransitionPage _buildFadeTransitionPage({
-  required LocalKey key,
-  required Widget child,
-}) {
-  return CustomTransitionPage(
-    key: key,
-    child: child,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 1.0);
-      const end = Offset.zero;
-      final tween = Tween(begin: begin, end: end).chain(
-        CurveTween(
-          curve: Curves.easeInOut,
-        ),
-      );
-      final offsetAnimation = animation.drive(tween);
-      return SlideTransition(
-        position: offsetAnimation,
-        child: child,
-      );
-    },
-  );
-}

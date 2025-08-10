@@ -4,7 +4,7 @@ import 'color.dart';
 ///
 /// Use the colors defined in this class to maintain consistency
 /// across the BUMA App Modules.
-abstract class RMColor {
+abstract class RColor {
   /// Text Color
   static final TextColor text = TextColor();
 

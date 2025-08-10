@@ -55,7 +55,7 @@ class TextHeading extends TextStyle {
   final TextStyle h3 = GoogleFonts.spaceGrotesk(
     fontSize: 24,
     fontWeight: FontWeight.bold,
-    color: RMColor.text.dark,
+    color: RColor.text.dark,
     height: 28.toFigmaLineHeight(24),
   );
 
@@ -69,7 +69,7 @@ class TextHeading extends TextStyle {
   final TextStyle h4 = GoogleFonts.spaceGrotesk(
     fontSize: 20,
     fontWeight: FontWeight.w500,
-    color: RMColor.text.dark,
+    color: RColor.text.dark,
     height: 24.toFigmaLineHeight(20),
   );
 }

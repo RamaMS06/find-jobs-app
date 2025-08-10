@@ -7,7 +7,7 @@ class SearchJobUseCase {
 
   SearchJobUseCase(this.repository);
 
-  Future<Result<JobEntity?>> execute({String? query}) async {
-    return await repository.searchJobs(query: query);
+  Future<Result<JobEntity?>> call({String? query, String? location}) async {
+    return await repository.searchJobs(query: query, location: location);
   }
 }

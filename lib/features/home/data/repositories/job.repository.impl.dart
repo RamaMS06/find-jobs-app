@@ -10,12 +10,16 @@ class JobRepositoryImpl implements JobRepository {
   JobRepositoryImpl(this.jobRemoteDataSource);
 
   @override
-  Future<Result<JobEntity?>> searchJobs({String? query}) async {
-    final data = await jobRemoteDataSource.findJobs(query: query);
+  Future<Result<JobEntity?>> searchJobs(
+      {String? query, String? location}) async {
+    final data = await jobRemoteDataSource.findJobs(
+      query: query,
+      location: location,
+    );
     return data.when(
           success: (data) => Result.success(data.toEntity()),
           loading: () => const Result.loading(),
-          failed: (error) => Result.failure(error),
+          failed: (error) => Result.failed(error),
         ) ??
         const Result.initial();
   }

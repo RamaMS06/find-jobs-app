@@ -1,4 +1,3 @@
-
 import 'package:find_job_app/core/services/injection.container.dart';
 import 'package:find_job_app/core/services/result.dart';
 import 'package:find_job_app/core/shared_data/auth/data/datasources/auth.datasource.dart';
@@ -9,17 +8,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthDataSourceImpl implements AuthDataSource {
-  final GoogleSignIn _googleSignIn;
-  final FirebaseAuth _firebaseAuth;
-
-  AuthDataSourceImpl(this._googleSignIn, this._firebaseAuth);
+class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+  final _googleSignIn = sl<GoogleSignIn>();
+  final _firebaseAuth = sl<FirebaseAuth>();
 
   @override
   Future<Result<UserModel>> signInWithGoogle() async {
     final account = await _googleSignIn.signIn();
     if (account == null) {
-      return const Result.failure('User cancelled');
+      return const Result.failed('User cancelled');
     }
 
     final auth = await account.authentication;

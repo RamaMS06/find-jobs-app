@@ -7,7 +7,7 @@ sealed class Result<T> extends Equatable {
 
   const factory Result.success(T value, {int? statusCode}) = Success<T>;
   const factory Result.loading({int? statusCode}) = Loading<T>;
-  const factory Result.failure(String message, {int? statusCode}) = Failed<T>;
+  const factory Result.failed(String message, {int? statusCode}) = Failed<T>;
   const factory Result.initial({int? statusCode}) = Initial<T>;
 
   bool get isSuccess => this is Success;

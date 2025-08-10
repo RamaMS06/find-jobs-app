@@ -20,7 +20,7 @@ class TextBody extends TextStyle implements GoogleFonts {
           fontFamily: GoogleFonts.spaceGrotesk(
             fontSize: 12,
             fontWeight: FontWeight.w500,
-            color: RMColor.text.dark,
+            color: RColor.text.dark,
             height: 16.toFigmaLineHeight(12),
           ).fontFamily,
         );
@@ -30,7 +30,7 @@ class TextBody extends TextStyle implements GoogleFonts {
   final TextStyle bold = GoogleFonts.spaceGrotesk(
     fontSize: 12,
     fontWeight: FontWeight.bold,
-    color: RMColor.text.dark,
+    color: RColor.text.dark,
     height: 16.toFigmaLineHeight(12),
   );
 
@@ -39,7 +39,7 @@ class TextBody extends TextStyle implements GoogleFonts {
   final TextStyle small = GoogleFonts.spaceGrotesk(
     fontSize: 11,
     fontWeight: FontWeight.w500,
-    color: RMColor.text.dark,
+    color: RColor.text.dark,
     height: 16.toFigmaLineHeight(11),
   );
 
@@ -48,7 +48,7 @@ class TextBody extends TextStyle implements GoogleFonts {
   final TextStyle xstraSmall = GoogleFonts.spaceGrotesk(
     fontSize: 8,
     fontWeight: FontWeight.w500,
-    color: RMColor.text.dark,
+    color: RColor.text.dark,
     height: 12.toFigmaLineHeight(8),
   );
 
@@ -57,7 +57,7 @@ class TextBody extends TextStyle implements GoogleFonts {
   final TextStyle italic = GoogleFonts.spaceGrotesk(
     fontSize: 12,
     fontWeight: FontWeight.w500,
-    color: RMColor.text.dark,
+    color: RColor.text.dark,
     fontStyle: FontStyle.italic,
     height: 16.toFigmaLineHeight(12),
   );
@@ -67,7 +67,7 @@ class TextBody extends TextStyle implements GoogleFonts {
   final TextStyle underline = GoogleFonts.spaceGrotesk(
     fontSize: 12,
     fontWeight: FontWeight.w600,
-    color: RMColor.text.dark,
+    color: RColor.text.dark,
     decoration: TextDecoration.underline,
     height: 16.toFigmaLineHeight(12),
   );
@@ -77,7 +77,7 @@ class TextBody extends TextStyle implements GoogleFonts {
   final TextStyle paragraph = GoogleFonts.spaceGrotesk(
     fontSize: 12,
     fontWeight: FontWeight.w500,
-    color: RMColor.text.dark,
+    color: RColor.text.dark,
     height: 24.toFigmaLineHeight(12),
   );
 }

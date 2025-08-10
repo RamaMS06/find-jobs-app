@@ -1,49 +1,13 @@
-part of 'auth.controller.dart';
+import 'package:find_job_app/core/shared_data/auth/domain/entities/user.entity.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-sealed class AuthState extends Equatable {
-  const AuthState();
+part 'auth.state.freezed.dart';
 
-  @override
-  List<Object?> get props => [];
-
-  get currentUser => null;
+@freezed
+class AuthState with _$AuthState {
+  const factory AuthState.initial() = _AuthInitial;
+  const factory AuthState.loading() = _AuthLoading;
+  const factory AuthState.signUpSuccess(UserEntity data) = _AuthSignUpSuccess;
+  const factory AuthState.signOutSuccess() = _AuthSignOutSuccess;
+  const factory AuthState.authFailed(String message) = _AuthFailed;
 }
-
-class AuthInitial extends AuthState {
-  const AuthInitial();
-}
-
-class AuthLoading extends AuthState {
-  const AuthLoading();
-}
-
-class SignUpSuccess<T> extends AuthState {
-  final T? data;
-  const SignUpSuccess(this.data);
-}
-
-class SignOutSuccess<T> extends AuthState {
-  final T? data;
-  const SignOutSuccess(this.data);
-}
-
-class AuthFailed extends AuthState {
-  final String message;
-  const AuthFailed(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
-
-// class AuthState extends Equatable {
-//   final Result _result;
-
-//   const AuthState({required Result result}) : _result = result;
-  
-//   AuthState copyWith({Result? result}){
-//     return AuthState(result: result ?? _result);
-//   }
-
-//   @override
-//   List<Object?> get props => [_result];
-// }

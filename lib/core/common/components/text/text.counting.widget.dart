@@ -2,14 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-class RMCountingText extends StatefulWidget {
+class RCountingText extends StatefulWidget {
   final double from;
   final double to;
   final Duration duration;
   final int decimalPlaces;
   final TextStyle? textStyle;
 
-  const RMCountingText({
+  const RCountingText({
     super.key,
     required this.from,
     required this.to,
@@ -19,10 +19,10 @@ class RMCountingText extends StatefulWidget {
   });
 
   @override
-  State<RMCountingText> createState() => _RMCountingTextState();
+  State<RCountingText> createState() => _RCountingTextState();
 }
 
-class _RMCountingTextState extends State<RMCountingText>
+class _RCountingTextState extends State<RCountingText>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -38,7 +38,7 @@ class _RMCountingTextState extends State<RMCountingText>
   }
 
   @override
-  void didUpdateWidget(covariant RMCountingText oldWidget) {
+  void didUpdateWidget(covariant RCountingText oldWidget) {
     super.didUpdateWidget(oldWidget);
     // If the 'from', 'to', or 'duration' changes, update the animation.
     // The parent widget (HomePage) uses a new Key for AnimatedCountingText
@@ -180,7 +180,7 @@ class _HomePageState extends State<HomePage> {
               },
               // The key forces AnimatedSwitcher to treat this as a new widget
               // when _counterKey changes, triggering the slide transition.
-              child: RMCountingText(
+              child: RCountingText(
                 key: ValueKey<int>(
                     _counterKey), // Unique key for each new animation cycle
                 from: _fromValue,

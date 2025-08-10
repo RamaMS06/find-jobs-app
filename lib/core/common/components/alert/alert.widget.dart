@@ -4,8 +4,8 @@
 import 'package:flutter/material.dart';
 import '../../common.dart';
 
-/// Creating enumeration type of [RMAlert].
-enum RMAlertType {
+/// Creating enumeration type of [RAlert].
+enum RAlertType {
   /// Used to convey success states.
   success,
 
@@ -26,16 +26,16 @@ enum RMAlertType {
 }
 
 /// A custom widget alert of [SnackBar].
-class RMAlert extends StatelessWidget {
-  factory RMAlert(
+class RAlert extends StatelessWidget {
+  factory RAlert(
     String title, {
     EdgeInsetsGeometry? margin,
-    RMAlertType? type,
+    RAlertType? type,
     String? description,
     bool? reverseColor,
     Key? key,
   }) {
-    return RMAlert._(
+    return RAlert._(
       title,
       type: type,
       margin: margin,
@@ -45,10 +45,10 @@ class RMAlert extends StatelessWidget {
       key: key,
     );
   }
-  const RMAlert._(
+  const RAlert._(
     this.title, {
     this.margin,
-    this.type = RMAlertType.success,
+    this.type = RAlertType.success,
     this.description,
     this.reverseColor,
     this.duration,
@@ -58,7 +58,7 @@ class RMAlert extends StatelessWidget {
   /// Show alert with [ScaffoldMessenger]
   /// need [Scaffold] to use this Widget
   /// for its [context].
-  RMAlert.showAlert(
+  RAlert.showAlert(
     BuildContext context,
     this.title, {
     required this.type,
@@ -87,7 +87,7 @@ class RMAlert extends StatelessWidget {
           },
           child: _CustomContentSnackBar(
             title: title,
-            type: type ?? RMAlertType.success,
+            type: type ?? RAlertType.success,
             reverseColor: reverseColor,
             desc: description,
           ),
@@ -102,8 +102,8 @@ class RMAlert extends StatelessWidget {
   /// Display optional describe of contents.
   final String? description;
 
-  /// Describe what [RMAlertType] you want.
-  final RMAlertType? type;
+  /// Describe what [RAlertType] you want.
+  final RAlertType? type;
 
   /// Makes the colors inverted with [reverseColor].
   final bool? reverseColor;
@@ -118,7 +118,7 @@ class RMAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     return _CustomContentSnackBar(
       title: title,
-      type: type ?? RMAlertType.success,
+      type: type ?? RAlertType.success,
       reverseColor: reverseColor,
       desc: description,
     );
@@ -130,7 +130,7 @@ class RMAlert extends StatelessWidget {
 ///
 /// The creation of this widget class is due to two implementations,
 /// namely calling the widget using [UIAlert.showAlert] and also directly
-/// calling the widget to display content using the [RMAlert] class.
+/// calling the widget to display content using the [RAlert] class.
 ///
 /// {@endtemplate}
 class _CustomContentSnackBar extends StatelessWidget {
@@ -146,7 +146,7 @@ class _CustomContentSnackBar extends StatelessWidget {
   final String title;
 
   /// Describing type into content of custom [SnackBar].
-  final RMAlertType type;
+  final RAlertType type;
 
   /// Display optional describe into content of custom [SnackBar].
   final String? desc;
@@ -159,19 +159,19 @@ class _CustomContentSnackBar extends StatelessWidget {
   Color get _backgroundColor {
     if (reverseColor ?? false) {
       return switch (type) {
-        RMAlertType.success => RMColor.background.success,
-        RMAlertType.error => RMColor.background.danger,
-        RMAlertType.info => RMColor.background.info,
-        RMAlertType.neutral => RMColor.background.neutral,
-        RMAlertType.warning => RMColor.background.warning
+        RAlertType.success => RColor.background.success,
+        RAlertType.error => RColor.background.danger,
+        RAlertType.info => RColor.background.info,
+        RAlertType.neutral => RColor.background.neutral,
+        RAlertType.warning => RColor.background.warning
       };
     } else {
       return switch (type) {
-        RMAlertType.success => RMColor.background.success,
-        RMAlertType.error => RMColor.background.danger,
-        RMAlertType.info => RMColor.background.info,
-        RMAlertType.neutral => RMColor.background.neutral,
-        RMAlertType.warning => RMColor.background.warning
+        RAlertType.success => RColor.background.success,
+        RAlertType.error => RColor.background.danger,
+        RAlertType.info => RColor.background.info,
+        RAlertType.neutral => RColor.background.neutral,
+        RAlertType.warning => RColor.background.warning
       };
     }
   }
@@ -181,40 +181,40 @@ class _CustomContentSnackBar extends StatelessWidget {
   Icon get _icon {
     const iconSize = 16.0;
     return switch (type) {
-      RMAlertType.success => Icon(
+      RAlertType.success => Icon(
           Icons.check_circle,
           size: iconSize,
           color: reverseColor ?? false
-              ? RMColor.background.white
-              : RMColor.background.success,
+              ? RColor.background.white
+              : RColor.background.success,
         ),
-      RMAlertType.error => Icon(
+      RAlertType.error => Icon(
           Icons.warning_rounded,
           size: iconSize,
           color: reverseColor ?? false
-              ? RMColor.background.danger
-              : RMColor.text.white,
+              ? RColor.background.danger
+              : RColor.text.white,
         ),
-      RMAlertType.neutral => Icon(
+      RAlertType.neutral => Icon(
           Icons.info,
           size: iconSize,
           color: reverseColor ?? false
-              ? RMColor.background.white
-              : RMColor.background.info,
+              ? RColor.background.white
+              : RColor.background.info,
         ),
-      RMAlertType.info => Icon(
+      RAlertType.info => Icon(
           Icons.info,
           size: iconSize,
           color: reverseColor ?? false
-              ? RMColor.background.white
-              : RMColor.background.info,
+              ? RColor.background.white
+              : RColor.background.info,
         ),
-      RMAlertType.warning => Icon(
+      RAlertType.warning => Icon(
           Icons.error,
           size: iconSize,
           color: reverseColor ?? false
-              ? RMColor.background.white
-              : RMColor.background.warning,
+              ? RColor.background.white
+              : RColor.background.warning,
         ),
     };
   }
@@ -224,19 +224,19 @@ class _CustomContentSnackBar extends StatelessWidget {
   Color get _textColor {
     if (reverseColor ?? false) {
       return switch (type) {
-        RMAlertType.success => RMColor.text.white,
-        RMAlertType.error => RMColor.text.white,
-        RMAlertType.neutral => RMColor.text.white,
-        RMAlertType.info => RMColor.text.white,
-        RMAlertType.warning => RMColor.text.dark
+        RAlertType.success => RColor.text.white,
+        RAlertType.error => RColor.text.white,
+        RAlertType.neutral => RColor.text.white,
+        RAlertType.info => RColor.text.white,
+        RAlertType.warning => RColor.text.dark
       };
     }
     return switch (type) {
-      RMAlertType.success => RMColor.background.success,
-      RMAlertType.error => RMColor.background.danger,
-      RMAlertType.neutral => RMColor.text.dark,
-      RMAlertType.info => RMColor.background.info,
-      RMAlertType.warning => RMColor.background.warning
+      RAlertType.success => RColor.background.success,
+      RAlertType.error => RColor.background.danger,
+      RAlertType.neutral => RColor.text.dark,
+      RAlertType.info => RColor.background.info,
+      RAlertType.warning => RColor.background.warning
     };
   }
 
@@ -253,7 +253,7 @@ class _CustomContentSnackBar extends StatelessWidget {
         color: _backgroundColor,
         boxShadow: [
           BoxShadow(
-            color: RMColor.background.dark.withOpacity(
+            color: RColor.background.dark.withOpacity(
               0.4,
             ),
             blurRadius: 8,
@@ -273,7 +273,7 @@ class _CustomContentSnackBar extends StatelessWidget {
               _icon,
               const SizedBox(width: 4),
               Expanded(
-                child: RMText(
+                child: RText(
                   title,
                   color: _textColor,
                 ),
@@ -287,7 +287,7 @@ class _CustomContentSnackBar extends StatelessWidget {
               padding: const EdgeInsets.only(
                 top: 4,
               ),
-              child: RMText(
+              child: RText(
                 desc ?? '',
                 color: _textColor,
               ),

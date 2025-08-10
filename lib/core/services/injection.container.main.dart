@@ -18,6 +18,7 @@ Future<void> init() async {
 
 Future<void> _authInit() async {
   sl
+    // Usecase
     ..registerLazySingleton(
       () => SignInUseCase(sl()),
     )
@@ -33,10 +34,46 @@ Future<void> _authInit() async {
     ..registerLazySingleton<SaveRoleUserUseCase>(
       () => SaveRoleUserUseCase(sl()),
     )
-    ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()))
-    ..registerLazySingleton<AuthDataSource>(
-      () => AuthDataSourceImpl(sl(), sl()),
+    ..registerLazySingleton<SearchJobUseCase>(
+      () => SearchJobUseCase(sl()),
     )
-    ..registerLazySingleton<GoogleSignIn>(() => GoogleSignIn())
-    ..registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+    ..registerLazySingleton<GetCountryUseCase>(
+      () => GetCountryUseCase(sl()),
+    )
+    ..registerLazySingleton<SearchCountryUseCase>(
+      () => SearchCountryUseCase(sl()),
+    )
+
+    // Repository
+    ..registerLazySingleton<AuthRepository>(
+      () => AuthRepositoryImpl(sl()),
+    )
+    ..registerLazySingleton<JobRepository>(
+      () => JobRepositoryImpl(sl()),
+    )
+    ..registerLazySingleton<CountryRepository>(
+      () => CountryRepositoryImpl(sl()),
+    )
+
+    // Data Source
+    ..registerLazySingleton<AuthRemoteDataSource>(
+      () => AuthRemoteDataSourceImpl(),
+    )
+    ..registerLazySingleton<JobRemoteDataSource>(
+      () => JobRemoteDataSourceImpl(),
+    )
+    ..registerLazySingleton<CountryDatasource>(
+      () => CountryDatasourceImpl(),
+    )
+
+    // Authentication
+    ..registerLazySingleton<GoogleSignIn>(
+      () => GoogleSignIn(),
+    )
+    ..registerLazySingleton<FirebaseAuth>(
+      () => FirebaseAuth.instance,
+    )
+
+    // Package
+    ..registerSingleton<Dio>(Dio());
 }

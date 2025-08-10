@@ -14,7 +14,7 @@ class TextSubHeading extends TextStyle {
   TextSubHeading()
       : super(
           fontSize: 16,
-          color: RMColor.text.dark,
+          color: RColor.text.dark,
           height: 20.toFigmaLineHeight(16),
           fontFamily: GoogleFonts.spaceGrotesk(
             fontWeight: FontWeight.bold,
@@ -26,7 +26,7 @@ class TextSubHeading extends TextStyle {
   final TextStyle h5 = GoogleFonts.spaceGrotesk(
     fontSize: 16,
     fontWeight: FontWeight.bold,
-    color: RMColor.text.dark,
+    color: RColor.text.dark,
     height: 20.toFigmaLineHeight(16),
   );
 
@@ -35,7 +35,7 @@ class TextSubHeading extends TextStyle {
   final TextStyle h6 = GoogleFonts.spaceGrotesk(
     fontSize: 14,
     fontWeight: FontWeight.w600,
-    color: RMColor.text.dark,
+    color: RColor.text.dark,
     height: 16.toFigmaLineHeight(14),
   );
 
@@ -44,7 +44,7 @@ class TextSubHeading extends TextStyle {
   final TextStyle h7 = GoogleFonts.spaceGrotesk(
     fontSize: 12,
     fontWeight: FontWeight.w600,
-    color: RMColor.text.dark,
+    color: RColor.text.dark,
     height: 16.toFigmaLineHeight(12),
   );
 }

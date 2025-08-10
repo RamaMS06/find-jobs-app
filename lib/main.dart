@@ -20,9 +20,12 @@ class MyApp extends ConsumerWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         useMaterial3: false,
-        scaffoldBackgroundColor: RMColor.background.white,
+        scaffoldBackgroundColor: RColor.background.white,
+        appBarTheme: AppBarTheme(
+          foregroundColor: RColor.background.dark,
+        ),
         colorScheme: ColorScheme.fromSeed(
-          seedColor: RMColor.background.white,
+          seedColor: RColor.background.white,
         ),
       ),
       routerConfig: router,

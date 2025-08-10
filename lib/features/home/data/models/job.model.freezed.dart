@@ -20,10 +20,8 @@ JobModel _$JobModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$JobModel {
-  String? get status => throw _privateConstructorUsedError;
-  String? get requestId => throw _privateConstructorUsedError;
-  JobParamters? get parameters => throw _privateConstructorUsedError;
-  List<JobDataModel>? get data => throw _privateConstructorUsedError;
+  int? get totalCount => throw _privateConstructorUsedError;
+  List<JobDataModel>? get jobs => throw _privateConstructorUsedError;
 
   /// Serializes this JobModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,13 +38,7 @@ abstract class $JobModelCopyWith<$Res> {
   factory $JobModelCopyWith(JobModel value, $Res Function(JobModel) then) =
       _$JobModelCopyWithImpl<$Res, JobModel>;
   @useResult
-  $Res call(
-      {String? status,
-      String? requestId,
-      JobParamters? parameters,
-      List<JobDataModel>? data});
-
-  $JobParamtersCopyWith<$Res>? get parameters;
+  $Res call({int? totalCount, List<JobDataModel>? jobs});
 }
 
 /// @nodoc
@@ -64,43 +56,19 @@ class _$JobModelCopyWithImpl<$Res, $Val extends JobModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? status = freezed,
-    Object? requestId = freezed,
-    Object? parameters = freezed,
-    Object? data = freezed,
+    Object? totalCount = freezed,
+    Object? jobs = freezed,
   }) {
     return _then(_value.copyWith(
-      status: freezed == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String?,
-      requestId: freezed == requestId
-          ? _value.requestId
-          : requestId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      parameters: freezed == parameters
-          ? _value.parameters
-          : parameters // ignore: cast_nullable_to_non_nullable
-              as JobParamters?,
-      data: freezed == data
-          ? _value.data
-          : data // ignore: cast_nullable_to_non_nullable
+      totalCount: freezed == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      jobs: freezed == jobs
+          ? _value.jobs
+          : jobs // ignore: cast_nullable_to_non_nullable
               as List<JobDataModel>?,
     ) as $Val);
-  }
-
-  /// Create a copy of JobModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $JobParamtersCopyWith<$Res>? get parameters {
-    if (_value.parameters == null) {
-      return null;
-    }
-
-    return $JobParamtersCopyWith<$Res>(_value.parameters!, (value) {
-      return _then(_value.copyWith(parameters: value) as $Val);
-    });
   }
 }
 
@@ -112,14 +80,7 @@ abstract class _$$JobModelImplCopyWith<$Res>
       __$$JobModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String? status,
-      String? requestId,
-      JobParamters? parameters,
-      List<JobDataModel>? data});
-
-  @override
-  $JobParamtersCopyWith<$Res>? get parameters;
+  $Res call({int? totalCount, List<JobDataModel>? jobs});
 }
 
 /// @nodoc
@@ -135,27 +96,17 @@ class __$$JobModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? status = freezed,
-    Object? requestId = freezed,
-    Object? parameters = freezed,
-    Object? data = freezed,
+    Object? totalCount = freezed,
+    Object? jobs = freezed,
   }) {
     return _then(_$JobModelImpl(
-      status: freezed == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String?,
-      requestId: freezed == requestId
-          ? _value.requestId
-          : requestId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      parameters: freezed == parameters
-          ? _value.parameters
-          : parameters // ignore: cast_nullable_to_non_nullable
-              as JobParamters?,
-      data: freezed == data
-          ? _value._data
-          : data // ignore: cast_nullable_to_non_nullable
+      totalCount: freezed == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      jobs: freezed == jobs
+          ? _value._jobs
+          : jobs // ignore: cast_nullable_to_non_nullable
               as List<JobDataModel>?,
     ));
   }
@@ -164,35 +115,27 @@ class __$$JobModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$JobModelImpl implements _JobModel {
-  const _$JobModelImpl(
-      {this.status,
-      this.requestId,
-      this.parameters,
-      final List<JobDataModel>? data})
-      : _data = data;
+  const _$JobModelImpl({this.totalCount, final List<JobDataModel>? jobs})
+      : _jobs = jobs;
 
   factory _$JobModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$JobModelImplFromJson(json);
 
   @override
-  final String? status;
+  final int? totalCount;
+  final List<JobDataModel>? _jobs;
   @override
-  final String? requestId;
-  @override
-  final JobParamters? parameters;
-  final List<JobDataModel>? _data;
-  @override
-  List<JobDataModel>? get data {
-    final value = _data;
+  List<JobDataModel>? get jobs {
+    final value = _jobs;
     if (value == null) return null;
-    if (_data is EqualUnmodifiableListView) return _data;
+    if (_jobs is EqualUnmodifiableListView) return _jobs;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
 
   @override
   String toString() {
-    return 'JobModel(status: $status, requestId: $requestId, parameters: $parameters, data: $data)';
+    return 'JobModel(totalCount: $totalCount, jobs: $jobs)';
   }
 
   @override
@@ -200,18 +143,15 @@ class _$JobModelImpl implements _JobModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$JobModelImpl &&
-            (identical(other.status, status) || other.status == status) &&
-            (identical(other.requestId, requestId) ||
-                other.requestId == requestId) &&
-            (identical(other.parameters, parameters) ||
-                other.parameters == parameters) &&
-            const DeepCollectionEquality().equals(other._data, _data));
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount) &&
+            const DeepCollectionEquality().equals(other._jobs, _jobs));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, status, requestId, parameters,
-      const DeepCollectionEquality().hash(_data));
+  int get hashCode => Object.hash(
+      runtimeType, totalCount, const DeepCollectionEquality().hash(_jobs));
 
   /// Create a copy of JobModel
   /// with the given fields replaced by the non-null parameter values.
@@ -231,22 +171,15 @@ class _$JobModelImpl implements _JobModel {
 
 abstract class _JobModel implements JobModel {
   const factory _JobModel(
-      {final String? status,
-      final String? requestId,
-      final JobParamters? parameters,
-      final List<JobDataModel>? data}) = _$JobModelImpl;
+      {final int? totalCount, final List<JobDataModel>? jobs}) = _$JobModelImpl;
 
   factory _JobModel.fromJson(Map<String, dynamic> json) =
       _$JobModelImpl.fromJson;
 
   @override
-  String? get status;
+  int? get totalCount;
   @override
-  String? get requestId;
-  @override
-  JobParamters? get parameters;
-  @override
-  List<JobDataModel>? get data;
+  List<JobDataModel>? get jobs;
 
   /// Create a copy of JobModel
   /// with the given fields replaced by the non-null parameter values.

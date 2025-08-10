@@ -1,15 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:find_job_app/core/common/common.dart';
-import 'package:find_job_app/core/core.dart';
-import 'package:find_job_app/core/shared_data/auth/domain/entities/user.role.entitiy.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:wave/config.dart';
-import 'package:wave/wave.dart';
-import '../../../../core/shared_data/auth/presentation/controller/auth.controller.dart';
+part of 'page.dart';
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
@@ -20,14 +11,21 @@ class LoginPage extends ConsumerWidget {
     final loginState = ref.watch(authControllerProvider);
 
     ref.listen(authControllerProvider, (previous, next) {
-      if (next is SignUpSuccess) {
-        context.go('/home');
-      } else if (next is AuthFailed) {
-        RMAlert.showAlert(context, next.message, type: RMAlertType.error);
-      }
+      next.maybeWhen(
+        signUpSuccess: (data) {
+          context.go('/home');
+        },
+        authFailed: (message) {
+          RAlert.showAlert(context, message, type: RAlertType.error);
+        },
+        orElse: () {
+          return;
+        },
+      );
     });
 
     return Scaffold(
+      backgroundColor: RColor.background.white,
       body: Stack(
         children: [
           // Animated wave background
@@ -41,37 +39,56 @@ class LoginPage extends ConsumerWidget {
                 top: value,
                 left: 0,
                 right: 0,
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.85,
-                  child: RotatedBox(
-                    quarterTurns: 2,
-                    child: WaveWidget(
-                      config: CustomConfig(
-                        gradients: [
-                          [RMColor.background.white, RMColor.shades.blue[400]!],
-                          [
-                            RMColor.shades.blue[200]!,
-                            RMColor.shades.blue[400]!
-                          ],
-                          [
-                            RMColor.shades.blue[100]!,
-                            RMColor.shades.blue[300]!
-                          ],
-                          [RMColor.background.white, RMColor.shades.blue[200]!]
-                        ],
-                        durations: [35000, 19440, 10800, 6000],
-                        heightPercentages: [0.20, 0.23, 0.25, 0.30],
-                        gradientBegin: Alignment.bottomLeft,
-                        gradientEnd: Alignment.topRight,
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.85,
+                      child: RotatedBox(
+                        quarterTurns: 2,
+                        child: WaveWidget(
+                          config: CustomConfig(
+                            gradients: [
+                              [
+                                RColor.background.white,
+                                RColor.shades.blue[400]!
+                              ],
+                              [
+                                RColor.shades.blue[200]!,
+                                RColor.shades.blue[400]!
+                              ],
+                              [
+                                RColor.shades.blue[100]!,
+                                RColor.shades.blue[300]!
+                              ],
+                              [
+                                RColor.background.white,
+                                RColor.shades.blue[150]!
+                              ]
+                            ],
+                            durations: [35000, 19440, 10800, 6000],
+                            heightPercentages: [0.20, 0.23, 0.25, 0.30],
+                            gradientBegin: Alignment.bottomLeft,
+                            gradientEnd: Alignment.topRight,
+                          ),
+                          size: Size(
+                            double.infinity,
+                            MediaQuery.of(context).size.height * 0.9,
+                          ),
+                          waveAmplitude: 15,
+                          waveFrequency: 1.6,
+                        ),
                       ),
-                      size: Size(
-                        double.infinity,
-                        MediaQuery.of(context).size.height * 0.9,
-                      ),
-                      waveAmplitude: 15,
-                      waveFrequency: 1.6,
                     ),
-                  ),
+                    const Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: Center(
+                        child: RLogo(),
+                      ),
+                    )
+                  ],
                 ),
               );
             },
@@ -94,16 +111,16 @@ class LoginPage extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      RMText(
+                      RText(
                         'Sign Up',
-                        style: RMFont.heading.h3,
+                        style: RFont.heading.h3,
                       ),
                       const SizedBox(
                         height: 8,
                       ),
-                      RMText(
+                      RText(
                         'It\'s free and only takes a minute',
-                        style: RMFont.subheading.h7.copyWith(
+                        style: RFont.subheading.h7.copyWith(
                           decoration: TextDecoration.underline,
                         ),
                       ),
@@ -114,10 +131,10 @@ class LoginPage extends ConsumerWidget {
                         width: double.infinity,
                         child: loginState is Loading
                             ? const CircularProgressIndicator()
-                            : RMButton(
+                            : RButton(
                                 text: 'Sign up with Google',
-                                textColor: RMColor.text.dark,
-                                bgColor: RMColor.background.white,
+                                textColor: RColor.text.dark,
+                                bgColor: RColor.background.white,
                                 onPressed: () async {
                                   await loginController.signIn();
                                 },
@@ -135,21 +152,23 @@ class LoginPage extends ConsumerWidget {
                         width: double.infinity,
                         child: loginState is Loading
                             ? const CircularProgressIndicator()
-                            : RMButton(
+                            : RButton(
                                 text: 'Sign up as a guest',
-                                textColor: RMColor.text.white,
-                                bgColor: RMColor.shades.blue[400],
+                                textColor: RColor.text.white,
+                                bgColor: RColor.shades.blue[400],
                                 onPressed: () async {
-                                  await loginController.saveRole(UserRoleEntity(
+                                  await loginController
+                                      .saveRole(UserRoleEntity(
                                     role: UserRoleEnum.guest,
-                                  )).whenComplete(() {
+                                  ))
+                                      .whenComplete(() {
                                     context.go('/home');
                                   });
                                 },
                                 trailingIcon: Icon(
                                   EvaIcons.person,
                                   size: 18,
-                                  color: RMColor.text.white,
+                                  color: RColor.text.white,
                                 )),
                       ),
                     ],

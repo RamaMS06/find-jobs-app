@@ -1,30 +1,29 @@
 
-import 'package:find_job_app/core/services/result.dart';
-import 'package:find_job_app/features/home/presentation/providers/job.providers.dart';
-import 'package:find_job_app/features/home/domain/entities/job.entity.dart';
+import 'package:find_job_app/core/services/injection.container.dart';
 import 'package:find_job_app/features/home/domain/usecase/search.job.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:find_job_app/features/home/presentation/controller/job.state.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+part 'home.controller.g.dart';
 
-final homeControllerProvider =
-    StateNotifierProvider<HomeController, Result<JobEntity?>>((ref) {
-  final usecase = ref.watch(jobUseCaseProvider);
-  return HomeController(usecase);
-});
+@riverpod
+class HomeController extends _$HomeController {
+  late SearchJobUseCase _findJobUseCase;
 
-class HomeController extends StateNotifier<Result<JobEntity?>> {
-  final SearchJobUseCase findJobUseCase;
+  @override
+  JobState build() {
+    _findJobUseCase = sl<SearchJobUseCase>();
+    return const JobState.initial();
+  }
 
-  HomeController(this.findJobUseCase) : super(const Initial());
-
-  Future<void> findJobs({String? query}) async {
-    state = const Result.loading();
-    final result = await findJobUseCase.execute(query: query);
+  Future<void> findJobs({String? query, String? location}) async {
+    state = const JobState.loading();
+    final result = await _findJobUseCase.call(query: query, location: location);
     result.when(success: (data) {
-      state = Result.success(data);
+      state = JobState.success(data!);
     }, loading: () {
-      state = const Result.loading();
+      state = const JobState.loading();
     }, failed: (error) {
-      state = Result.failure(error);
+      state = JobState.failed(error);
     });
   }
 }
