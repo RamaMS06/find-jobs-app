@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:find_job_app/core/shared_data/auth/data/datasources/auth.datasource.dart';
 import 'package:find_job_app/core/shared_data/auth/data/datasources/auth.datasource.impl.dart';
@@ -17,13 +18,20 @@ import 'package:find_job_app/core/shared_data/country/domain/repositories/countr
 import 'package:find_job_app/core/shared_data/country/domain/usecase/get.country.dart';
 import 'package:find_job_app/core/shared_data/country/domain/usecase/search.country.dart';
 import 'package:find_job_app/env/firebase.env.dart';
-import 'package:find_job_app/features/home/data/datasources/job.remote.datasource.dart';
-import 'package:find_job_app/features/home/data/datasources/job.remote.datasource.impl.dart';
-import 'package:find_job_app/features/home/data/repositories/job.repository.impl.dart';
-import 'package:find_job_app/features/home/domain/repositories/job.repository.dart';
-import 'package:find_job_app/features/home/domain/usecase/search.job.dart';
+import 'package:find_job_app/features/job/data/datasources/job.remote.datasource.dart';
+import 'package:find_job_app/features/job/data/datasources/job.remote.datasource.impl.dart';
+import 'package:find_job_app/features/job/data/repositories/job.repository.impl.dart';
+import 'package:find_job_app/features/job/domain/repositories/job.repository.dart';
+import 'package:find_job_app/features/job/domain/usecase/search.job.dart';
+import 'package:find_job_app/features/task/data/datasources/task.datasource.dart';
+import 'package:find_job_app/features/task/data/datasources/task.datasource.impl.dart';
+import 'package:find_job_app/features/task/data/repositories/task.repository.impl.dart';
+import 'package:find_job_app/features/task/domain/repositories/task.repository.dart';
+import 'package:find_job_app/features/task/domain/usecase/add.task.dart';
+import 'package:find_job_app/features/task/domain/usecase/get.task.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';

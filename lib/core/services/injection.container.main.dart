@@ -3,6 +3,7 @@ part of 'injection.container.dart';
 GetIt sl = GetIt.instance;
 
 Future<void> init() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: FirebaseOptions(
       apiKey: FirebaseEnv.apiKey,
@@ -43,6 +44,12 @@ Future<void> _authInit() async {
     ..registerLazySingleton<SearchCountryUseCase>(
       () => SearchCountryUseCase(sl()),
     )
+    ..registerLazySingleton<GetTaskUseCase>(
+      () => GetTaskUseCase(sl()),
+    )
+    ..registerLazySingleton<AddTaskUseCase>(
+      () => AddTaskUseCase(sl()),
+    )
 
     // Repository
     ..registerLazySingleton<AuthRepository>(
@@ -53,6 +60,9 @@ Future<void> _authInit() async {
     )
     ..registerLazySingleton<CountryRepository>(
       () => CountryRepositoryImpl(sl()),
+    )
+    ..registerLazySingleton<TaskRepository>(
+      () => TaskRepositoryImpl(sl()),
     )
 
     // Data Source
@@ -65,6 +75,9 @@ Future<void> _authInit() async {
     ..registerLazySingleton<CountryDatasource>(
       () => CountryDatasourceImpl(),
     )
+    ..registerLazySingleton<TaskDataSource>(
+      () => TaskDataSourceImpl(),
+    )
 
     // Authentication
     ..registerLazySingleton<GoogleSignIn>(
@@ -72,6 +85,9 @@ Future<void> _authInit() async {
     )
     ..registerLazySingleton<FirebaseAuth>(
       () => FirebaseAuth.instance,
+    )
+    ..registerLazySingleton<FirebaseFirestore>(
+      () => FirebaseFirestore.instance,
     )
 
     // Package

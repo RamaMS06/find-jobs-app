@@ -2,102 +2,223 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import '../../common.dart';
 
-class RSearchField extends StatefulWidget {
+enum RTextFieldVariant { normal, textArea }
+
+class RTextField extends StatefulWidget {
   final String? hintText;
-
+  final bool isMandatory;
+  final String? title;
   final TextEditingController? controller;
-
   final Function(String)? onChanged;
-
   final Function(String)? onSubmitted;
+  final Widget? prefixIcon;
+  final String? prefixText;
+  final RTextFieldVariant variant;
+  final int? minLines;
+  final int? maxLines;
+  final TextInputType? keyboardType;
+  final FormFieldValidator<String>? validator;
 
-  const RSearchField({
+  const RTextField({
     super.key,
+    this.title,
     this.hintText,
     this.controller,
     this.onChanged,
     this.onSubmitted,
+    this.isMandatory = false,
+    this.prefixIcon,
+    this.prefixText,
+    this.variant = RTextFieldVariant.normal,
+    this.minLines,
+    this.maxLines,
+    this.keyboardType,
+    this.validator,
   });
 
+  factory RTextField.textArea({
+    Key? key,
+    String? title,
+    String? hintText,
+    TextEditingController? controller,
+    Function(String)? onChanged,
+    Function(String)? onSubmitted,
+    bool isMandatory = false,
+    Widget? prefixIcon,
+    String? prefixText,
+    int? minLines,
+    int? maxLines,
+    TextInputType? keyboardType,
+    FormFieldValidator<String>? validator,
+  }) {
+    return RTextField(
+      key: key,
+      title: title,
+      hintText: hintText,
+      controller: controller,
+      onChanged: onChanged,
+      onSubmitted: onSubmitted,
+      isMandatory: isMandatory,
+      prefixIcon: prefixIcon,
+      prefixText: prefixText,
+      variant: RTextFieldVariant.textArea,
+      minLines: minLines,
+      maxLines: maxLines,
+      keyboardType: keyboardType,
+      validator: validator,
+    );
+  }
+
   @override
-  State<RSearchField> createState() => _RSearchFieldState();
+  State<RTextField> createState() => _RTextFieldState();
 }
 
-class _RSearchFieldState extends State<RSearchField> {
+class _RTextFieldState extends State<RTextField> {
+  String? _errorText;
+  bool get _isError => _errorText != null && _errorText!.isNotEmpty;
+
+  // Remove setState from validator to avoid calling setState during build
+  String? _setupValidator(String? val) {
+    String? isValid = widget.validator?.call(val);
+    // Only update _errorText if it has changed, and schedule setState after build
+    if (_errorText != isValid) {
+      _errorText = isValid;
+      // Schedule setState after build phase to avoid exception
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() {});
+      });
+    }
+    return isValid;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      decoration: BoxDecoration(
-        color: RColor.background.white,
-        borderRadius: BorderRadius.circular(5),
-        boxShadow: [
-          BoxShadow(
-            color: RColor.background.dark.withOpacity(0.8),
-            offset: const Offset(3, 4),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        controller: widget.controller,
-        style: RFont.subheading.h6,
-        onChanged: (value) {
-          widget.onChanged?.call(value);
-        },
-        onFieldSubmitted: (value) {
-          widget.onSubmitted?.call(value);
-        },
-        cursorColor: RColor.text.dark,
-        keyboardType: TextInputType.visiblePassword,
-        decoration: InputDecoration(
-          fillColor: RColor.background.white,
-          prefixIcon: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(5),
-                bottomLeft: Radius.circular(5),
-              ),
-              color: RColor.background.info,
-              border: Border.all(
-                color: RColor.background.dark,
-                width: 2,
+    final bool isTextArea = widget.variant == RTextFieldVariant.textArea;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (widget.title != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: widget.title ?? '',
+                    style: RFont.subheading.h6.copyWith(
+                      color: RColor.text.dark,
+                    ),
+                  ),
+                  if (widget.isMandatory)
+                    TextSpan(
+                      text: ' *',
+                      style: RFont.subheading.h6.copyWith(
+                        color: RColor.text.danger,
+                      ),
+                    ),
+                ],
               ),
             ),
-            child: Icon(
-              EvaIcons.searchOutline,
-              color: RColor.icon.white,
+          ),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            color: RColor.background.white,
+            borderRadius: BorderRadius.circular(5),
+            boxShadow: [
+              BoxShadow(
+                color: RColor.background.dark.withOpacity(0.8),
+                offset: const Offset(3, 4),
+              ),
+            ],
+          ),
+          child: TextFormField(
+            validator: _setupValidator,
+            controller: widget.controller,
+            style: RFont.subheading.h6,
+            onFieldSubmitted: (value) {
+              widget.onSubmitted?.call(value);
+            },
+            cursorColor: RColor.text.dark,
+            keyboardType: widget.keyboardType ??
+                (isTextArea
+                    ? TextInputType.multiline
+                    : TextInputType.visiblePassword),
+            minLines: isTextArea ? (widget.minLines ?? 4) : 1,
+            maxLines: isTextArea ? (widget.maxLines ?? 8) : 1,
+            decoration: InputDecoration(
+              prefixIcon: widget.prefixIcon,
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: RColor.background.dark.withOpacity(0.8),
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: RColor.background.dark.withOpacity(0.8),
+                ),
+              ),
+              isDense: !isTextArea,
+              fillColor: RColor.background.white,
+              prefixText: widget.prefixText ?? '',
+              contentPadding: isTextArea
+                  ? const EdgeInsets.symmetric(horizontal: 16, vertical: 12)
+                  : const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              hintStyle: RFont.subheading.h6.copyWith(
+                color: RColor.text.lightdark,
+              ),
+              hintText: widget.hintText ?? '',
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: RColor.background.dark.withOpacity(0.8),
+                ),
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: RColor.background.dark.withOpacity(0.8),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: RColor.background.dark.withOpacity(0.8),
+                  width: 2,
+                ),
+              ),
+              errorStyle: const TextStyle(
+                height: 0,
+                fontSize: 0.01,
+              ),
+              errorText: _isError ? "" : null,
             ),
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 12,
-          ),
-          prefixText: '  ',
-          hintStyle: RFont.subheading.h6.copyWith(
-            color: RColor.text.lightdark,
-          ),
-          hintText: widget.hintText ?? 'Search a job',
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              width: 2,
-              color: RColor.background.dark.withOpacity(0.8),
-            ),
-          ),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(
-              width: 2,
-              color: RColor.background.dark.withOpacity(0.8),
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: RColor.background.dark.withOpacity(0.8),
-              width: 2,
-            ),
+            autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
         ),
-      ),
+        if (_isError)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  EvaIcons.alertTriangle,
+                  size: 12,
+                  color: RColor.text.danger,
+                ),
+                const SizedBox(width: 4),
+                RText(
+                  _errorText ?? '',
+                  style: RFont.body.small,
+                  color: RColor.text.danger,
+                ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }

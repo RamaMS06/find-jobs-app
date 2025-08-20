@@ -32,7 +32,7 @@ GoRouter _routeConfig({GoRouterRedirect? redirect}) => GoRouter(
         ),
         GoRoute(
           path: '/home',
-          builder: (context, state) => const HomePage(),
+          builder: (context, state) => const NavigationPage(),
         ),
         GoRoute(
           path: '/detail-job',
