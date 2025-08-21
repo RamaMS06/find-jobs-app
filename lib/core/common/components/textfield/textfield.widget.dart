@@ -18,6 +18,7 @@ class RTextField extends StatefulWidget {
   final int? maxLines;
   final TextInputType? keyboardType;
   final FormFieldValidator<String>? validator;
+  final TextInputAction? textInputAction;
 
   const RTextField({
     super.key,
@@ -34,6 +35,7 @@ class RTextField extends StatefulWidget {
     this.maxLines,
     this.keyboardType,
     this.validator,
+    this.textInputAction,
   });
 
   factory RTextField.textArea({
@@ -50,6 +52,7 @@ class RTextField extends StatefulWidget {
     int? maxLines,
     TextInputType? keyboardType,
     FormFieldValidator<String>? validator,
+    TextInputAction? textInputAction,
   }) {
     return RTextField(
       key: key,
@@ -66,6 +69,7 @@ class RTextField extends StatefulWidget {
       maxLines: maxLines,
       keyboardType: keyboardType,
       validator: validator,
+      textInputAction: textInputAction,
     );
   }
 
@@ -128,7 +132,10 @@ class _RTextFieldState extends State<RTextField> {
             borderRadius: BorderRadius.circular(5),
             boxShadow: [
               BoxShadow(
-                color: RColor.background.dark.withOpacity(0.8),
+                color: (_isError
+                        ? RColor.background.danger
+                        : RColor.background.dark)
+                    .withOpacity(0.8),
                 offset: const Offset(3, 4),
               ),
             ],
@@ -141,6 +148,7 @@ class _RTextFieldState extends State<RTextField> {
               widget.onSubmitted?.call(value);
             },
             cursorColor: RColor.text.dark,
+            textInputAction: widget.textInputAction ?? TextInputAction.done,
             keyboardType: widget.keyboardType ??
                 (isTextArea
                     ? TextInputType.multiline
@@ -152,13 +160,19 @@ class _RTextFieldState extends State<RTextField> {
               focusedErrorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   width: 2,
-                  color: RColor.background.dark.withOpacity(0.8),
+                  color: (_isError
+                          ? RColor.background.danger
+                          : RColor.background.dark)
+                      .withOpacity(0.8),
                 ),
               ),
               errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   width: 2,
-                  color: RColor.background.dark.withOpacity(0.8),
+                  color: (_isError
+                          ? RColor.background.danger
+                          : RColor.background.dark)
+                      .withOpacity(0.8),
                 ),
               ),
               isDense: !isTextArea,
@@ -174,18 +188,27 @@ class _RTextFieldState extends State<RTextField> {
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   width: 2,
-                  color: RColor.background.dark.withOpacity(0.8),
+                  color: (_isError
+                          ? RColor.background.danger
+                          : RColor.background.dark)
+                      .withOpacity(0.8),
                 ),
               ),
               border: OutlineInputBorder(
                 borderSide: BorderSide(
                   width: 2,
-                  color: RColor.background.dark.withOpacity(0.8),
+                  color: (_isError
+                          ? RColor.background.danger
+                          : RColor.background.dark)
+                      .withOpacity(0.8),
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: RColor.background.dark.withOpacity(0.8),
+                  color: (_isError
+                          ? RColor.background.danger
+                          : RColor.background.dark)
+                      .withOpacity(0.8),
                   width: 2,
                 ),
               ),

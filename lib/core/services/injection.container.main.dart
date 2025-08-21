@@ -50,6 +50,9 @@ Future<void> _authInit() async {
     ..registerLazySingleton<AddTaskUseCase>(
       () => AddTaskUseCase(sl()),
     )
+    ..registerLazySingleton<GetDatesUseCase>(
+      () => GetDatesUseCase(sl()),
+    )
 
     // Repository
     ..registerLazySingleton<AuthRepository>(

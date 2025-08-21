@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'task.controller.dart';
+part of 'date.controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$taskControllerHash() => r'2e081ecb095efb405a904b93adfa4cf74f14e87b';
+String _$dateControllerHash() => r'2850bee8bdd52255e4094b26367a1fc332e549af';
 
-/// See also [TaskController].
-@ProviderFor(TaskController)
-final taskControllerProvider =
-    AutoDisposeNotifierProvider<TaskController, TaskState>.internal(
-  TaskController.new,
-  name: r'taskControllerProvider',
+/// See also [DateController].
+@ProviderFor(DateController)
+final dateControllerProvider =
+    AutoDisposeNotifierProvider<DateController, DateState>.internal(
+  DateController.new,
+  name: r'dateControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$taskControllerHash,
+      : _$dateControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$TaskController = AutoDisposeNotifier<TaskState>;
+typedef _$DateController = AutoDisposeNotifier<DateState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

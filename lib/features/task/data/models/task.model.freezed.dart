@@ -22,9 +22,10 @@ TaskModel _$TaskModelFromJson(Map<String, dynamic> json) {
 mixin _$TaskModel {
   String? get title => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
-  DateTime? get date => throw _privateConstructorUsedError;
-  double? get time => throw _privateConstructorUsedError;
-  int? get colorHex => throw _privateConstructorUsedError;
+  String? get hex => throw _privateConstructorUsedError;
+  String? get estimatedInMinutes => throw _privateConstructorUsedError;
+  String? get startTime => throw _privateConstructorUsedError;
+  String? get finishTime => throw _privateConstructorUsedError;
 
   /// Serializes this TaskModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -44,9 +45,10 @@ abstract class $TaskModelCopyWith<$Res> {
   $Res call(
       {String? title,
       String? description,
-      DateTime? date,
-      double? time,
-      int? colorHex});
+      String? hex,
+      String? estimatedInMinutes,
+      String? startTime,
+      String? finishTime});
 }
 
 /// @nodoc
@@ -66,9 +68,10 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
   $Res call({
     Object? title = freezed,
     Object? description = freezed,
-    Object? date = freezed,
-    Object? time = freezed,
-    Object? colorHex = freezed,
+    Object? hex = freezed,
+    Object? estimatedInMinutes = freezed,
+    Object? startTime = freezed,
+    Object? finishTime = freezed,
   }) {
     return _then(_value.copyWith(
       title: freezed == title
@@ -79,18 +82,22 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
-      date: freezed == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      time: freezed == time
-          ? _value.time
-          : time // ignore: cast_nullable_to_non_nullable
-              as double?,
-      colorHex: freezed == colorHex
-          ? _value.colorHex
-          : colorHex // ignore: cast_nullable_to_non_nullable
-              as int?,
+      hex: freezed == hex
+          ? _value.hex
+          : hex // ignore: cast_nullable_to_non_nullable
+              as String?,
+      estimatedInMinutes: freezed == estimatedInMinutes
+          ? _value.estimatedInMinutes
+          : estimatedInMinutes // ignore: cast_nullable_to_non_nullable
+              as String?,
+      startTime: freezed == startTime
+          ? _value.startTime
+          : startTime // ignore: cast_nullable_to_non_nullable
+              as String?,
+      finishTime: freezed == finishTime
+          ? _value.finishTime
+          : finishTime // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -106,9 +113,10 @@ abstract class _$$TaskModelImplCopyWith<$Res>
   $Res call(
       {String? title,
       String? description,
-      DateTime? date,
-      double? time,
-      int? colorHex});
+      String? hex,
+      String? estimatedInMinutes,
+      String? startTime,
+      String? finishTime});
 }
 
 /// @nodoc
@@ -126,9 +134,10 @@ class __$$TaskModelImplCopyWithImpl<$Res>
   $Res call({
     Object? title = freezed,
     Object? description = freezed,
-    Object? date = freezed,
-    Object? time = freezed,
-    Object? colorHex = freezed,
+    Object? hex = freezed,
+    Object? estimatedInMinutes = freezed,
+    Object? startTime = freezed,
+    Object? finishTime = freezed,
   }) {
     return _then(_$TaskModelImpl(
       title: freezed == title
@@ -139,18 +148,22 @@ class __$$TaskModelImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
-      date: freezed == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      time: freezed == time
-          ? _value.time
-          : time // ignore: cast_nullable_to_non_nullable
-              as double?,
-      colorHex: freezed == colorHex
-          ? _value.colorHex
-          : colorHex // ignore: cast_nullable_to_non_nullable
-              as int?,
+      hex: freezed == hex
+          ? _value.hex
+          : hex // ignore: cast_nullable_to_non_nullable
+              as String?,
+      estimatedInMinutes: freezed == estimatedInMinutes
+          ? _value.estimatedInMinutes
+          : estimatedInMinutes // ignore: cast_nullable_to_non_nullable
+              as String?,
+      startTime: freezed == startTime
+          ? _value.startTime
+          : startTime // ignore: cast_nullable_to_non_nullable
+              as String?,
+      finishTime: freezed == finishTime
+          ? _value.finishTime
+          : finishTime // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -159,7 +172,12 @@ class __$$TaskModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$TaskModelImpl implements _TaskModel {
   const _$TaskModelImpl(
-      {this.title, this.description, this.date, this.time, this.colorHex});
+      {this.title,
+      this.description,
+      this.hex,
+      this.estimatedInMinutes,
+      this.startTime,
+      this.finishTime});
 
   factory _$TaskModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$TaskModelImplFromJson(json);
@@ -169,15 +187,17 @@ class _$TaskModelImpl implements _TaskModel {
   @override
   final String? description;
   @override
-  final DateTime? date;
+  final String? hex;
   @override
-  final double? time;
+  final String? estimatedInMinutes;
   @override
-  final int? colorHex;
+  final String? startTime;
+  @override
+  final String? finishTime;
 
   @override
   String toString() {
-    return 'TaskModel(title: $title, description: $description, date: $date, time: $time, colorHex: $colorHex)';
+    return 'TaskModel(title: $title, description: $description, hex: $hex, estimatedInMinutes: $estimatedInMinutes, startTime: $startTime, finishTime: $finishTime)';
   }
 
   @override
@@ -188,16 +208,19 @@ class _$TaskModelImpl implements _TaskModel {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.date, date) || other.date == date) &&
-            (identical(other.time, time) || other.time == time) &&
-            (identical(other.colorHex, colorHex) ||
-                other.colorHex == colorHex));
+            (identical(other.hex, hex) || other.hex == hex) &&
+            (identical(other.estimatedInMinutes, estimatedInMinutes) ||
+                other.estimatedInMinutes == estimatedInMinutes) &&
+            (identical(other.startTime, startTime) ||
+                other.startTime == startTime) &&
+            (identical(other.finishTime, finishTime) ||
+                other.finishTime == finishTime));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, title, description, date, time, colorHex);
+  int get hashCode => Object.hash(runtimeType, title, description, hex,
+      estimatedInMinutes, startTime, finishTime);
 
   /// Create a copy of TaskModel
   /// with the given fields replaced by the non-null parameter values.
@@ -219,9 +242,10 @@ abstract class _TaskModel implements TaskModel {
   const factory _TaskModel(
       {final String? title,
       final String? description,
-      final DateTime? date,
-      final double? time,
-      final int? colorHex}) = _$TaskModelImpl;
+      final String? hex,
+      final String? estimatedInMinutes,
+      final String? startTime,
+      final String? finishTime}) = _$TaskModelImpl;
 
   factory _TaskModel.fromJson(Map<String, dynamic> json) =
       _$TaskModelImpl.fromJson;
@@ -231,11 +255,13 @@ abstract class _TaskModel implements TaskModel {
   @override
   String? get description;
   @override
-  DateTime? get date;
+  String? get hex;
   @override
-  double? get time;
+  String? get estimatedInMinutes;
   @override
-  int? get colorHex;
+  String? get startTime;
+  @override
+  String? get finishTime;
 
   /// Create a copy of TaskModel
   /// with the given fields replaced by the non-null parameter values.

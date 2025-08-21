@@ -17,12 +17,21 @@ class _MyWidgetState extends ConsumerState<TaskPage>
     super.initState();
     _calendarScrollController = ScrollController();
 
+    _setupInitialData();
+  }
+
+  void _setupInitialData() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(taskControllerProvider.notifier).getTasks(_currentDate);
+      ref
+          .read(taskControllerProvider.notifier)
+          .getTasks(ref.read(selectableDateProvider));
+      ref.read(dateControllerProvider.notifier).getDates();
 
       // Auto-scroll to current date on init
-      final currentDateIndex = _currentDate.day - 1;
-      _scrollToSelectedDate(currentDateIndex);
+      final currentDateIndex = ref.read(selectableDateProvider).day - 1;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToSelectedDate(currentDateIndex);
+      });
     });
   }
 
@@ -32,15 +41,22 @@ class _MyWidgetState extends ConsumerState<TaskPage>
     super.dispose();
   }
 
-  void _scrollToSelectedDate(int selectedIndex) {
-    if (_calendarScrollController.hasClients) {
-      // Calculate the scroll position
-      // Each item width is 45px + 8px separator = 53px total
-      const itemWidth = 53.0;
-      const padding = 16.0;
+  /// Fixes scrollToSelectedDate to always wait for scrollController to be attached and layout to be ready.
+  void _scrollToSelectedDate(int selectedIndex) async {
+    // Each item width is 45px + 8px separator = 53px total
+    const itemWidth = 53.0;
+    const padding = 16.0;
+
+    // Wait until the controller has attached clients and the layout is ready
+    Future<void> tryScroll() async {
+      if (!_calendarScrollController.hasClients) {
+        await Future.delayed(const Duration(milliseconds: 10));
+        return tryScroll();
+      }
 
       // Get the viewport width to center the selected item
-      final viewportWidth = MediaQuery.of(context).size.width;
+      final viewportWidth =
+          context.mounted ? MediaQuery.of(context).size.width : 0.0;
       final targetPosition = (selectedIndex * itemWidth) -
           (viewportWidth / 2) +
           (itemWidth / 2) +
@@ -51,16 +67,27 @@ class _MyWidgetState extends ConsumerState<TaskPage>
           _calendarScrollController.position.maxScrollExtent;
       final clampedPosition = targetPosition.clamp(0.0, maxScrollExtent);
 
-      _calendarScrollController.animateTo(
-        clampedPosition,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+      // Only animate if the controller is still attached
+      if (_calendarScrollController.hasClients) {
+        _calendarScrollController.animateTo(
+          clampedPosition,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+
+    // Schedule after the current frame to ensure layout is ready
+    if (mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        tryScroll();
+      });
     }
   }
 
   Widget _buildHeader() {
     final selectableDate = ref.watch(selectableDateProvider);
+    final refDates = ref.watch(dateControllerProvider);
 
     // Listen for changes in selectableDate and auto-scroll
     ref.listen<DateTime>(selectableDateProvider, (previous, next) {
@@ -132,171 +159,181 @@ class _MyWidgetState extends ConsumerState<TaskPage>
         const SizedBox(
           height: 16,
         ),
-        ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxHeight: 100,
-            ),
-            child: Builder(
-              builder: (context) {
-                // Get the first day of the current month
-                final firstDayOfMonth =
-                    DateTime(_currentDate.year, _currentDate.month, 1);
-                // Get the number of days in the current month
-                final nextMonth =
-                    DateTime(_currentDate.year, _currentDate.month + 1, 1);
-                final daysInMonth =
-                    nextMonth.difference(firstDayOfMonth).inDays;
+        refDates.when(
+            initial: () => const SizedBox.shrink(),
+            loading: () => const SizedBox.shrink(),
+            success: (listDate) {
+              return ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxHeight: 100,
+                  ),
+                  child: Builder(
+                    builder: (context) {
+                      // Get the first day of the current month
+                      final firstDayOfMonth =
+                          DateTime(_currentDate.year, _currentDate.month, 1);
+                      // Get the number of days in the current month
+                      final nextMonth = DateTime(
+                          _currentDate.year, _currentDate.month + 1, 1);
+                      final daysInMonth =
+                          nextMonth.difference(firstDayOfMonth).inDays;
 
-                return MediaQuery.removePadding(
-                  removeLeft: true,
-                  removeRight: true,
-                  context: context,
-                  child: ListView.separated(
-                    controller: _calendarScrollController,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    physics: const ClampingScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: daysInMonth,
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(
-                        width: 8,
-                      );
-                    },
-                    itemBuilder: (context, index) {
-                      final date = firstDayOfMonth.add(Duration(days: index));
-                      // Detect if the day is Saturday or Sunday
-                      final isSaturday = date.weekday == DateTime.saturday;
-                      final isSunday = date.weekday == DateTime.sunday;
-                      final dayColor = (isSaturday || isSunday)
-                          ? const Color(0xFFEF9A9A)
-                          : const Color(0xFF64B5F6);
+                      return MediaQuery.removePadding(
+                        removeLeft: true,
+                        removeRight: true,
+                        context: context,
+                        child: ListView.separated(
+                          controller: _calendarScrollController,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          physics: const ClampingScrollPhysics(),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: daysInMonth,
+                          separatorBuilder: (context, index) {
+                            return const SizedBox(
+                              width: 8,
+                            );
+                          },
+                          itemBuilder: (context, index) {
+                            final date =
+                                firstDayOfMonth.add(Duration(days: index));
+                            // Detect if the day is Saturday or Sunday
+                            final isSaturday =
+                                date.weekday == DateTime.saturday;
+                            final isSunday = date.weekday == DateTime.sunday;
 
-                      // Check if this date is the selected date (compare only year, month, day)
-                      final isSelected = selectableDate.year == date.year &&
-                          selectableDate.month == date.month &&
-                          selectableDate.day == date.day;
+                            // Check if this date is the selected date (compare only year, month, day)
+                            final isSelected =
+                                selectableDate.year == date.year &&
+                                    selectableDate.month == date.month &&
+                                    selectableDate.day == date.day;
 
-                      return GestureDetector(
-                        onTap: () {
-                          ref.read(selectableDateProvider.notifier).state =
-                              date;
-                          if (selectableDate != date) {
-                            ref
-                                .read(taskControllerProvider.notifier)
-                                .getTasks(date);
-                          }
+                            // Only show the date if it's in updatedListDate
+                            final isInListDate = listDate.any((d) =>
+                                d.year == date.year &&
+                                d.month == date.month &&
+                                d.day == date.day);
 
-                          // Auto-scroll to the selected date
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            _scrollToSelectedDate(index);
-                          });
-                        },
-                        child: Column(
-                          children: [
-                            RText(
-                              DateFormat('EE').format(date),
-                              style: RFont.body.small,
-                              color: isSaturday || isSunday
-                                  ? RColor.text.danger
-                                  : isSelected
-                                      ? RColor.background.success
-                                      : const Color(0xFF64B5F6),
-                            ),
-                            const SizedBox(
-                              height: 4,
-                            ),
-                            Container(
-                              width: 45,
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: isSelected
-                                      ? RColor.background.success
-                                      : RColor.background.light,
-                                  width: 1,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: RColor.background.dark
-                                        .withOpacity(0.05),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    width: 45,
-                                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10),
-                                      ),
-                                      border: Border.all(
-                                        color: isSelected
-                                            ? RColor.background.success
-                                                .withOpacity(0.15)
-                                            : (dayColor),
-                                        width: 1,
-                                      ),
-                                      color: isSelected
+                            return Column(
+                              children: [
+                                RText(
+                                  DateFormat('EE').format(date),
+                                  style: RFont.body.small,
+                                  color: isSaturday || isSunday
+                                      ? RColor.text.danger
+                                      : isSelected
                                           ? RColor.background.success
-                                              .withOpacity(0.15)
-                                          : (isSaturday || isSunday
-                                              ? const Color(0xFFFFEBEE)
-                                              : const Color(0xFFB3E5FC)),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12, vertical: 4),
-                                      child: Center(
-                                        child: RText(
-                                          DateFormat('dd').format(date),
-                                          style: RFont.body.small.copyWith(
-                                            color: isSelected
-                                                ? RColor.background.success
-                                                : null,
-                                            fontWeight: isSelected
-                                                ? FontWeight.bold
-                                                : null,
+                                          : const Color(0xFF64B5F6),
+                                ),
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                RContainerShadow(
+                                  width: 45,
+                                  borderRadius: 5,
+                                  onTap: () {
+                                    ref
+                                        .read(selectableDateProvider.notifier)
+                                        .state = date;
+                                    if (selectableDate != date) {
+                                      ref
+                                          .read(taskControllerProvider.notifier)
+                                          .getTasks(date);
+                                    }
+
+                                    // Auto-scroll to the selected date
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      _scrollToSelectedDate(index);
+                                    });
+                                  },
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? RColor.background.success
+                                        : RColor.background.lightdark,
+                                    width: 0.25,
+                                  ),
+                                  color: RColor.background.white,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      AnimatedContainer(
+                                        duration:
+                                            const Duration(milliseconds: 300),
+                                        width: 45,
+                                        clipBehavior:
+                                            Clip.antiAliasWithSaveLayer,
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(5),
+                                            topRight: Radius.circular(5),
+                                          ),
+                                          color: isSelected
+                                              ? RColor.shades.green[100]
+                                              : (isSaturday || isSunday
+                                                  ? const Color(0xFFFFEBEE)
+                                                  : const Color(0xFFB3E5FC)),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 4),
+                                          child: Center(
+                                            child: RText(
+                                              DateFormat('dd').format(date),
+                                              style: RFont.body.small.copyWith(
+                                                color: isSelected
+                                                    ? RColor.background.success
+                                                    : null,
+                                                fontWeight: isSelected
+                                                    ? FontWeight.bold
+                                                    : null,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 4),
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        bottomRight: Radius.circular(10),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 4),
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.only(
+                                            bottomLeft: Radius.circular(5),
+                                            bottomRight: Radius.circular(5),
+                                          ),
+                                          color: RColor.background.white,
+                                        ),
+                                        child: Center(
+                                          child: isSelected
+                                              ? const _PulseCircle()
+                                              : isInListDate
+                                                  ? Icon(
+                                                      EvaIcons.bookmark,
+                                                      size: 16,
+                                                      color: RColor.icon.info
+                                                          .withOpacity(0.4),
+                                                    )
+                                                  : RText(
+                                                      '-',
+                                                      color:
+                                                          RColor.text.lightdark,
+                                                    ),
+                                        ),
                                       ),
-                                      color: RColor.background.white,
-                                    ),
-                                    child: Center(
-                                      child: isSelected
-                                          ? const _PulseCircle()
-                                          : const _ScribbleEffect(),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          ],
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       );
                     },
-                  ),
-                );
-              },
-            ))
+                  ));
+            },
+            failed: (error) => RText(error),
+            empty: () => const RText(
+                  'No dates',
+                ))
       ],
     );
   }
@@ -335,12 +372,14 @@ class _MyWidgetState extends ConsumerState<TaskPage>
                   width: MediaQuery.of(context).size.width,
                   borderRadius: 10,
                   padding: const EdgeInsets.all(16),
-                  color: RColor.background.light,
+                  color: datas[index].hex != null
+                      ? Color(int.parse(datas[index].hex!))
+                      : RColor.background.light,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       RText(
-                        datas[index]?.title ?? '',
+                        datas[index].title ?? '',
                         style: RFont.subheading.h5,
                         color: RColor.background.dark,
                       ),
@@ -348,7 +387,7 @@ class _MyWidgetState extends ConsumerState<TaskPage>
                         height: 8,
                       ),
                       RText(
-                        datas[index]?.description ?? '',
+                        datas[index].description ?? '',
                         style: RFont.body,
                       ),
                     ],
@@ -412,22 +451,31 @@ class _MyWidgetState extends ConsumerState<TaskPage>
     super.build(context);
     final taskController = ref.watch(taskControllerProvider);
     return Scaffold(
-        body: CustomScrollView(
-      slivers: [
-        SliverAppBar(
-            pinned: true,
-            backgroundColor: RColor.background.white,
-            floating: true,
-            snap: true,
-            elevation: 8,
-            shadowColor: RColor.background.dark.withOpacity(0.05),
-            expandedHeight: 160,
-            toolbarHeight: 160,
-            flexibleSpace: FlexibleSpaceBar(
-              background: _buildHeader(),
-            )),
-        _buildTaskList(context, taskController)
-      ],
+        body: RefreshIndicator(
+      color: RColor.background.white,
+      backgroundColor: RColor.background.info,
+      displacement: 0,
+      strokeWidth: 3,
+      onRefresh: () async {
+        _setupInitialData();
+      },
+      child: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+              pinned: true,
+              backgroundColor: RColor.background.white,
+              floating: true,
+              snap: true,
+              elevation: 8,
+              shadowColor: RColor.background.dark.withOpacity(0.05),
+              expandedHeight: 160,
+              toolbarHeight: 160,
+              flexibleSpace: FlexibleSpaceBar(
+                background: _buildHeader(),
+              )),
+          _buildTaskList(context, taskController)
+        ],
+      ),
     ));
   }
 

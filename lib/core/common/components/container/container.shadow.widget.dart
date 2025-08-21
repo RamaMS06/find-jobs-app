@@ -11,6 +11,7 @@ class RContainerShadow extends StatefulWidget {
   final EdgeInsets? padding;
   final void Function()? onTap;
   final Border? border;
+  final Color? shadowColor;
   const RContainerShadow(
       {super.key,
       this.width,
@@ -20,7 +21,8 @@ class RContainerShadow extends StatefulWidget {
       this.child,
       this.padding,
       this.onTap,
-      this.border});
+      this.border,
+      this.shadowColor});
 
   @override
   State<RContainerShadow> createState() => _RContainerShadowState();
@@ -32,32 +34,40 @@ class _RContainerShadowState extends State<RContainerShadow> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: widget.onTap != null ? () {
-          setState(() {
-            isPressed = true;
-          });
-          Future.delayed(const Duration(milliseconds: 125), () {
-            setState(() {
-              isPressed = false;
-            });
-          });
-          widget.onTap?.call();
-        } : null,
-        onTapDown: widget.onTap != null ? (_) {
-          setState(() {
-            isPressed = true;
-          });
-        } : null,
-        onTapUp: widget.onTap != null ? (_) {
-          setState(() {
-            isPressed = false;
-          });
-        } : null,
-        onTapCancel: widget.onTap != null ? () {
-          setState(() {
-            isPressed = false;
-          });
-        } : null,
+        onTap: widget.onTap != null
+            ? () {
+                setState(() {
+                  isPressed = true;
+                });
+                Future.delayed(const Duration(milliseconds: 125), () {
+                  setState(() {
+                    isPressed = false;
+                  });
+                });
+                widget.onTap?.call();
+              }
+            : null,
+        onTapDown: widget.onTap != null
+            ? (_) {
+                setState(() {
+                  isPressed = true;
+                });
+              }
+            : null,
+        onTapUp: widget.onTap != null
+            ? (_) {
+                setState(() {
+                  isPressed = false;
+                });
+              }
+            : null,
+        onTapCancel: widget.onTap != null
+            ? () {
+                setState(() {
+                  isPressed = false;
+                });
+              }
+            : null,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 125),
           transform: isPressed
@@ -75,9 +85,9 @@ class _RContainerShadowState extends State<RContainerShadow> {
                 ? []
                 : [
                     BoxShadow(
-                      color:
+                      color: widget.shadowColor ??
                           darken((widget.color ?? RColor.background.dark), 0.1),
-                      offset: const Offset(2, 3),
+                      offset: const Offset(3, 4),
                     )
                   ],
           ),

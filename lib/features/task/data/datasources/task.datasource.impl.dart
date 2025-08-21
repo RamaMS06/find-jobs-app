@@ -3,7 +3,7 @@ import 'package:find_job_app/core/services/injection.container.dart';
 import 'package:find_job_app/core/services/result.dart';
 import 'package:find_job_app/features/task/data/datasources/task.datasource.dart';
 import 'package:find_job_app/features/task/data/models/task.model.dart';
-import 'package:find_job_app/features/task/domain/entities/task.entity.dart';
+import 'package:find_job_app/features/task/domain/entities/add.task.entity.dart';
 import 'package:intl/intl.dart';
 
 class TaskDataSourceImpl implements TaskDataSource {
@@ -27,20 +27,32 @@ class TaskDataSourceImpl implements TaskDataSource {
       return Result.failed(e.toString());
     }
   }
-  
+
   @override
-  Future<Result<String>> addTask(TaskEntity task) async {
+  Future<Result<String>> addTask(
+      DateTime currentDate, AddTaskEntity task) async {
     final ref = _firebaseFirestore
         .collection('tasks')
-        .doc(DateFormat('yyyy-MM-dd').format(task.date!));
+        .doc(DateFormat('yyyy-MM-dd').format(currentDate));
 
     try {
+      // Use update with arrayUnion to add to the list if the doc exists, otherwise set with merge:true
       await ref.set({
         'data': FieldValue.arrayUnion([task.toJson()])
-      });
+      }, SetOptions(merge: true));
       return const Result.success('Task added successfully');
     } catch (e) {
       return Result.failed(e.toString());
     }
+  }
+
+  @override
+  Future<Result<List<DateTime>>> getDates() async {
+    final ref = _firebaseFirestore.collection('tasks');
+    final querySnapshot = await ref.get();
+    final dates = querySnapshot.docs
+        .map<DateTime>((doc) => DateTime.parse(doc.id))
+        .toList();
+    return Result.success(dates);
   }
 }

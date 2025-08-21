@@ -1,29 +1,19 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:find_job_app/core/common/components/component.dart';
 import 'package:find_job_app/core/common/components/container/container.shadow.widget.dart';
 import 'package:find_job_app/core/common/tokens/color/color.token.dart';
 import 'package:find_job_app/core/common/tokens/fonts/font.token.dart';
+import 'package:find_job_app/features/task/domain/entities/add.task.entity.dart';
+import 'package:find_job_app/features/task/domain/usecase/color.task.dart';
+import 'package:find_job_app/features/task/presentation/controller/date.controller.dart';
+import 'package:find_job_app/features/task/presentation/controller/task.controller.dart';
+import 'package:find_job_app/features/task/presentation/providers/task.provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
-
-class ColorTask {
-  final Color color;
-  bool isSelected;
-
-  ColorTask({
-    required this.color,
-    this.isSelected = false,
-  });
-
-  static List<ColorTask> colors = [
-    ColorTask(color: const Color(0xFFFFCDD2)),
-    ColorTask(color: const Color(0xFFE1BEE7)),
-    ColorTask(color: const Color(0xFFBBDEFB)),
-    ColorTask(color: const Color(0xFFDCEDC8)),
-  ];
-}
 
 class BottomSheetTask extends ConsumerStatefulWidget {
   final ScrollController scrollController;
@@ -34,17 +24,25 @@ class BottomSheetTask extends ConsumerStatefulWidget {
 }
 
 class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
-  TimeOfDay? _selectedTime;
+  TimeOfDay? _selectStartTime;
+
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _startTimeController = TextEditingController();
+  final TextEditingController _estimatedInMinutesController =
+      TextEditingController();
+  ColorTask _selectedColor = ColorTask.colors[0];
 
   @override
   void initState() {
     super.initState();
     final now = TimeOfDay.now();
-    _selectedTime = now;
+    _selectStartTime = now;
+    _startTimeController.text = _formatTimeOfDay(_selectStartTime);
   }
 
   Future<void> _pickTime(BuildContext context) async {
-    TimeOfDay tempPicked = _selectedTime ?? TimeOfDay.now();
+    TimeOfDay tempPicked = _selectStartTime ?? TimeOfDay.now();
     await showCupertinoModalPopup(
       context: context,
       builder: (BuildContext ctx) {
@@ -71,7 +69,7 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
                   ),
                   onPressed: () {
                     setState(() {
-                      _selectedTime = TimeOfDay(
+                      _selectStartTime = TimeOfDay(
                         hour: tempDateTime.hour,
                         minute: tempDateTime.minute,
                       );
@@ -133,6 +131,7 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RTextField(
+                    controller: _titleController,
                     title: 'Title',
                     isMandatory: true,
                     validator: (value) {
@@ -146,6 +145,7 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
                     height: 16,
                   ),
                   RTextField.textArea(
+                    controller: _descriptionController,
                     title: 'Description',
                   ),
                   const SizedBox(
@@ -185,9 +185,13 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
                           ),
                         ),
                         title: 'Start Time',
-                        controller: TextEditingController(
-                          text: _formatTimeOfDay(_selectedTime),
-                        ),
+                        controller: _startTimeController,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectStartTime =
+                                TimeOfDay.fromDateTime(DateTime.parse(value));
+                          });
+                        },
                         // suffixIcon: const Icon(Icons.access_time),
                       ),
                     ),
@@ -196,6 +200,7 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
                     height: 16,
                   ),
                   RTextField(
+                    controller: _estimatedInMinutesController,
                     title: 'Estimated in Minutes',
                     isMandatory: true,
                     validator: (value) {
@@ -204,7 +209,7 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
                       }
                       return null;
                     },
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.number,
                   ),
                   const SizedBox(
                     height: 16,
@@ -232,6 +237,7 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
                               color.isSelected = false;
                             }
                             ColorTask.colors[index].isSelected = true;
+                            _selectedColor = ColorTask.colors[index];
                           });
                         },
                         color: ColorTask.colors[index].color,
@@ -256,9 +262,24 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
             left: 16,
             child: RButton(
               text: 'Save Task',
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  _formKey.currentState?.save();
+                  await ref.read(taskControllerProvider.notifier).addTask(
+                        ref.watch(selectableDateProvider),
+                        AddTaskEntity(
+                          title: _titleController.text,
+                          desc: _descriptionController.text,
+                          startTime: _formatTimeOfDay(_selectStartTime),
+                          estimatedInMinutes:
+                              _estimatedInMinutesController.text,
+                          hex:
+                              '0x${_selectedColor.color.value.toRadixString(16).toUpperCase()}',
+                        ),
+                      );
+                  // Refresh the dates after adding a task
+                  ref.read(dateControllerProvider.notifier).getDates();
+                  // Close the bottom sheet
+                  Navigator.of(context).pop();
                 }
               },
             ),

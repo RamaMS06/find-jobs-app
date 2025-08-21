@@ -28,6 +28,7 @@ import 'package:find_job_app/features/task/data/datasources/task.datasource.impl
 import 'package:find_job_app/features/task/data/repositories/task.repository.impl.dart';
 import 'package:find_job_app/features/task/domain/repositories/task.repository.dart';
 import 'package:find_job_app/features/task/domain/usecase/add.task.dart';
+import 'package:find_job_app/features/task/domain/usecase/get.dates.dart';
 import 'package:find_job_app/features/task/domain/usecase/get.task.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

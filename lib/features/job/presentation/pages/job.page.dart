@@ -43,7 +43,6 @@ class _HomePageState extends ConsumerState<HomePage>
     );
   }
 
-
   Widget _buildHeader() {
     final user = ref.watch(authControllerProvider.notifier).currentUser;
     return Row(
@@ -98,7 +97,7 @@ class _HomePageState extends ConsumerState<HomePage>
   // Convert to SliverList for better integration with CustomScrollView
   Widget _buildJobCard(BuildContext context, job,
       {bool isGrid = false, double? height}) {
-    return RContainerStack(
+    return RContainerShadow(
       onTap: () {
         ref.read(selectedJobProvider.notifier).state = job;
         showModalBottomSheet(
@@ -114,10 +113,14 @@ class _HomePageState extends ConsumerState<HomePage>
         );
       },
       width: MediaQuery.of(context).size.width,
-      height: height ?? 55,
-      frontColor: RColor.background.white,
-      backColor: RColor.background.white,
-      backBorderColor: RColor.background.dark,
+      height: height ?? 50,
+      color: RColor.background.white,
+      borderRadius: 5,
+      shadowColor: RColor.background.lightdark,
+      border: Border.all(
+        color: RColor.background.lightdark,
+        width: 0.25
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5),
         child: isGrid
@@ -395,7 +398,7 @@ class _HomePageState extends ConsumerState<HomePage>
                 child: _buildJobCard(
                   context,
                   jobList[index],
-                  height: 80,
+                  height: 75,
                 ),
               ),
             ),

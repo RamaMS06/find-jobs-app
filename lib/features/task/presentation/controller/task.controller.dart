@@ -1,6 +1,5 @@
-
 import 'package:find_job_app/core/services/injection.container.dart';
-import 'package:find_job_app/features/task/domain/entities/task.entity.dart';
+import 'package:find_job_app/features/task/domain/entities/add.task.entity.dart';
 import 'package:find_job_app/features/task/domain/usecase/add.task.dart';
 import 'package:find_job_app/features/task/domain/usecase/get.task.dart';
 import 'package:find_job_app/features/task/presentation/controller/task.state.dart';
@@ -9,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'task.controller.g.dart';
 
 @riverpod
-class TaskController extends _$TaskController{
+class TaskController extends _$TaskController {
   late GetTaskUseCase _getTaskUseCase;
   late AddTaskUseCase _addTaskUseCase;
 
@@ -28,19 +27,19 @@ class TaskController extends _$TaskController{
       if (data.isEmpty) {
         state = const TaskState.empty();
       }
-    },
-     failed: (error) {
+    }, failed: (error) {
       state = TaskState.failed(error);
     }, loading: () {
       state = const TaskState.loading();
     });
   }
 
-  Future<void> addTask(TaskEntity task) async {
+  Future<void> addTask(DateTime currentDate, AddTaskEntity task) async {
     state = const TaskState.loading();
-    final result = await _addTaskUseCase.call(task);
+    final result = await _addTaskUseCase.call(currentDate, task);
     result.when(success: (data) {
-      state = const TaskState.success(null);
+      // After adding a task, refresh the task list for the current date
+      getTasks(currentDate);
     }, failed: (error) {
       state = TaskState.failed(error);
     }, loading: () {

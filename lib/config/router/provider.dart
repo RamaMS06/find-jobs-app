@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:find_job_app/core/common/components/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:find_job_app/features/job/home.dart';
+import 'package:find_job_app/features/job/job.dart';
 import 'package:find_job_app/features/login/login.dart';
 import 'dart:async';
 
