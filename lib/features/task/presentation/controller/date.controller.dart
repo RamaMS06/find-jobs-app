@@ -14,16 +14,8 @@ class DateController extends _$DateController {
     _getDatesUseCase = sl<GetDatesUseCase>();
     return const DateState.initial();
   }
-
-  Future<void> getDates() async {
-    state = const DateState.loading();
-    final result = await _getDatesUseCase.call();
-    result.when(success: (data) {
-      state = DateState.success(data);
-    }, failed: (error) {
-      state = DateState.failed(error);
-    }, loading: () {
-      state = const DateState.loading();
-    });
+  
+  Stream<List<DateTime>> getDates(String userId) {
+    return _getDatesUseCase.call(userId);
   }
 }

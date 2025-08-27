@@ -12,471 +12,570 @@ class _MyWidgetState extends ConsumerState<TaskPage>
   final DateTime _currentDate = DateTime.now();
   late final ScrollController _calendarScrollController;
 
+  // Store item keys for measuring their positions
+  final Map<int, GlobalKey> _itemKeys = {};
+
+  // Track if auto-scroll to today has been completed
+  bool _hasAutoScrolledToToday = false;
+
+  // Store active timers for cleanup
+  Timer? _autoScrollTimer;
+
+  static const double _itemWidth = 35.0;
+  static const double _separatorWidth = 11.0;
+  static const double _listHorizontalPadding = 11.0;
+
+  late String _userId;
+
   @override
   void initState() {
     super.initState();
     _calendarScrollController = ScrollController();
-
     _setupInitialData();
+    _setupAutoScrollToToday();
+  }
+
+  void _setupAutoScrollToToday() {
+    if (!mounted) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _scrollToTodayWithFixedWidth();
+      }
+    });
+  }
+
+  void _scrollToTodayWithFixedWidth() {
+    // Only auto-scroll to today once during initialization
+    if (_hasAutoScrolledToToday || !mounted) return;
+
+    final todayIndex = DateTime.now().day - 1;
+
+    // Cancel any existing timer
+    _autoScrollTimer?.cancel();
+
+    _autoScrollTimer = Timer(const Duration(milliseconds: 300), () {
+      if (!mounted) return;
+
+      if (_calendarScrollController.hasClients && !_hasAutoScrolledToToday) {
+        // Use the correct item width and separator width
+        const itemWidth = _itemWidth;
+        const separatorWidth = _separatorWidth;
+        const listPadding = _listHorizontalPadding;
+
+        // Calculate total width per item (item + separator)
+        const totalItemWidth = itemWidth + separatorWidth;
+
+        // Calculate the position of today's item
+        final itemPosition = (todayIndex * totalItemWidth) + listPadding;
+
+        // Get screen width to center the item
+        final screenWidth = MediaQuery.of(context).size.width;
+        final targetScroll = itemPosition - (screenWidth / 2) + (itemWidth / 2);
+
+        // Clamp to valid scroll range
+        final maxScroll = _calendarScrollController.position.maxScrollExtent;
+        final clampedScroll = targetScroll.clamp(0.0, maxScroll);
+
+        _calendarScrollController.animateTo(
+          clampedScroll,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+
+        // Mark that we've completed the auto-scroll to today
+        _hasAutoScrolledToToday = true;
+      } else if (!_hasAutoScrolledToToday && mounted) {
+        // Retry with a new timer
+        _autoScrollTimer = Timer(const Duration(milliseconds: 100), () {
+          if (mounted) _scrollToTodayWithFixedWidth();
+        });
+      }
+    });
   }
 
   void _setupInitialData() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(taskControllerProvider.notifier)
-          .getTasks(ref.read(selectableDateProvider));
-      ref.read(dateControllerProvider.notifier).getDates();
-
-      // Auto-scroll to current date on init
-      final currentDateIndex = ref.read(selectableDateProvider).day - 1;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _scrollToSelectedDate(currentDateIndex);
-      });
-    });
+    if (!mounted) return;
+    _hasAutoScrolledToToday = false;
+    _userId = ref.read(currentUserProvider)!.id ?? '';
   }
 
   @override
   void dispose() {
+    // Cancel any active timers to prevent setState after dispose
+    _autoScrollTimer?.cancel();
+    _autoScrollTimer = null;
+
+    // Dispose of the scroll controller
     _calendarScrollController.dispose();
+
     super.dispose();
   }
 
-  /// Fixes scrollToSelectedDate to always wait for scrollController to be attached and layout to be ready.
-  void _scrollToSelectedDate(int selectedIndex) async {
-    // Each item width is 45px + 8px separator = 53px total
-    const itemWidth = 53.0;
-    const padding = 16.0;
+  /// Scrolls to center the selected date in the calendar header.
+  void _scrollToSelectedDate(int selectedIndex) {
+    if (!mounted) return;
 
-    // Wait until the controller has attached clients and the layout is ready
-    Future<void> tryScroll() async {
-      if (!_calendarScrollController.hasClients) {
-        await Future.delayed(const Duration(milliseconds: 10));
-        return tryScroll();
-      }
+    // Since we use fixed width and separator, we can calculate the offset directly
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_calendarScrollController.hasClients) return;
 
-      // Get the viewport width to center the selected item
-      final viewportWidth =
-          context.mounted ? MediaQuery.of(context).size.width : 0.0;
-      final targetPosition = (selectedIndex * itemWidth) -
-          (viewportWidth / 2) +
-          (itemWidth / 2) +
-          padding;
+      // Calculate the scroll offset to center the selected item
+      const itemWidth = _itemWidth;
+      const separatorWidth = _separatorWidth;
+      const listPadding = _listHorizontalPadding;
 
-      // Clamp the position to valid scroll range
-      final maxScrollExtent =
-          _calendarScrollController.position.maxScrollExtent;
-      final clampedPosition = targetPosition.clamp(0.0, maxScrollExtent);
+      // The position of the selected item (start of item)
+      final itemPosition =
+          (selectedIndex * (itemWidth + separatorWidth)) + listPadding;
 
-      // Only animate if the controller is still attached
-      if (_calendarScrollController.hasClients) {
+      // Center the item in the viewport
+      final screenWidth = MediaQuery.of(context).size.width;
+      final targetScroll = itemPosition - (screenWidth / 2) + (itemWidth / 2);
+
+      // Clamp to valid scroll range
+      final maxScroll = _calendarScrollController.position.maxScrollExtent;
+      final minScroll = _calendarScrollController.position.minScrollExtent;
+      final clampedScroll = targetScroll.clamp(minScroll, maxScroll);
+
+      // Final mounted check before animating
+      if (mounted && _calendarScrollController.hasClients) {
         _calendarScrollController.animateTo(
-          clampedPosition,
+          clampedScroll,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
       }
-    }
-
-    // Schedule after the current frame to ensure layout is ready
-    if (mounted) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        tryScroll();
-      });
-    }
+    });
   }
 
   Widget _buildHeader() {
     final selectableDate = ref.watch(selectableDateProvider);
-    final refDates = ref.watch(dateControllerProvider);
-
-    // Listen for changes in selectableDate and auto-scroll
-    ref.listen<DateTime>(selectableDateProvider, (previous, next) {
-      if (previous != null && previous != next) {
-        // Calculate the index of the selected date
-        final selectedIndex = next.day - 1;
-
-        // Only scroll if the selected date is in the current month
-        if (next.year == _currentDate.year &&
-            next.month == _currentDate.month) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _scrollToSelectedDate(selectedIndex);
-          });
-        }
-      }
-    });
+    final user = ref.watch(authControllerProvider.notifier).currentUser;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              RText(
-                DateFormat('MMMM yyyy').format(_currentDate),
-                style: RFont.subheading.h5,
-              ),
-              RContainerShadow(
-                color: RColor.background.lightdark,
-                borderRadius: 5,
-                onTap: () {
-                  RBottomSheet.show(
-                      context: context,
-                      title: 'What to do',
-                      initialChildSize: 0.8,
-                      minChildSize: 0.8,
-                      maxChildSize: 1,
-                      builder: (context, scrollController) =>
-                          BottomSheetTask(scrollController: scrollController));
-                },
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        EvaIcons.calendarOutline,
-                        color: RColor.background.white,
-                        size: 12,
-                      ),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      RText(
-                        'Add Task',
-                        color: RColor.background.white,
-                        style: RFont.body.small,
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
+          child: RText(
+            DateFormat('MMMM yyyy').format(_currentDate),
+            style: RFont.subheading.h7,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 4, left: 16, right: 16),
+          child: RText(
+            user?.name ?? '',
+            style: RFont.heading.h4.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         const SizedBox(
-          height: 16,
+          height: 12,
         ),
-        refDates.when(
-            initial: () => const SizedBox.shrink(),
-            loading: () => const SizedBox.shrink(),
-            success: (listDate) {
-              return ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxHeight: 100,
-                  ),
-                  child: Builder(
-                    builder: (context) {
-                      // Get the first day of the current month
-                      final firstDayOfMonth =
-                          DateTime(_currentDate.year, _currentDate.month, 1);
-                      // Get the number of days in the current month
-                      final nextMonth = DateTime(
-                          _currentDate.year, _currentDate.month + 1, 1);
-                      final daysInMonth =
-                          nextMonth.difference(firstDayOfMonth).inDays;
+        // Use StreamProvider for real-time date updates
+        Consumer(
+          builder: (context, ref, child) {
+            final dateAsync = ref.watch(dateStreamProvider(_userId));
 
-                      return MediaQuery.removePadding(
-                        removeLeft: true,
-                        removeRight: true,
-                        context: context,
-                        child: ListView.separated(
-                          controller: _calendarScrollController,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          physics: const ClampingScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: daysInMonth,
-                          separatorBuilder: (context, index) {
-                            return const SizedBox(
-                              width: 8,
-                            );
-                          },
-                          itemBuilder: (context, index) {
-                            final date =
-                                firstDayOfMonth.add(Duration(days: index));
-                            // Detect if the day is Saturday or Sunday
-                            final isSaturday =
-                                date.weekday == DateTime.saturday;
-                            final isSunday = date.weekday == DateTime.sunday;
-
-                            // Check if this date is the selected date (compare only year, month, day)
-                            final isSelected =
-                                selectableDate.year == date.year &&
-                                    selectableDate.month == date.month &&
-                                    selectableDate.day == date.day;
-
-                            // Only show the date if it's in updatedListDate
-                            final isInListDate = listDate.any((d) =>
-                                d.year == date.year &&
-                                d.month == date.month &&
-                                d.day == date.day);
-
-                            return Column(
-                              children: [
-                                RText(
-                                  DateFormat('EE').format(date),
-                                  style: RFont.body.small,
-                                  color: isSaturday || isSunday
-                                      ? RColor.text.danger
-                                      : isSelected
-                                          ? RColor.background.success
-                                          : const Color(0xFF64B5F6),
-                                ),
-                                const SizedBox(
-                                  height: 4,
-                                ),
-                                RContainerShadow(
-                                  width: 45,
-                                  borderRadius: 5,
-                                  onTap: () {
-                                    ref
-                                        .read(selectableDateProvider.notifier)
-                                        .state = date;
-                                    if (selectableDate != date) {
-                                      ref
-                                          .read(taskControllerProvider.notifier)
-                                          .getTasks(date);
-                                    }
-
-                                    // Auto-scroll to the selected date
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) {
-                                      _scrollToSelectedDate(index);
-                                    });
-                                  },
-                                  border: Border.all(
-                                    color: isSelected
-                                        ? RColor.background.success
-                                        : RColor.background.lightdark,
-                                    width: 0.25,
-                                  ),
-                                  color: RColor.background.white,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      AnimatedContainer(
-                                        duration:
-                                            const Duration(milliseconds: 300),
-                                        width: 45,
-                                        clipBehavior:
-                                            Clip.antiAliasWithSaveLayer,
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(5),
-                                            topRight: Radius.circular(5),
-                                          ),
-                                          color: isSelected
-                                              ? RColor.shades.green[100]
-                                              : (isSaturday || isSunday
-                                                  ? const Color(0xFFFFEBEE)
-                                                  : const Color(0xFFB3E5FC)),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 4),
-                                          child: Center(
-                                            child: RText(
-                                              DateFormat('dd').format(date),
-                                              style: RFont.body.small.copyWith(
-                                                color: isSelected
-                                                    ? RColor.background.success
-                                                    : null,
-                                                fontWeight: isSelected
-                                                    ? FontWeight.bold
-                                                    : null,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 4),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.only(
-                                            bottomLeft: Radius.circular(5),
-                                            bottomRight: Radius.circular(5),
-                                          ),
-                                          color: RColor.background.white,
-                                        ),
-                                        child: Center(
-                                          child: isSelected
-                                              ? const _PulseCircle()
-                                              : isInListDate
-                                                  ? Icon(
-                                                      EvaIcons.bookmark,
-                                                      size: 16,
-                                                      color: RColor.icon.info
-                                                          .withOpacity(0.4),
-                                                    )
-                                                  : RText(
-                                                      '-',
-                                                      color:
-                                                          RColor.text.lightdark,
-                                                    ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ));
-            },
-            failed: (error) => RText(error),
-            empty: () => const RText(
-                  'No dates',
-                ))
+            return dateAsync.when(
+              data: (listDate) {
+                if (listDate.isEmpty) {
+                  return const RText('No dates');
+                }
+                return _buildCalendarWidget(selectableDate, listDate);
+              },
+              loading: () => const Center(child: RLoading()),
+              error: (error, stack) => RText('Error: $error'),
+            );
+          },
+        ),
       ],
     );
   }
 
-  Widget _buildTaskList(BuildContext context, TaskState task) {
-    return task.when(
-      success: (datas) {
+  Widget _buildCalendarWidget(
+      DateTime selectableDate, List<DateTime> listDate) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxHeight: 65,
+      ),
+      child: Builder(
+        builder: (context) {
+          // Get the first day of the current month
+          final firstDayOfMonth =
+              DateTime(_currentDate.year, _currentDate.month, 1);
+          // Get the number of days in the current month
+          final nextMonth =
+              DateTime(_currentDate.year, _currentDate.month + 1, 1);
+          final daysInMonth = nextMonth.difference(firstDayOfMonth).inDays;
+
+          return MediaQuery.removePadding(
+            removeLeft: true,
+            removeRight: true,
+            context: context,
+            child: ListView.separated(
+              controller: _calendarScrollController,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: _listHorizontalPadding),
+              physics: const ClampingScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: daysInMonth,
+              separatorBuilder: (context, index) {
+                return const SizedBox(
+                  width: _separatorWidth,
+                );
+              },
+              itemBuilder: (context, index) {
+                final date = firstDayOfMonth.add(Duration(days: index));
+                // Detect if the day is Saturday or Sunday
+                final isSaturday = date.weekday == DateTime.saturday;
+                final isSunday = date.weekday == DateTime.sunday;
+
+                // Check if this date is the selected date (compare only year, month, day)
+                final isSelected = selectableDate.year == date.year &&
+                    selectableDate.month == date.month &&
+                    selectableDate.day == date.day;
+
+                // Only show the date if it's in updatedListDate
+                final isInListDate = listDate.any((d) =>
+                    d.year == date.year &&
+                    d.month == date.month &&
+                    d.day == date.day);
+
+                // Assign a key for each item for measurement
+                _itemKeys[index] = _itemKeys[index] ?? GlobalKey();
+
+                return InkWell(
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
+                  onTap: () {
+                    if (!mounted) return;
+
+                    ref.read(selectableDateProvider.notifier).state = date;
+                    // No need to manually call getTasks - StreamBuilder will handle it automatically
+
+                    // Always center the selected date on tap
+                    _scrollToSelectedDate(index);
+                  },
+                  child: Container(
+                    key: _itemKeys[index],
+                    width:
+                        _itemWidth, // Fixed width for consistent calculations
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Column(
+                      children: [
+                        RText(
+                          DateFormat('EE').format(date),
+                          style: RFont.body.small,
+                          color: isSelected
+                              ? RColor.background.success
+                              : isSaturday || isSunday
+                                  ? RColor.text.danger
+                                  : RColor.background.lightdark,
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            RText(
+                              DateFormat('dd').format(date),
+                              color: isSelected
+                                  ? RColor.background.success
+                                  : (isSunday || isSaturday)
+                                      ? RColor.background.danger
+                                      : RColor.background.dark,
+                              style: RFont.subheading.h6,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(5),
+                                  bottomRight: Radius.circular(5),
+                                ),
+                                color: RColor.background.white,
+                              ),
+                              child: Center(
+                                child: isSelected
+                                    ? const _PulseCircle()
+                                    : isInListDate
+                                        ? Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 2),
+                                            child: Icon(
+                                              EvaIcons.bookmark,
+                                              size: 10,
+                                              color: (isSunday || isSaturday)
+                                                  ? RColor.background.danger
+                                                  : RColor.background.lightdark,
+                                            ),
+                                          )
+                                        : const SizedBox.shrink(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildTaskList(BuildContext context) {
+    final selectableDate = ref.watch(selectableDateProvider);
+
+    Widget widgetState(Widget child) => SliverToBoxAdapter(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 24),
+              child: child,
+            ),
+          ),
+        );
+
+    final taskAsync = ref
+        .watch(taskStreamProvider(TaskStreamParams(selectableDate, _userId)));
+
+    return taskAsync.when(
+      data: (tasks) {
+        final validTasks = tasks.whereType<TaskEntity>().toList();
+
+        if (validTasks.isEmpty) {
+          return widgetState(
+            Column(
+              children: [
+                Icon(EvaIcons.alertCircleOutline,
+                    color: RColor.background.danger, size: 64),
+                const SizedBox(height: 8),
+                const RText('No Task on this date'),
+              ],
+            ),
+          );
+        }
+
         return SliverList(
           delegate: SliverChildBuilderDelegate(
-            (context, index) => Padding(
-              key: ValueKey(datas[index]),
-              padding: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
-              child: Dismissible(
-                key: ValueKey(datas[index]),
-                direction: DismissDirection.endToStart,
-                background: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: RColor.background.danger,
+            (context, index) => _buildTaskCard(validTasks[index]),
+            childCount: validTasks.length,
+          ),
+        );
+      },
+      loading: () => widgetState(const RLoading()),
+      error: (error, stack) => widgetState(RText('Error: $error')),
+    );
+  }
+
+  Widget _buildTaskCard(TaskEntity task) {
+    return Padding(
+      key: ValueKey(task),
+      padding: const EdgeInsets.only(
+        bottom: 16,
+        left: 16,
+        right: 16,
+        top: 8,
+      ),
+      child: Dismissible(
+        key: ValueKey(task),
+        direction: DismissDirection.endToStart,
+        background: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: RColor.background.danger,
+          ),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Icon(
+                EvaIcons.trash2,
+                color: RColor.background.white,
+              ),
+            ),
+          ),
+        ),
+        onDismissed: (direction) {
+          ref.read(taskControllerProvider.notifier).deleteTask(
+                _userId,
+                task.id ?? '',
+              );
+        },
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              // Time column with divider that matches content height
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  RText(
+                    task.startTime ?? '',
+                    color: RColor.text.lightdark,
                   ),
-                  child: Align(
-                    alignment: Alignment.centerRight,
+                  Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: Icon(
-                        EvaIcons.trash2,
-                        color: RColor.background.white,
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: RDivider.vertical(
+                        variant: RDividerVariant.dashed,
+                        color: RColor.background.lightdark,
                       ),
                     ),
                   ),
-                ),
-                onDismissed: (direction) {
-                  // ref.read(taskControllerProvider.notifier).deleteTask(datas[index]);
-                },
+                  RText(
+                    task.finishTime ?? '',
+                    color: RColor.text.lightdark,
+                  )
+                ],
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              Expanded(
                 child: RContainerShadow(
                   width: MediaQuery.of(context).size.width,
                   borderRadius: 10,
                   padding: const EdgeInsets.all(16),
-                  color: datas[index].hex != null
-                      ? Color(int.parse(datas[index].hex!))
+                  color: task.isDone ?? false
+                      ? RColor.shades.blue[300]
                       : RColor.background.light,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  border: Border.all(
+                    color: RColor.background.lightdark,
+                    width: 0.15,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      RText(
-                        datas[index].title ?? '',
-                        style: RFont.subheading.h5,
-                        color: RColor.background.dark,
+                      RCheckbox(
+                        value: task.isDone ?? false,
+                        fillColor: RColor.background.white,
+                        checkColor: RColor.background.dark,
+                        onChanged: (bool? value) {
+                          // Toggle the task status - use the new value from checkbox
+                          final newStatus = value ?? false;
+
+                          ref.read(taskControllerProvider.notifier).checkedTask(
+                                _userId,
+                                task.id ?? '',
+                                newStatus,
+                              );
+                        },
                       ),
                       const SizedBox(
-                        height: 8,
+                        width: 8,
                       ),
-                      RText(
-                        datas[index].description ?? '',
-                        style: RFont.body,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            RText(
+                              task.title ?? '',
+                              style: RFont.subheading.h5,
+                              color: task.isDone ?? false
+                                  ? RColor.text.white
+                                  : RColor.text.dark,
+                            ),
+                            const SizedBox(height: 8),
+                            RText(
+                              task.description ?? 'No description',
+                              style: RFont.body,
+                              color: task.isDone ?? false
+                                  ? RColor.text.white
+                                  : RColor.text.dark,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
-            ),
-            childCount: datas.length,
-          ),
-        );
-      },
-      initial: () {
-        return const SliverToBoxAdapter(child: SizedBox.shrink());
-      },
-      loading: () {
-        return const SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Center(
-              child: RLoading(),
-            ),
-          ),
-        );
-      },
-      failed: (String message) {
-        return SliverToBoxAdapter(child: RText(message));
-      },
-      empty: () {
-        return SliverToBoxAdapter(
-            child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                EvaIcons.clipboard,
-                size: 60,
-                color: RColor.background.lightdark,
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              RText(
-                'No task ${_currentDate == DateTime.now() ? 'for today' : 'in this date'}',
-                style: RFont.subheading.h5,
-                color: RColor.text.lightdark,
-              ),
-              const SizedBox(
-                height: 8,
-              ),
             ],
-          )),
-        ));
-      },
+          ),
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final taskController = ref.watch(taskControllerProvider);
     return Scaffold(
-        body: RefreshIndicator(
-      color: RColor.background.white,
-      backgroundColor: RColor.background.info,
-      displacement: 0,
-      strokeWidth: 3,
-      onRefresh: () async {
-        _setupInitialData();
-      },
-      child: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-              pinned: true,
-              backgroundColor: RColor.background.white,
-              floating: true,
-              snap: true,
-              elevation: 8,
-              shadowColor: RColor.background.dark.withOpacity(0.05),
-              expandedHeight: 160,
-              toolbarHeight: 160,
-              flexibleSpace: FlexibleSpaceBar(
-                background: _buildHeader(),
-              )),
-          _buildTaskList(context, taskController)
-        ],
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(top: 12),
+        child: RButton(
+          padding: const EdgeInsets.all(8),
+          borderRadius: 999,
+          border: Border.all(
+            color: RColor.background.dark,
+            width: 0.25,
+          ),
+          constraints: const BoxConstraints(),
+          bgColor: RColor.background.white,
+          icon: Icon(
+            Icons.add_rounded,
+            color: RColor.background.lightdark,
+          ),
+          onPressed: () {
+            if (!mounted) return;
+
+            RBottomSheet.show(
+              context: context,
+              title: 'What to do',
+              initialChildSize: 0.8,
+              minChildSize: 0.8,
+              maxChildSize: 1,
+              builder: (context, scrollController) => BottomSheetTask(
+                scrollController: scrollController,
+              ),
+            );
+          },
+        ),
       ),
-    ));
+      body: RefreshIndicator(
+        color: RColor.background.white,
+        backgroundColor: RColor.background.info,
+        displacement: 0,
+        strokeWidth: 3,
+        onRefresh: () async {
+          if (!mounted) return;
+
+          // StreamBuilder handles data refreshing automatically
+          // Just reset the auto-scroll functionality
+          _setupInitialData();
+          _setupAutoScrollToToday();
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+                pinned: true,
+                backgroundColor: RColor.background.white,
+                floating: true,
+                snap: true,
+                elevation: 8,
+                shadowColor: RColor.background.dark.withOpacity(0.25),
+                expandedHeight: 140,
+                toolbarHeight: 140,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: _buildHeader(),
+                )),
+            _buildTaskList(context)
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -485,7 +584,7 @@ class _MyWidgetState extends ConsumerState<TaskPage>
 
 /// PulseCircle widget for pulsing effect
 class _PulseCircle extends StatefulWidget {
-  const _PulseCircle({Key? key}) : super(key: key);
+  const _PulseCircle();
 
   @override
   State<_PulseCircle> createState() => _PulseCircleState();
@@ -510,6 +609,7 @@ class _PulseCircleState extends State<_PulseCircle>
 
   @override
   void dispose() {
+    _controller.stop();
     _controller.dispose();
     super.dispose();
   }
@@ -518,12 +618,17 @@ class _PulseCircleState extends State<_PulseCircle>
   Widget build(BuildContext context) {
     // The color can be customized as needed
     return SizedBox(
-      height: 16,
-      width: 16,
+      height: 14,
+      width: 14,
       child: Center(
         child: AnimatedBuilder(
           animation: _animation,
           builder: (context, child) {
+            // Check if widget is still mounted before rebuilding
+            if (!mounted) {
+              return const SizedBox.shrink();
+            }
+
             return Stack(
               alignment: Alignment.center,
               children: [
@@ -539,8 +644,8 @@ class _PulseCircleState extends State<_PulseCircle>
                   ),
                 ),
                 Container(
-                  width: 8,
-                  height: 8,
+                  width: 6,
+                  height: 6,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: RColor.background.success,
@@ -553,57 +658,4 @@ class _PulseCircleState extends State<_PulseCircle>
       ),
     );
   }
-}
-
-/// ScribbleEffect widget for scribble effect when not selected
-class _ScribbleEffect extends StatelessWidget {
-  const _ScribbleEffect({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // The scribble is a custom painted widget
-    return SizedBox(
-      height: 16,
-      width: 16,
-      child: CustomPaint(
-        painter: _ScribblePainter(),
-      ),
-    );
-  }
-}
-
-class _ScribblePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = RColor.background.lightdark.withOpacity(0.4)
-      ..strokeWidth = 2.0
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
-
-    // Draw a simple scribble: a few wavy lines
-    final path = Path();
-    path.moveTo(2, size.height / 2);
-    path.cubicTo(
-      size.width * 0.25,
-      size.height * 0.2,
-      size.width * 0.75,
-      size.height * 0.8,
-      size.width - 2,
-      size.height / 2,
-    );
-    path.moveTo(2, size.height / 2 + 3);
-    path.cubicTo(
-      size.width * 0.3,
-      size.height * 0.7,
-      size.width * 0.7,
-      size.height * 0.3,
-      size.width - 2,
-      size.height / 2 + 3,
-    );
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

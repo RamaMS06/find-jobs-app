@@ -1,13 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:find_job_app/config/router/provider.dart';
 import 'package:find_job_app/core/common/components/component.dart';
-import 'package:find_job_app/core/common/components/container/container.shadow.widget.dart';
 import 'package:find_job_app/core/common/tokens/color/color.token.dart';
 import 'package:find_job_app/core/common/tokens/fonts/font.token.dart';
 import 'package:find_job_app/features/task/domain/entities/add.task.entity.dart';
-import 'package:find_job_app/features/task/domain/usecase/color.task.dart';
-import 'package:find_job_app/features/task/presentation/controller/date.controller.dart';
 import 'package:find_job_app/features/task/presentation/controller/task.controller.dart';
 import 'package:find_job_app/features/task/presentation/providers/task.provider.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +29,6 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
   final TextEditingController _startTimeController = TextEditingController();
   final TextEditingController _estimatedInMinutesController =
       TextEditingController();
-  ColorTask _selectedColor = ColorTask.colors[0];
 
   @override
   void initState() {
@@ -69,6 +66,11 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
                   ),
                   onPressed: () {
                     setState(() {
+                      _startTimeController.text =
+                          _formatTimeOfDay(TimeOfDay(
+                        hour: tempDateTime.hour,
+                        minute: tempDateTime.minute,
+                      ));
                       _selectStartTime = TimeOfDay(
                         hour: tempDateTime.hour,
                         minute: tempDateTime.minute,
@@ -112,6 +114,37 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
   }
 
   final _formKey = GlobalKey<FormState>();
+
+  Widget _buildSaveButton() {
+    final addTaskState = ref.watch(taskControllerProvider);
+
+    return addTaskState.maybeWhen(
+      orElse: () => RButton(
+        text: 'Save Task',
+        onPressed: () async {
+          if (_formKey.currentState!.validate()) {
+            final currentDate = ref.watch(selectableDateProvider);
+            await ref.read(taskControllerProvider.notifier).addTask(
+                currentDate,
+                AddTaskEntity(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  title: _titleController.text,
+                  desc: _descriptionController.text,
+                  startTime: _formatTimeOfDay(_selectStartTime),
+                  estimatedInMinutes: _estimatedInMinutesController.text,
+                ),
+                ref.read(currentUserProvider)!.id ?? '');
+
+            // No need to manually refresh - StreamBuilder will handle real-time updates
+            Navigator.of(context).pop();
+          }
+        },
+      ),
+      addingTask: () => const RButton(
+        isLoading: true,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -214,44 +247,6 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
                   const SizedBox(
                     height: 16,
                   ),
-                  RText(
-                    'Select Color',
-                    style: RFont.subheading.h6,
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Wrap(
-                    alignment: WrapAlignment.start,
-                    runAlignment: WrapAlignment.start,
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: List.generate(
-                      ColorTask.colors.length,
-                      (index) => RContainerShadow(
-                        height: 25,
-                        width: 25,
-                        onTap: () {
-                          setState(() {
-                            for (var color in ColorTask.colors) {
-                              color.isSelected = false;
-                            }
-                            ColorTask.colors[index].isSelected = true;
-                            _selectedColor = ColorTask.colors[index];
-                          });
-                        },
-                        color: ColorTask.colors[index].color,
-                        borderRadius: 999,
-                        child: ColorTask.colors[index].isSelected
-                            ? Icon(
-                                EvaIcons.checkmark,
-                                size: 16,
-                                color: RColor.icon.white,
-                              )
-                            : const SizedBox.shrink(),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),
@@ -260,29 +255,7 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
             right: 16,
             bottom: 24,
             left: 16,
-            child: RButton(
-              text: 'Save Task',
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  await ref.read(taskControllerProvider.notifier).addTask(
-                        ref.watch(selectableDateProvider),
-                        AddTaskEntity(
-                          title: _titleController.text,
-                          desc: _descriptionController.text,
-                          startTime: _formatTimeOfDay(_selectStartTime),
-                          estimatedInMinutes:
-                              _estimatedInMinutesController.text,
-                          hex:
-                              '0x${_selectedColor.color.value.toRadixString(16).toUpperCase()}',
-                        ),
-                      );
-                  // Refresh the dates after adding a task
-                  ref.read(dateControllerProvider.notifier).getDates();
-                  // Close the bottom sheet
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
+            child: _buildSaveButton(),
           ),
         ],
       ),

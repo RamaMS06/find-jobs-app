@@ -6,7 +6,7 @@ part of 'date.controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dateControllerHash() => r'2850bee8bdd52255e4094b26367a1fc332e549af';
+String _$dateControllerHash() => r'5739a1c3c5026b971a05d73c33825247b674367a';
 
 /// See also [DateController].
 @ProviderFor(DateController)

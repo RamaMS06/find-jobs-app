@@ -4,14 +4,24 @@ GetIt sl = GetIt.instance;
 
 Future<void> init() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: FirebaseOptions(
-      apiKey: FirebaseEnv.apiKey,
-      appId: Platform.isIOS ? FirebaseEnv.appIdIos : FirebaseEnv.appIdAndroid,
-      messagingSenderId: FirebaseEnv.messagingSenderId,
-      projectId: FirebaseEnv.projectId,
-    ),
-  );
+  
+  if (Firebase.apps.isEmpty) {
+    try {
+      await Firebase.initializeApp();
+    } catch (e) {
+      await Firebase.initializeApp(
+        options: FirebaseOptions(
+          apiKey: FirebaseEnv.apiKey,
+          appId: Platform.isIOS ? FirebaseEnv.appIdIos : FirebaseEnv.appIdAndroid,
+          messagingSenderId: FirebaseEnv.messagingSenderId,
+          projectId: FirebaseEnv.projectId,
+          databaseURL: FirebaseEnv.databaseURL,
+        ),
+      );
+    }
+  } else {
+  }
+  
   final prefs = await SharedPreferences.getInstance();
   sl.registerSingleton(prefs);
   await _authInit();
@@ -53,6 +63,12 @@ Future<void> _authInit() async {
     ..registerLazySingleton<GetDatesUseCase>(
       () => GetDatesUseCase(sl()),
     )
+    ..registerLazySingleton<CheckedTaskUseCase>(
+      () => CheckedTaskUseCase(sl()),
+    )
+    ..registerLazySingleton<DeleteTaskUseCase>(
+      () => DeleteTaskUseCase(sl()),
+    )
 
     // Repository
     ..registerLazySingleton<AuthRepository>(
@@ -91,6 +107,16 @@ Future<void> _authInit() async {
     )
     ..registerLazySingleton<FirebaseFirestore>(
       () => FirebaseFirestore.instance,
+    )
+    ..registerLazySingleton<FirebaseDatabase>(
+      () {
+        // Configure Firebase Database with the correct URL
+        final database = FirebaseDatabase.instanceFor(
+          app: Firebase.app(),
+          databaseURL: FirebaseEnv.databaseURL,
+        );
+        return database;
+      },
     )
 
     // Package

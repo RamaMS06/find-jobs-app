@@ -7,12 +7,13 @@ part 'task.model.g.dart';
 @freezed
 class TaskModel with _$TaskModel {
   const factory TaskModel({
+    String? id,
     String? title,
     String? description,
-    String? hex,
     String? estimatedInMinutes,
     String? startTime,
     String? finishTime,
+    bool? isDone,
   }) = _TaskModel;
 
   factory TaskModel.fromJson(Map<String, dynamic> json) =>
@@ -21,11 +22,12 @@ class TaskModel with _$TaskModel {
 
 extension TaskModelMapper on TaskModel {
   TaskEntity toEntity() => TaskEntity(
+        id: id,
         title: title,
         description: description,
-        hex: hex,
         estimatedTime: estimatedInMinutes,
         startTime: startTime,
         finishTime: finishTime,
+        isDone: isDone,
       );
 }

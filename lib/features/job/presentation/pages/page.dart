@@ -3,10 +3,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:find_job_app/core/common/common.dart';
 import 'package:find_job_app/core/common/components/container/container.shadow.widget.dart';
-import 'package:find_job_app/core/common/components/container/container.stack.widget.dart';
+
 import 'package:find_job_app/core/common/components/text/text.counting.widget.dart';
 import 'package:find_job_app/core/shared_data/auth/presentation/controller/auth.controller.dart';
-import 'package:find_job_app/features/job/presentation/controller/home.controller.dart';
+import 'package:find_job_app/features/job/presentation/controller/job.controller.dart';
 import 'package:find_job_app/features/job/presentation/controller/job.state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

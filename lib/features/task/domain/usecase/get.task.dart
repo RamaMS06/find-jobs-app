@@ -1,4 +1,4 @@
-import 'package:find_job_app/core/services/result.dart';
+
 import 'package:find_job_app/features/task/domain/entities/task.entity.dart';
 import 'package:find_job_app/features/task/domain/repositories/task.repository.dart';
 
@@ -7,7 +7,7 @@ class GetTaskUseCase {
 
   GetTaskUseCase(this.repository);
 
-  Future<Result<List<TaskEntity?>>> call(DateTime date) async {
-    return await repository.getTasks(date);
+  Stream<List<TaskEntity?>> call(DateTime date, String userId) {
+    return repository.getTasks(date, userId);
   }
 }

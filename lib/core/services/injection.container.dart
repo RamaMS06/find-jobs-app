@@ -28,12 +28,16 @@ import 'package:find_job_app/features/task/data/datasources/task.datasource.impl
 import 'package:find_job_app/features/task/data/repositories/task.repository.impl.dart';
 import 'package:find_job_app/features/task/domain/repositories/task.repository.dart';
 import 'package:find_job_app/features/task/domain/usecase/add.task.dart';
-import 'package:find_job_app/features/task/domain/usecase/get.dates.dart';
+import 'package:find_job_app/features/task/domain/usecase/checked.task.dart';
+import 'package:find_job_app/features/task/domain/usecase/delete.task.dart';
+  import 'package:find_job_app/features/task/domain/usecase/get.dates.dart';
 import 'package:find_job_app/features/task/domain/usecase/get.task.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 part 'injection.container.main.dart';

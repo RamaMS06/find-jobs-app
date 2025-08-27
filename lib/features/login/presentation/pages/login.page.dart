@@ -133,6 +133,10 @@ class LoginPage extends ConsumerWidget {
                             ? const CircularProgressIndicator()
                             : RButton(
                                 text: 'Sign up with Google',
+                                border: Border.all(
+                                  color: RColor.background.dark.withOpacity(0.8),
+                                  width: 0.25,
+                                ),
                                 textColor: RColor.text.dark,
                                 bgColor: RColor.background.white,
                                 onPressed: () async {

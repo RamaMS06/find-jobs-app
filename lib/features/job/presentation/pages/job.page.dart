@@ -53,9 +53,8 @@ class _HomePageState extends ConsumerState<HomePage>
           mainAxisSize: MainAxisSize.min,
           children: [
             RText(
-              'Hello!',
+              'Welcome!',
               style: RFont.subheading.h6,
-              color: RColor.text.dark,
             ),
             const SizedBox(
               height: 6,
@@ -117,10 +116,7 @@ class _HomePageState extends ConsumerState<HomePage>
       color: RColor.background.white,
       borderRadius: 5,
       shadowColor: RColor.background.lightdark,
-      border: Border.all(
-        color: RColor.background.lightdark,
-        width: 0.25
-      ),
+      border: Border.all(color: RColor.background.lightdark, width: 0.25),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5),
         child: isGrid
@@ -268,7 +264,10 @@ class _HomePageState extends ConsumerState<HomePage>
   }
 
   Widget _buildJobsListGridSliver(BuildContext context, JobState jobs) {
-    return jobs.when(
+    return jobs.maybeWhen(
+      orElse: () => const SliverToBoxAdapter(
+        child: SizedBox.shrink(),
+      ),
       success: (value) {
         final jobList = value.jobs ?? [];
         if (jobList.isEmpty) {
@@ -362,7 +361,10 @@ class _HomePageState extends ConsumerState<HomePage>
   }
 
   Widget _buildJobsListSliver(BuildContext context, JobState jobs) {
-    return jobs.when(
+    return jobs.maybeWhen(
+      orElse: () => const SliverToBoxAdapter(
+        child: SizedBox.shrink(),
+      ),
       success: (value) {
         final jobList = value.jobs ?? [];
         if (jobList.isEmpty) {
@@ -437,7 +439,10 @@ class _HomePageState extends ConsumerState<HomePage>
 
   // Similarly, wrap the jobs count row in a stable widget
   Widget _buildJobsCount(JobState jobs) {
-    return jobs.when(
+    return jobs.maybeWhen(
+      orElse: () => const SliverToBoxAdapter(
+        child: SizedBox.shrink(),
+      ),
       success: (value) {
         if (value.jobs?.isEmpty ?? true) {
           return const SizedBox.shrink();

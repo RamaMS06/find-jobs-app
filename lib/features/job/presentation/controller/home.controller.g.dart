@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'home.controller.dart';
+part of 'job.controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator

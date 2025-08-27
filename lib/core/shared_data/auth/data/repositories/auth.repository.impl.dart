@@ -7,6 +7,7 @@ import 'package:find_job_app/core/shared_data/auth/domain/repositories/auth.repo
 
 import '../../domain/entities/user.entity.dart';
 
+
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _authDataSource;
 

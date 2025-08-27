@@ -21,7 +21,7 @@ sealed class Result<T> extends Equatable {
 
   R when<R>({
     required R Function(T value) success,
-    required R Function()? loading,
+    R Function()? loading,
     required R Function(String message)? failed,
     R Function()? initial,
   }) {

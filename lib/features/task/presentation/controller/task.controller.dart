@@ -1,6 +1,9 @@
 import 'package:find_job_app/core/services/injection.container.dart';
 import 'package:find_job_app/features/task/domain/entities/add.task.entity.dart';
+import 'package:find_job_app/features/task/domain/entities/task.entity.dart';
 import 'package:find_job_app/features/task/domain/usecase/add.task.dart';
+import 'package:find_job_app/features/task/domain/usecase/checked.task.dart';
+import 'package:find_job_app/features/task/domain/usecase/delete.task.dart';
 import 'package:find_job_app/features/task/domain/usecase/get.task.dart';
 import 'package:find_job_app/features/task/presentation/controller/task.state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,39 +14,38 @@ part 'task.controller.g.dart';
 class TaskController extends _$TaskController {
   late GetTaskUseCase _getTaskUseCase;
   late AddTaskUseCase _addTaskUseCase;
-
+  late CheckedTaskUseCase _checkedTaskUseCase;
+  late DeleteTaskUseCase _deleteTaskUseCase;
+  
   @override
   TaskState build() {
     _getTaskUseCase = sl<GetTaskUseCase>();
     _addTaskUseCase = sl<AddTaskUseCase>();
+    _checkedTaskUseCase = sl<CheckedTaskUseCase>();
+    _deleteTaskUseCase = sl<DeleteTaskUseCase>();
     return const TaskState.initial();
   }
 
-  Future<void> getTasks(DateTime date) async {
-    state = const TaskState.loading();
-    final result = await _getTaskUseCase.call(date);
-    result.when(success: (data) {
-      state = TaskState.success(data);
-      if (data.isEmpty) {
-        state = const TaskState.empty();
-      }
-    }, failed: (error) {
-      state = TaskState.failed(error);
-    }, loading: () {
-      state = const TaskState.loading();
+  Stream<List<TaskEntity?>> getTasks(DateTime date, String userId) {
+    return _getTaskUseCase.call(date, userId);
+  }
+
+  Future<void> addTask(
+      DateTime currentDate, AddTaskEntity task, String userId) async {
+    state = const TaskState.addingTask();
+    final result = _addTaskUseCase.call(currentDate, task, userId);
+    result.listen((data) {
+      state = const TaskState.taskAdded([]);
     });
   }
 
-  Future<void> addTask(DateTime currentDate, AddTaskEntity task) async {
-    state = const TaskState.loading();
-    final result = await _addTaskUseCase.call(currentDate, task);
-    result.when(success: (data) {
-      // After adding a task, refresh the task list for the current date
-      getTasks(currentDate);
-    }, failed: (error) {
-      state = TaskState.failed(error);
-    }, loading: () {
-      state = const TaskState.loading();
-    });
+  Future<void> checkedTask(
+      String userId, String taskId, bool isDone) async {
+    await _checkedTaskUseCase.call(userId, taskId, isDone);
+    // The task list stream will automatically update the UI
+  }
+
+  Future<void> deleteTask(String userId, String taskId) async {
+    await _deleteTaskUseCase.call(userId, taskId);
   }
 }

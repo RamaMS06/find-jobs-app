@@ -15,75 +15,104 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$TaskState<T> {
+mixin _$TaskState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(T data) success,
-    required TResult Function(String message) failed,
-    required TResult Function() empty,
+    required TResult Function(List<TaskEntity> tasks) tasksLoaded,
+    required TResult Function() tasksEmpty,
+    required TResult Function() addingTask,
+    required TResult Function(List<TaskEntity> updatedTasks) taskAdded,
+    required TResult Function(String message) error,
+    required TResult Function() checkedTask,
+    required TResult Function(TaskEntity? task) taskChecked,
+    required TResult Function(String message) errorChecked,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(T data)? success,
-    TResult? Function(String message)? failed,
-    TResult? Function()? empty,
+    TResult? Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult? Function()? tasksEmpty,
+    TResult? Function()? addingTask,
+    TResult? Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult? Function(String message)? error,
+    TResult? Function()? checkedTask,
+    TResult? Function(TaskEntity? task)? taskChecked,
+    TResult? Function(String message)? errorChecked,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(T data)? success,
-    TResult Function(String message)? failed,
-    TResult Function()? empty,
+    TResult Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult Function()? tasksEmpty,
+    TResult Function()? addingTask,
+    TResult Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult Function(String message)? error,
+    TResult Function()? checkedTask,
+    TResult Function(TaskEntity? task)? taskChecked,
+    TResult Function(String message)? errorChecked,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_TaskInitial<T> value) initial,
-    required TResult Function(_TaskLoading<T> value) loading,
-    required TResult Function(_TaskSuccess<T> value) success,
-    required TResult Function(_TaskFailed<T> value) failed,
-    required TResult Function(_TaskEmpty<T> value) empty,
+    required TResult Function(_TaskInitial value) initial,
+    required TResult Function(_TaskLoading value) loading,
+    required TResult Function(_TasksLoaded value) tasksLoaded,
+    required TResult Function(_TasksEmpty value) tasksEmpty,
+    required TResult Function(_AddingTask value) addingTask,
+    required TResult Function(_TaskAdded value) taskAdded,
+    required TResult Function(_TaskError value) error,
+    required TResult Function(_CheckedTask value) checkedTask,
+    required TResult Function(_TaskChecked value) taskChecked,
+    required TResult Function(_ErrorChecked value) errorChecked,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_TaskInitial<T> value)? initial,
-    TResult? Function(_TaskLoading<T> value)? loading,
-    TResult? Function(_TaskSuccess<T> value)? success,
-    TResult? Function(_TaskFailed<T> value)? failed,
-    TResult? Function(_TaskEmpty<T> value)? empty,
+    TResult? Function(_TaskInitial value)? initial,
+    TResult? Function(_TaskLoading value)? loading,
+    TResult? Function(_TasksLoaded value)? tasksLoaded,
+    TResult? Function(_TasksEmpty value)? tasksEmpty,
+    TResult? Function(_AddingTask value)? addingTask,
+    TResult? Function(_TaskAdded value)? taskAdded,
+    TResult? Function(_TaskError value)? error,
+    TResult? Function(_CheckedTask value)? checkedTask,
+    TResult? Function(_TaskChecked value)? taskChecked,
+    TResult? Function(_ErrorChecked value)? errorChecked,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_TaskInitial<T> value)? initial,
-    TResult Function(_TaskLoading<T> value)? loading,
-    TResult Function(_TaskSuccess<T> value)? success,
-    TResult Function(_TaskFailed<T> value)? failed,
-    TResult Function(_TaskEmpty<T> value)? empty,
+    TResult Function(_TaskInitial value)? initial,
+    TResult Function(_TaskLoading value)? loading,
+    TResult Function(_TasksLoaded value)? tasksLoaded,
+    TResult Function(_TasksEmpty value)? tasksEmpty,
+    TResult Function(_AddingTask value)? addingTask,
+    TResult Function(_TaskAdded value)? taskAdded,
+    TResult Function(_TaskError value)? error,
+    TResult Function(_CheckedTask value)? checkedTask,
+    TResult Function(_TaskChecked value)? taskChecked,
+    TResult Function(_ErrorChecked value)? errorChecked,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TaskStateCopyWith<T, $Res> {
-  factory $TaskStateCopyWith(
-          TaskState<T> value, $Res Function(TaskState<T>) then) =
-      _$TaskStateCopyWithImpl<T, $Res, TaskState<T>>;
+abstract class $TaskStateCopyWith<$Res> {
+  factory $TaskStateCopyWith(TaskState value, $Res Function(TaskState) then) =
+      _$TaskStateCopyWithImpl<$Res, TaskState>;
 }
 
 /// @nodoc
-class _$TaskStateCopyWithImpl<T, $Res, $Val extends TaskState<T>>
-    implements $TaskStateCopyWith<T, $Res> {
+class _$TaskStateCopyWithImpl<$Res, $Val extends TaskState>
+    implements $TaskStateCopyWith<$Res> {
   _$TaskStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -96,18 +125,18 @@ class _$TaskStateCopyWithImpl<T, $Res, $Val extends TaskState<T>>
 }
 
 /// @nodoc
-abstract class _$$TaskInitialImplCopyWith<T, $Res> {
-  factory _$$TaskInitialImplCopyWith(_$TaskInitialImpl<T> value,
-          $Res Function(_$TaskInitialImpl<T>) then) =
-      __$$TaskInitialImplCopyWithImpl<T, $Res>;
+abstract class _$$TaskInitialImplCopyWith<$Res> {
+  factory _$$TaskInitialImplCopyWith(
+          _$TaskInitialImpl value, $Res Function(_$TaskInitialImpl) then) =
+      __$$TaskInitialImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$TaskInitialImplCopyWithImpl<T, $Res>
-    extends _$TaskStateCopyWithImpl<T, $Res, _$TaskInitialImpl<T>>
-    implements _$$TaskInitialImplCopyWith<T, $Res> {
+class __$$TaskInitialImplCopyWithImpl<$Res>
+    extends _$TaskStateCopyWithImpl<$Res, _$TaskInitialImpl>
+    implements _$$TaskInitialImplCopyWith<$Res> {
   __$$TaskInitialImplCopyWithImpl(
-      _$TaskInitialImpl<T> _value, $Res Function(_$TaskInitialImpl<T>) _then)
+      _$TaskInitialImpl _value, $Res Function(_$TaskInitialImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of TaskState
@@ -116,18 +145,18 @@ class __$$TaskInitialImplCopyWithImpl<T, $Res>
 
 /// @nodoc
 
-class _$TaskInitialImpl<T> implements _TaskInitial<T> {
+class _$TaskInitialImpl implements _TaskInitial {
   const _$TaskInitialImpl();
 
   @override
   String toString() {
-    return 'TaskState<$T>.initial()';
+    return 'TaskState.initial()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$TaskInitialImpl<T>);
+        (other.runtimeType == runtimeType && other is _$TaskInitialImpl);
   }
 
   @override
@@ -138,9 +167,14 @@ class _$TaskInitialImpl<T> implements _TaskInitial<T> {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(T data) success,
-    required TResult Function(String message) failed,
-    required TResult Function() empty,
+    required TResult Function(List<TaskEntity> tasks) tasksLoaded,
+    required TResult Function() tasksEmpty,
+    required TResult Function() addingTask,
+    required TResult Function(List<TaskEntity> updatedTasks) taskAdded,
+    required TResult Function(String message) error,
+    required TResult Function() checkedTask,
+    required TResult Function(TaskEntity? task) taskChecked,
+    required TResult Function(String message) errorChecked,
   }) {
     return initial();
   }
@@ -150,9 +184,14 @@ class _$TaskInitialImpl<T> implements _TaskInitial<T> {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(T data)? success,
-    TResult? Function(String message)? failed,
-    TResult? Function()? empty,
+    TResult? Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult? Function()? tasksEmpty,
+    TResult? Function()? addingTask,
+    TResult? Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult? Function(String message)? error,
+    TResult? Function()? checkedTask,
+    TResult? Function(TaskEntity? task)? taskChecked,
+    TResult? Function(String message)? errorChecked,
   }) {
     return initial?.call();
   }
@@ -162,9 +201,14 @@ class _$TaskInitialImpl<T> implements _TaskInitial<T> {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(T data)? success,
-    TResult Function(String message)? failed,
-    TResult Function()? empty,
+    TResult Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult Function()? tasksEmpty,
+    TResult Function()? addingTask,
+    TResult Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult Function(String message)? error,
+    TResult Function()? checkedTask,
+    TResult Function(TaskEntity? task)? taskChecked,
+    TResult Function(String message)? errorChecked,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -176,11 +220,16 @@ class _$TaskInitialImpl<T> implements _TaskInitial<T> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_TaskInitial<T> value) initial,
-    required TResult Function(_TaskLoading<T> value) loading,
-    required TResult Function(_TaskSuccess<T> value) success,
-    required TResult Function(_TaskFailed<T> value) failed,
-    required TResult Function(_TaskEmpty<T> value) empty,
+    required TResult Function(_TaskInitial value) initial,
+    required TResult Function(_TaskLoading value) loading,
+    required TResult Function(_TasksLoaded value) tasksLoaded,
+    required TResult Function(_TasksEmpty value) tasksEmpty,
+    required TResult Function(_AddingTask value) addingTask,
+    required TResult Function(_TaskAdded value) taskAdded,
+    required TResult Function(_TaskError value) error,
+    required TResult Function(_CheckedTask value) checkedTask,
+    required TResult Function(_TaskChecked value) taskChecked,
+    required TResult Function(_ErrorChecked value) errorChecked,
   }) {
     return initial(this);
   }
@@ -188,11 +237,16 @@ class _$TaskInitialImpl<T> implements _TaskInitial<T> {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_TaskInitial<T> value)? initial,
-    TResult? Function(_TaskLoading<T> value)? loading,
-    TResult? Function(_TaskSuccess<T> value)? success,
-    TResult? Function(_TaskFailed<T> value)? failed,
-    TResult? Function(_TaskEmpty<T> value)? empty,
+    TResult? Function(_TaskInitial value)? initial,
+    TResult? Function(_TaskLoading value)? loading,
+    TResult? Function(_TasksLoaded value)? tasksLoaded,
+    TResult? Function(_TasksEmpty value)? tasksEmpty,
+    TResult? Function(_AddingTask value)? addingTask,
+    TResult? Function(_TaskAdded value)? taskAdded,
+    TResult? Function(_TaskError value)? error,
+    TResult? Function(_CheckedTask value)? checkedTask,
+    TResult? Function(_TaskChecked value)? taskChecked,
+    TResult? Function(_ErrorChecked value)? errorChecked,
   }) {
     return initial?.call(this);
   }
@@ -200,11 +254,16 @@ class _$TaskInitialImpl<T> implements _TaskInitial<T> {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_TaskInitial<T> value)? initial,
-    TResult Function(_TaskLoading<T> value)? loading,
-    TResult Function(_TaskSuccess<T> value)? success,
-    TResult Function(_TaskFailed<T> value)? failed,
-    TResult Function(_TaskEmpty<T> value)? empty,
+    TResult Function(_TaskInitial value)? initial,
+    TResult Function(_TaskLoading value)? loading,
+    TResult Function(_TasksLoaded value)? tasksLoaded,
+    TResult Function(_TasksEmpty value)? tasksEmpty,
+    TResult Function(_AddingTask value)? addingTask,
+    TResult Function(_TaskAdded value)? taskAdded,
+    TResult Function(_TaskError value)? error,
+    TResult Function(_CheckedTask value)? checkedTask,
+    TResult Function(_TaskChecked value)? taskChecked,
+    TResult Function(_ErrorChecked value)? errorChecked,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -214,23 +273,23 @@ class _$TaskInitialImpl<T> implements _TaskInitial<T> {
   }
 }
 
-abstract class _TaskInitial<T> implements TaskState<T> {
-  const factory _TaskInitial() = _$TaskInitialImpl<T>;
+abstract class _TaskInitial implements TaskState {
+  const factory _TaskInitial() = _$TaskInitialImpl;
 }
 
 /// @nodoc
-abstract class _$$TaskLoadingImplCopyWith<T, $Res> {
-  factory _$$TaskLoadingImplCopyWith(_$TaskLoadingImpl<T> value,
-          $Res Function(_$TaskLoadingImpl<T>) then) =
-      __$$TaskLoadingImplCopyWithImpl<T, $Res>;
+abstract class _$$TaskLoadingImplCopyWith<$Res> {
+  factory _$$TaskLoadingImplCopyWith(
+          _$TaskLoadingImpl value, $Res Function(_$TaskLoadingImpl) then) =
+      __$$TaskLoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$TaskLoadingImplCopyWithImpl<T, $Res>
-    extends _$TaskStateCopyWithImpl<T, $Res, _$TaskLoadingImpl<T>>
-    implements _$$TaskLoadingImplCopyWith<T, $Res> {
+class __$$TaskLoadingImplCopyWithImpl<$Res>
+    extends _$TaskStateCopyWithImpl<$Res, _$TaskLoadingImpl>
+    implements _$$TaskLoadingImplCopyWith<$Res> {
   __$$TaskLoadingImplCopyWithImpl(
-      _$TaskLoadingImpl<T> _value, $Res Function(_$TaskLoadingImpl<T>) _then)
+      _$TaskLoadingImpl _value, $Res Function(_$TaskLoadingImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of TaskState
@@ -239,18 +298,18 @@ class __$$TaskLoadingImplCopyWithImpl<T, $Res>
 
 /// @nodoc
 
-class _$TaskLoadingImpl<T> implements _TaskLoading<T> {
+class _$TaskLoadingImpl implements _TaskLoading {
   const _$TaskLoadingImpl();
 
   @override
   String toString() {
-    return 'TaskState<$T>.loading()';
+    return 'TaskState.loading()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$TaskLoadingImpl<T>);
+        (other.runtimeType == runtimeType && other is _$TaskLoadingImpl);
   }
 
   @override
@@ -261,9 +320,14 @@ class _$TaskLoadingImpl<T> implements _TaskLoading<T> {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(T data) success,
-    required TResult Function(String message) failed,
-    required TResult Function() empty,
+    required TResult Function(List<TaskEntity> tasks) tasksLoaded,
+    required TResult Function() tasksEmpty,
+    required TResult Function() addingTask,
+    required TResult Function(List<TaskEntity> updatedTasks) taskAdded,
+    required TResult Function(String message) error,
+    required TResult Function() checkedTask,
+    required TResult Function(TaskEntity? task) taskChecked,
+    required TResult Function(String message) errorChecked,
   }) {
     return loading();
   }
@@ -273,9 +337,14 @@ class _$TaskLoadingImpl<T> implements _TaskLoading<T> {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(T data)? success,
-    TResult? Function(String message)? failed,
-    TResult? Function()? empty,
+    TResult? Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult? Function()? tasksEmpty,
+    TResult? Function()? addingTask,
+    TResult? Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult? Function(String message)? error,
+    TResult? Function()? checkedTask,
+    TResult? Function(TaskEntity? task)? taskChecked,
+    TResult? Function(String message)? errorChecked,
   }) {
     return loading?.call();
   }
@@ -285,9 +354,14 @@ class _$TaskLoadingImpl<T> implements _TaskLoading<T> {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(T data)? success,
-    TResult Function(String message)? failed,
-    TResult Function()? empty,
+    TResult Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult Function()? tasksEmpty,
+    TResult Function()? addingTask,
+    TResult Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult Function(String message)? error,
+    TResult Function()? checkedTask,
+    TResult Function(TaskEntity? task)? taskChecked,
+    TResult Function(String message)? errorChecked,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -299,11 +373,16 @@ class _$TaskLoadingImpl<T> implements _TaskLoading<T> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_TaskInitial<T> value) initial,
-    required TResult Function(_TaskLoading<T> value) loading,
-    required TResult Function(_TaskSuccess<T> value) success,
-    required TResult Function(_TaskFailed<T> value) failed,
-    required TResult Function(_TaskEmpty<T> value) empty,
+    required TResult Function(_TaskInitial value) initial,
+    required TResult Function(_TaskLoading value) loading,
+    required TResult Function(_TasksLoaded value) tasksLoaded,
+    required TResult Function(_TasksEmpty value) tasksEmpty,
+    required TResult Function(_AddingTask value) addingTask,
+    required TResult Function(_TaskAdded value) taskAdded,
+    required TResult Function(_TaskError value) error,
+    required TResult Function(_CheckedTask value) checkedTask,
+    required TResult Function(_TaskChecked value) taskChecked,
+    required TResult Function(_ErrorChecked value) errorChecked,
   }) {
     return loading(this);
   }
@@ -311,11 +390,16 @@ class _$TaskLoadingImpl<T> implements _TaskLoading<T> {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_TaskInitial<T> value)? initial,
-    TResult? Function(_TaskLoading<T> value)? loading,
-    TResult? Function(_TaskSuccess<T> value)? success,
-    TResult? Function(_TaskFailed<T> value)? failed,
-    TResult? Function(_TaskEmpty<T> value)? empty,
+    TResult? Function(_TaskInitial value)? initial,
+    TResult? Function(_TaskLoading value)? loading,
+    TResult? Function(_TasksLoaded value)? tasksLoaded,
+    TResult? Function(_TasksEmpty value)? tasksEmpty,
+    TResult? Function(_AddingTask value)? addingTask,
+    TResult? Function(_TaskAdded value)? taskAdded,
+    TResult? Function(_TaskError value)? error,
+    TResult? Function(_CheckedTask value)? checkedTask,
+    TResult? Function(_TaskChecked value)? taskChecked,
+    TResult? Function(_ErrorChecked value)? errorChecked,
   }) {
     return loading?.call(this);
   }
@@ -323,11 +407,16 @@ class _$TaskLoadingImpl<T> implements _TaskLoading<T> {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_TaskInitial<T> value)? initial,
-    TResult Function(_TaskLoading<T> value)? loading,
-    TResult Function(_TaskSuccess<T> value)? success,
-    TResult Function(_TaskFailed<T> value)? failed,
-    TResult Function(_TaskEmpty<T> value)? empty,
+    TResult Function(_TaskInitial value)? initial,
+    TResult Function(_TaskLoading value)? loading,
+    TResult Function(_TasksLoaded value)? tasksLoaded,
+    TResult Function(_TasksEmpty value)? tasksEmpty,
+    TResult Function(_AddingTask value)? addingTask,
+    TResult Function(_TaskAdded value)? taskAdded,
+    TResult Function(_TaskError value)? error,
+    TResult Function(_CheckedTask value)? checkedTask,
+    TResult Function(_TaskChecked value)? taskChecked,
+    TResult Function(_ErrorChecked value)? errorChecked,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -337,25 +426,25 @@ class _$TaskLoadingImpl<T> implements _TaskLoading<T> {
   }
 }
 
-abstract class _TaskLoading<T> implements TaskState<T> {
-  const factory _TaskLoading() = _$TaskLoadingImpl<T>;
+abstract class _TaskLoading implements TaskState {
+  const factory _TaskLoading() = _$TaskLoadingImpl;
 }
 
 /// @nodoc
-abstract class _$$TaskSuccessImplCopyWith<T, $Res> {
-  factory _$$TaskSuccessImplCopyWith(_$TaskSuccessImpl<T> value,
-          $Res Function(_$TaskSuccessImpl<T>) then) =
-      __$$TaskSuccessImplCopyWithImpl<T, $Res>;
+abstract class _$$TasksLoadedImplCopyWith<$Res> {
+  factory _$$TasksLoadedImplCopyWith(
+          _$TasksLoadedImpl value, $Res Function(_$TasksLoadedImpl) then) =
+      __$$TasksLoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({T data});
+  $Res call({List<TaskEntity> tasks});
 }
 
 /// @nodoc
-class __$$TaskSuccessImplCopyWithImpl<T, $Res>
-    extends _$TaskStateCopyWithImpl<T, $Res, _$TaskSuccessImpl<T>>
-    implements _$$TaskSuccessImplCopyWith<T, $Res> {
-  __$$TaskSuccessImplCopyWithImpl(
-      _$TaskSuccessImpl<T> _value, $Res Function(_$TaskSuccessImpl<T>) _then)
+class __$$TasksLoadedImplCopyWithImpl<$Res>
+    extends _$TaskStateCopyWithImpl<$Res, _$TasksLoadedImpl>
+    implements _$$TasksLoadedImplCopyWith<$Res> {
+  __$$TasksLoadedImplCopyWithImpl(
+      _$TasksLoadedImpl _value, $Res Function(_$TasksLoadedImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of TaskState
@@ -363,61 +452,70 @@ class __$$TaskSuccessImplCopyWithImpl<T, $Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? data = freezed,
+    Object? tasks = null,
   }) {
-    return _then(_$TaskSuccessImpl<T>(
-      freezed == data
-          ? _value.data
-          : data // ignore: cast_nullable_to_non_nullable
-              as T,
+    return _then(_$TasksLoadedImpl(
+      null == tasks
+          ? _value._tasks
+          : tasks // ignore: cast_nullable_to_non_nullable
+              as List<TaskEntity>,
     ));
   }
 }
 
 /// @nodoc
 
-class _$TaskSuccessImpl<T> implements _TaskSuccess<T> {
-  const _$TaskSuccessImpl(this.data);
+class _$TasksLoadedImpl implements _TasksLoaded {
+  const _$TasksLoadedImpl(final List<TaskEntity> tasks) : _tasks = tasks;
 
+  final List<TaskEntity> _tasks;
   @override
-  final T data;
+  List<TaskEntity> get tasks {
+    if (_tasks is EqualUnmodifiableListView) return _tasks;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tasks);
+  }
 
   @override
   String toString() {
-    return 'TaskState<$T>.success(data: $data)';
+    return 'TaskState.tasksLoaded(tasks: $tasks)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TaskSuccessImpl<T> &&
-            const DeepCollectionEquality().equals(other.data, data));
+            other is _$TasksLoadedImpl &&
+            const DeepCollectionEquality().equals(other._tasks, _tasks));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(data));
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_tasks));
 
   /// Create a copy of TaskState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TaskSuccessImplCopyWith<T, _$TaskSuccessImpl<T>> get copyWith =>
-      __$$TaskSuccessImplCopyWithImpl<T, _$TaskSuccessImpl<T>>(
-          this, _$identity);
+  _$$TasksLoadedImplCopyWith<_$TasksLoadedImpl> get copyWith =>
+      __$$TasksLoadedImplCopyWithImpl<_$TasksLoadedImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(T data) success,
-    required TResult Function(String message) failed,
-    required TResult Function() empty,
+    required TResult Function(List<TaskEntity> tasks) tasksLoaded,
+    required TResult Function() tasksEmpty,
+    required TResult Function() addingTask,
+    required TResult Function(List<TaskEntity> updatedTasks) taskAdded,
+    required TResult Function(String message) error,
+    required TResult Function() checkedTask,
+    required TResult Function(TaskEntity? task) taskChecked,
+    required TResult Function(String message) errorChecked,
   }) {
-    return success(data);
+    return tasksLoaded(tasks);
   }
 
   @override
@@ -425,11 +523,16 @@ class _$TaskSuccessImpl<T> implements _TaskSuccess<T> {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(T data)? success,
-    TResult? Function(String message)? failed,
-    TResult? Function()? empty,
+    TResult? Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult? Function()? tasksEmpty,
+    TResult? Function()? addingTask,
+    TResult? Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult? Function(String message)? error,
+    TResult? Function()? checkedTask,
+    TResult? Function(TaskEntity? task)? taskChecked,
+    TResult? Function(String message)? errorChecked,
   }) {
-    return success?.call(data);
+    return tasksLoaded?.call(tasks);
   }
 
   @override
@@ -437,13 +540,18 @@ class _$TaskSuccessImpl<T> implements _TaskSuccess<T> {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(T data)? success,
-    TResult Function(String message)? failed,
-    TResult Function()? empty,
+    TResult Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult Function()? tasksEmpty,
+    TResult Function()? addingTask,
+    TResult Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult Function(String message)? error,
+    TResult Function()? checkedTask,
+    TResult Function(TaskEntity? task)? taskChecked,
+    TResult Function(String message)? errorChecked,
     required TResult orElse(),
   }) {
-    if (success != null) {
-      return success(data);
+    if (tasksLoaded != null) {
+      return tasksLoaded(tasks);
     }
     return orElse();
   }
@@ -451,71 +559,589 @@ class _$TaskSuccessImpl<T> implements _TaskSuccess<T> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_TaskInitial<T> value) initial,
-    required TResult Function(_TaskLoading<T> value) loading,
-    required TResult Function(_TaskSuccess<T> value) success,
-    required TResult Function(_TaskFailed<T> value) failed,
-    required TResult Function(_TaskEmpty<T> value) empty,
+    required TResult Function(_TaskInitial value) initial,
+    required TResult Function(_TaskLoading value) loading,
+    required TResult Function(_TasksLoaded value) tasksLoaded,
+    required TResult Function(_TasksEmpty value) tasksEmpty,
+    required TResult Function(_AddingTask value) addingTask,
+    required TResult Function(_TaskAdded value) taskAdded,
+    required TResult Function(_TaskError value) error,
+    required TResult Function(_CheckedTask value) checkedTask,
+    required TResult Function(_TaskChecked value) taskChecked,
+    required TResult Function(_ErrorChecked value) errorChecked,
   }) {
-    return success(this);
+    return tasksLoaded(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_TaskInitial<T> value)? initial,
-    TResult? Function(_TaskLoading<T> value)? loading,
-    TResult? Function(_TaskSuccess<T> value)? success,
-    TResult? Function(_TaskFailed<T> value)? failed,
-    TResult? Function(_TaskEmpty<T> value)? empty,
+    TResult? Function(_TaskInitial value)? initial,
+    TResult? Function(_TaskLoading value)? loading,
+    TResult? Function(_TasksLoaded value)? tasksLoaded,
+    TResult? Function(_TasksEmpty value)? tasksEmpty,
+    TResult? Function(_AddingTask value)? addingTask,
+    TResult? Function(_TaskAdded value)? taskAdded,
+    TResult? Function(_TaskError value)? error,
+    TResult? Function(_CheckedTask value)? checkedTask,
+    TResult? Function(_TaskChecked value)? taskChecked,
+    TResult? Function(_ErrorChecked value)? errorChecked,
   }) {
-    return success?.call(this);
+    return tasksLoaded?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_TaskInitial<T> value)? initial,
-    TResult Function(_TaskLoading<T> value)? loading,
-    TResult Function(_TaskSuccess<T> value)? success,
-    TResult Function(_TaskFailed<T> value)? failed,
-    TResult Function(_TaskEmpty<T> value)? empty,
+    TResult Function(_TaskInitial value)? initial,
+    TResult Function(_TaskLoading value)? loading,
+    TResult Function(_TasksLoaded value)? tasksLoaded,
+    TResult Function(_TasksEmpty value)? tasksEmpty,
+    TResult Function(_AddingTask value)? addingTask,
+    TResult Function(_TaskAdded value)? taskAdded,
+    TResult Function(_TaskError value)? error,
+    TResult Function(_CheckedTask value)? checkedTask,
+    TResult Function(_TaskChecked value)? taskChecked,
+    TResult Function(_ErrorChecked value)? errorChecked,
     required TResult orElse(),
   }) {
-    if (success != null) {
-      return success(this);
+    if (tasksLoaded != null) {
+      return tasksLoaded(this);
     }
     return orElse();
   }
 }
 
-abstract class _TaskSuccess<T> implements TaskState<T> {
-  const factory _TaskSuccess(final T data) = _$TaskSuccessImpl<T>;
+abstract class _TasksLoaded implements TaskState {
+  const factory _TasksLoaded(final List<TaskEntity> tasks) = _$TasksLoadedImpl;
 
-  T get data;
+  List<TaskEntity> get tasks;
 
   /// Create a copy of TaskState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TaskSuccessImplCopyWith<T, _$TaskSuccessImpl<T>> get copyWith =>
+  _$$TasksLoadedImplCopyWith<_$TasksLoadedImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$TaskFailedImplCopyWith<T, $Res> {
-  factory _$$TaskFailedImplCopyWith(
-          _$TaskFailedImpl<T> value, $Res Function(_$TaskFailedImpl<T>) then) =
-      __$$TaskFailedImplCopyWithImpl<T, $Res>;
+abstract class _$$TasksEmptyImplCopyWith<$Res> {
+  factory _$$TasksEmptyImplCopyWith(
+          _$TasksEmptyImpl value, $Res Function(_$TasksEmptyImpl) then) =
+      __$$TasksEmptyImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$TasksEmptyImplCopyWithImpl<$Res>
+    extends _$TaskStateCopyWithImpl<$Res, _$TasksEmptyImpl>
+    implements _$$TasksEmptyImplCopyWith<$Res> {
+  __$$TasksEmptyImplCopyWithImpl(
+      _$TasksEmptyImpl _value, $Res Function(_$TasksEmptyImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$TasksEmptyImpl implements _TasksEmpty {
+  const _$TasksEmptyImpl();
+
+  @override
+  String toString() {
+    return 'TaskState.tasksEmpty()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$TasksEmptyImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(List<TaskEntity> tasks) tasksLoaded,
+    required TResult Function() tasksEmpty,
+    required TResult Function() addingTask,
+    required TResult Function(List<TaskEntity> updatedTasks) taskAdded,
+    required TResult Function(String message) error,
+    required TResult Function() checkedTask,
+    required TResult Function(TaskEntity? task) taskChecked,
+    required TResult Function(String message) errorChecked,
+  }) {
+    return tasksEmpty();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult? Function()? tasksEmpty,
+    TResult? Function()? addingTask,
+    TResult? Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult? Function(String message)? error,
+    TResult? Function()? checkedTask,
+    TResult? Function(TaskEntity? task)? taskChecked,
+    TResult? Function(String message)? errorChecked,
+  }) {
+    return tasksEmpty?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult Function()? tasksEmpty,
+    TResult Function()? addingTask,
+    TResult Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult Function(String message)? error,
+    TResult Function()? checkedTask,
+    TResult Function(TaskEntity? task)? taskChecked,
+    TResult Function(String message)? errorChecked,
+    required TResult orElse(),
+  }) {
+    if (tasksEmpty != null) {
+      return tasksEmpty();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_TaskInitial value) initial,
+    required TResult Function(_TaskLoading value) loading,
+    required TResult Function(_TasksLoaded value) tasksLoaded,
+    required TResult Function(_TasksEmpty value) tasksEmpty,
+    required TResult Function(_AddingTask value) addingTask,
+    required TResult Function(_TaskAdded value) taskAdded,
+    required TResult Function(_TaskError value) error,
+    required TResult Function(_CheckedTask value) checkedTask,
+    required TResult Function(_TaskChecked value) taskChecked,
+    required TResult Function(_ErrorChecked value) errorChecked,
+  }) {
+    return tasksEmpty(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_TaskInitial value)? initial,
+    TResult? Function(_TaskLoading value)? loading,
+    TResult? Function(_TasksLoaded value)? tasksLoaded,
+    TResult? Function(_TasksEmpty value)? tasksEmpty,
+    TResult? Function(_AddingTask value)? addingTask,
+    TResult? Function(_TaskAdded value)? taskAdded,
+    TResult? Function(_TaskError value)? error,
+    TResult? Function(_CheckedTask value)? checkedTask,
+    TResult? Function(_TaskChecked value)? taskChecked,
+    TResult? Function(_ErrorChecked value)? errorChecked,
+  }) {
+    return tasksEmpty?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_TaskInitial value)? initial,
+    TResult Function(_TaskLoading value)? loading,
+    TResult Function(_TasksLoaded value)? tasksLoaded,
+    TResult Function(_TasksEmpty value)? tasksEmpty,
+    TResult Function(_AddingTask value)? addingTask,
+    TResult Function(_TaskAdded value)? taskAdded,
+    TResult Function(_TaskError value)? error,
+    TResult Function(_CheckedTask value)? checkedTask,
+    TResult Function(_TaskChecked value)? taskChecked,
+    TResult Function(_ErrorChecked value)? errorChecked,
+    required TResult orElse(),
+  }) {
+    if (tasksEmpty != null) {
+      return tasksEmpty(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _TasksEmpty implements TaskState {
+  const factory _TasksEmpty() = _$TasksEmptyImpl;
+}
+
+/// @nodoc
+abstract class _$$AddingTaskImplCopyWith<$Res> {
+  factory _$$AddingTaskImplCopyWith(
+          _$AddingTaskImpl value, $Res Function(_$AddingTaskImpl) then) =
+      __$$AddingTaskImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$AddingTaskImplCopyWithImpl<$Res>
+    extends _$TaskStateCopyWithImpl<$Res, _$AddingTaskImpl>
+    implements _$$AddingTaskImplCopyWith<$Res> {
+  __$$AddingTaskImplCopyWithImpl(
+      _$AddingTaskImpl _value, $Res Function(_$AddingTaskImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$AddingTaskImpl implements _AddingTask {
+  const _$AddingTaskImpl();
+
+  @override
+  String toString() {
+    return 'TaskState.addingTask()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$AddingTaskImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(List<TaskEntity> tasks) tasksLoaded,
+    required TResult Function() tasksEmpty,
+    required TResult Function() addingTask,
+    required TResult Function(List<TaskEntity> updatedTasks) taskAdded,
+    required TResult Function(String message) error,
+    required TResult Function() checkedTask,
+    required TResult Function(TaskEntity? task) taskChecked,
+    required TResult Function(String message) errorChecked,
+  }) {
+    return addingTask();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult? Function()? tasksEmpty,
+    TResult? Function()? addingTask,
+    TResult? Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult? Function(String message)? error,
+    TResult? Function()? checkedTask,
+    TResult? Function(TaskEntity? task)? taskChecked,
+    TResult? Function(String message)? errorChecked,
+  }) {
+    return addingTask?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult Function()? tasksEmpty,
+    TResult Function()? addingTask,
+    TResult Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult Function(String message)? error,
+    TResult Function()? checkedTask,
+    TResult Function(TaskEntity? task)? taskChecked,
+    TResult Function(String message)? errorChecked,
+    required TResult orElse(),
+  }) {
+    if (addingTask != null) {
+      return addingTask();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_TaskInitial value) initial,
+    required TResult Function(_TaskLoading value) loading,
+    required TResult Function(_TasksLoaded value) tasksLoaded,
+    required TResult Function(_TasksEmpty value) tasksEmpty,
+    required TResult Function(_AddingTask value) addingTask,
+    required TResult Function(_TaskAdded value) taskAdded,
+    required TResult Function(_TaskError value) error,
+    required TResult Function(_CheckedTask value) checkedTask,
+    required TResult Function(_TaskChecked value) taskChecked,
+    required TResult Function(_ErrorChecked value) errorChecked,
+  }) {
+    return addingTask(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_TaskInitial value)? initial,
+    TResult? Function(_TaskLoading value)? loading,
+    TResult? Function(_TasksLoaded value)? tasksLoaded,
+    TResult? Function(_TasksEmpty value)? tasksEmpty,
+    TResult? Function(_AddingTask value)? addingTask,
+    TResult? Function(_TaskAdded value)? taskAdded,
+    TResult? Function(_TaskError value)? error,
+    TResult? Function(_CheckedTask value)? checkedTask,
+    TResult? Function(_TaskChecked value)? taskChecked,
+    TResult? Function(_ErrorChecked value)? errorChecked,
+  }) {
+    return addingTask?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_TaskInitial value)? initial,
+    TResult Function(_TaskLoading value)? loading,
+    TResult Function(_TasksLoaded value)? tasksLoaded,
+    TResult Function(_TasksEmpty value)? tasksEmpty,
+    TResult Function(_AddingTask value)? addingTask,
+    TResult Function(_TaskAdded value)? taskAdded,
+    TResult Function(_TaskError value)? error,
+    TResult Function(_CheckedTask value)? checkedTask,
+    TResult Function(_TaskChecked value)? taskChecked,
+    TResult Function(_ErrorChecked value)? errorChecked,
+    required TResult orElse(),
+  }) {
+    if (addingTask != null) {
+      return addingTask(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _AddingTask implements TaskState {
+  const factory _AddingTask() = _$AddingTaskImpl;
+}
+
+/// @nodoc
+abstract class _$$TaskAddedImplCopyWith<$Res> {
+  factory _$$TaskAddedImplCopyWith(
+          _$TaskAddedImpl value, $Res Function(_$TaskAddedImpl) then) =
+      __$$TaskAddedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<TaskEntity> updatedTasks});
+}
+
+/// @nodoc
+class __$$TaskAddedImplCopyWithImpl<$Res>
+    extends _$TaskStateCopyWithImpl<$Res, _$TaskAddedImpl>
+    implements _$$TaskAddedImplCopyWith<$Res> {
+  __$$TaskAddedImplCopyWithImpl(
+      _$TaskAddedImpl _value, $Res Function(_$TaskAddedImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? updatedTasks = null,
+  }) {
+    return _then(_$TaskAddedImpl(
+      null == updatedTasks
+          ? _value._updatedTasks
+          : updatedTasks // ignore: cast_nullable_to_non_nullable
+              as List<TaskEntity>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$TaskAddedImpl implements _TaskAdded {
+  const _$TaskAddedImpl(final List<TaskEntity> updatedTasks)
+      : _updatedTasks = updatedTasks;
+
+  final List<TaskEntity> _updatedTasks;
+  @override
+  List<TaskEntity> get updatedTasks {
+    if (_updatedTasks is EqualUnmodifiableListView) return _updatedTasks;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_updatedTasks);
+  }
+
+  @override
+  String toString() {
+    return 'TaskState.taskAdded(updatedTasks: $updatedTasks)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TaskAddedImpl &&
+            const DeepCollectionEquality()
+                .equals(other._updatedTasks, _updatedTasks));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_updatedTasks));
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TaskAddedImplCopyWith<_$TaskAddedImpl> get copyWith =>
+      __$$TaskAddedImplCopyWithImpl<_$TaskAddedImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(List<TaskEntity> tasks) tasksLoaded,
+    required TResult Function() tasksEmpty,
+    required TResult Function() addingTask,
+    required TResult Function(List<TaskEntity> updatedTasks) taskAdded,
+    required TResult Function(String message) error,
+    required TResult Function() checkedTask,
+    required TResult Function(TaskEntity? task) taskChecked,
+    required TResult Function(String message) errorChecked,
+  }) {
+    return taskAdded(updatedTasks);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult? Function()? tasksEmpty,
+    TResult? Function()? addingTask,
+    TResult? Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult? Function(String message)? error,
+    TResult? Function()? checkedTask,
+    TResult? Function(TaskEntity? task)? taskChecked,
+    TResult? Function(String message)? errorChecked,
+  }) {
+    return taskAdded?.call(updatedTasks);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult Function()? tasksEmpty,
+    TResult Function()? addingTask,
+    TResult Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult Function(String message)? error,
+    TResult Function()? checkedTask,
+    TResult Function(TaskEntity? task)? taskChecked,
+    TResult Function(String message)? errorChecked,
+    required TResult orElse(),
+  }) {
+    if (taskAdded != null) {
+      return taskAdded(updatedTasks);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_TaskInitial value) initial,
+    required TResult Function(_TaskLoading value) loading,
+    required TResult Function(_TasksLoaded value) tasksLoaded,
+    required TResult Function(_TasksEmpty value) tasksEmpty,
+    required TResult Function(_AddingTask value) addingTask,
+    required TResult Function(_TaskAdded value) taskAdded,
+    required TResult Function(_TaskError value) error,
+    required TResult Function(_CheckedTask value) checkedTask,
+    required TResult Function(_TaskChecked value) taskChecked,
+    required TResult Function(_ErrorChecked value) errorChecked,
+  }) {
+    return taskAdded(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_TaskInitial value)? initial,
+    TResult? Function(_TaskLoading value)? loading,
+    TResult? Function(_TasksLoaded value)? tasksLoaded,
+    TResult? Function(_TasksEmpty value)? tasksEmpty,
+    TResult? Function(_AddingTask value)? addingTask,
+    TResult? Function(_TaskAdded value)? taskAdded,
+    TResult? Function(_TaskError value)? error,
+    TResult? Function(_CheckedTask value)? checkedTask,
+    TResult? Function(_TaskChecked value)? taskChecked,
+    TResult? Function(_ErrorChecked value)? errorChecked,
+  }) {
+    return taskAdded?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_TaskInitial value)? initial,
+    TResult Function(_TaskLoading value)? loading,
+    TResult Function(_TasksLoaded value)? tasksLoaded,
+    TResult Function(_TasksEmpty value)? tasksEmpty,
+    TResult Function(_AddingTask value)? addingTask,
+    TResult Function(_TaskAdded value)? taskAdded,
+    TResult Function(_TaskError value)? error,
+    TResult Function(_CheckedTask value)? checkedTask,
+    TResult Function(_TaskChecked value)? taskChecked,
+    TResult Function(_ErrorChecked value)? errorChecked,
+    required TResult orElse(),
+  }) {
+    if (taskAdded != null) {
+      return taskAdded(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _TaskAdded implements TaskState {
+  const factory _TaskAdded(final List<TaskEntity> updatedTasks) =
+      _$TaskAddedImpl;
+
+  List<TaskEntity> get updatedTasks;
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TaskAddedImplCopyWith<_$TaskAddedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$TaskErrorImplCopyWith<$Res> {
+  factory _$$TaskErrorImplCopyWith(
+          _$TaskErrorImpl value, $Res Function(_$TaskErrorImpl) then) =
+      __$$TaskErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$$TaskFailedImplCopyWithImpl<T, $Res>
-    extends _$TaskStateCopyWithImpl<T, $Res, _$TaskFailedImpl<T>>
-    implements _$$TaskFailedImplCopyWith<T, $Res> {
-  __$$TaskFailedImplCopyWithImpl(
-      _$TaskFailedImpl<T> _value, $Res Function(_$TaskFailedImpl<T>) _then)
+class __$$TaskErrorImplCopyWithImpl<$Res>
+    extends _$TaskStateCopyWithImpl<$Res, _$TaskErrorImpl>
+    implements _$$TaskErrorImplCopyWith<$Res> {
+  __$$TaskErrorImplCopyWithImpl(
+      _$TaskErrorImpl _value, $Res Function(_$TaskErrorImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of TaskState
@@ -525,7 +1151,7 @@ class __$$TaskFailedImplCopyWithImpl<T, $Res>
   $Res call({
     Object? message = null,
   }) {
-    return _then(_$TaskFailedImpl<T>(
+    return _then(_$TaskErrorImpl(
       null == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -536,22 +1162,22 @@ class __$$TaskFailedImplCopyWithImpl<T, $Res>
 
 /// @nodoc
 
-class _$TaskFailedImpl<T> implements _TaskFailed<T> {
-  const _$TaskFailedImpl(this.message);
+class _$TaskErrorImpl implements _TaskError {
+  const _$TaskErrorImpl(this.message);
 
   @override
   final String message;
 
   @override
   String toString() {
-    return 'TaskState<$T>.failed(message: $message)';
+    return 'TaskState.error(message: $message)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TaskFailedImpl<T> &&
+            other is _$TaskErrorImpl &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -563,19 +1189,24 @@ class _$TaskFailedImpl<T> implements _TaskFailed<T> {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TaskFailedImplCopyWith<T, _$TaskFailedImpl<T>> get copyWith =>
-      __$$TaskFailedImplCopyWithImpl<T, _$TaskFailedImpl<T>>(this, _$identity);
+  _$$TaskErrorImplCopyWith<_$TaskErrorImpl> get copyWith =>
+      __$$TaskErrorImplCopyWithImpl<_$TaskErrorImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(T data) success,
-    required TResult Function(String message) failed,
-    required TResult Function() empty,
+    required TResult Function(List<TaskEntity> tasks) tasksLoaded,
+    required TResult Function() tasksEmpty,
+    required TResult Function() addingTask,
+    required TResult Function(List<TaskEntity> updatedTasks) taskAdded,
+    required TResult Function(String message) error,
+    required TResult Function() checkedTask,
+    required TResult Function(TaskEntity? task) taskChecked,
+    required TResult Function(String message) errorChecked,
   }) {
-    return failed(message);
+    return error(message);
   }
 
   @override
@@ -583,11 +1214,16 @@ class _$TaskFailedImpl<T> implements _TaskFailed<T> {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(T data)? success,
-    TResult? Function(String message)? failed,
-    TResult? Function()? empty,
+    TResult? Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult? Function()? tasksEmpty,
+    TResult? Function()? addingTask,
+    TResult? Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult? Function(String message)? error,
+    TResult? Function()? checkedTask,
+    TResult? Function(TaskEntity? task)? taskChecked,
+    TResult? Function(String message)? errorChecked,
   }) {
-    return failed?.call(message);
+    return error?.call(message);
   }
 
   @override
@@ -595,13 +1231,18 @@ class _$TaskFailedImpl<T> implements _TaskFailed<T> {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(T data)? success,
-    TResult Function(String message)? failed,
-    TResult Function()? empty,
+    TResult Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult Function()? tasksEmpty,
+    TResult Function()? addingTask,
+    TResult Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult Function(String message)? error,
+    TResult Function()? checkedTask,
+    TResult Function(TaskEntity? task)? taskChecked,
+    TResult Function(String message)? errorChecked,
     required TResult orElse(),
   }) {
-    if (failed != null) {
-      return failed(message);
+    if (error != null) {
+      return error(message);
     }
     return orElse();
   }
@@ -609,69 +1250,84 @@ class _$TaskFailedImpl<T> implements _TaskFailed<T> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_TaskInitial<T> value) initial,
-    required TResult Function(_TaskLoading<T> value) loading,
-    required TResult Function(_TaskSuccess<T> value) success,
-    required TResult Function(_TaskFailed<T> value) failed,
-    required TResult Function(_TaskEmpty<T> value) empty,
+    required TResult Function(_TaskInitial value) initial,
+    required TResult Function(_TaskLoading value) loading,
+    required TResult Function(_TasksLoaded value) tasksLoaded,
+    required TResult Function(_TasksEmpty value) tasksEmpty,
+    required TResult Function(_AddingTask value) addingTask,
+    required TResult Function(_TaskAdded value) taskAdded,
+    required TResult Function(_TaskError value) error,
+    required TResult Function(_CheckedTask value) checkedTask,
+    required TResult Function(_TaskChecked value) taskChecked,
+    required TResult Function(_ErrorChecked value) errorChecked,
   }) {
-    return failed(this);
+    return error(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_TaskInitial<T> value)? initial,
-    TResult? Function(_TaskLoading<T> value)? loading,
-    TResult? Function(_TaskSuccess<T> value)? success,
-    TResult? Function(_TaskFailed<T> value)? failed,
-    TResult? Function(_TaskEmpty<T> value)? empty,
+    TResult? Function(_TaskInitial value)? initial,
+    TResult? Function(_TaskLoading value)? loading,
+    TResult? Function(_TasksLoaded value)? tasksLoaded,
+    TResult? Function(_TasksEmpty value)? tasksEmpty,
+    TResult? Function(_AddingTask value)? addingTask,
+    TResult? Function(_TaskAdded value)? taskAdded,
+    TResult? Function(_TaskError value)? error,
+    TResult? Function(_CheckedTask value)? checkedTask,
+    TResult? Function(_TaskChecked value)? taskChecked,
+    TResult? Function(_ErrorChecked value)? errorChecked,
   }) {
-    return failed?.call(this);
+    return error?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_TaskInitial<T> value)? initial,
-    TResult Function(_TaskLoading<T> value)? loading,
-    TResult Function(_TaskSuccess<T> value)? success,
-    TResult Function(_TaskFailed<T> value)? failed,
-    TResult Function(_TaskEmpty<T> value)? empty,
+    TResult Function(_TaskInitial value)? initial,
+    TResult Function(_TaskLoading value)? loading,
+    TResult Function(_TasksLoaded value)? tasksLoaded,
+    TResult Function(_TasksEmpty value)? tasksEmpty,
+    TResult Function(_AddingTask value)? addingTask,
+    TResult Function(_TaskAdded value)? taskAdded,
+    TResult Function(_TaskError value)? error,
+    TResult Function(_CheckedTask value)? checkedTask,
+    TResult Function(_TaskChecked value)? taskChecked,
+    TResult Function(_ErrorChecked value)? errorChecked,
     required TResult orElse(),
   }) {
-    if (failed != null) {
-      return failed(this);
+    if (error != null) {
+      return error(this);
     }
     return orElse();
   }
 }
 
-abstract class _TaskFailed<T> implements TaskState<T> {
-  const factory _TaskFailed(final String message) = _$TaskFailedImpl<T>;
+abstract class _TaskError implements TaskState {
+  const factory _TaskError(final String message) = _$TaskErrorImpl;
 
   String get message;
 
   /// Create a copy of TaskState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TaskFailedImplCopyWith<T, _$TaskFailedImpl<T>> get copyWith =>
+  _$$TaskErrorImplCopyWith<_$TaskErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$TaskEmptyImplCopyWith<T, $Res> {
-  factory _$$TaskEmptyImplCopyWith(
-          _$TaskEmptyImpl<T> value, $Res Function(_$TaskEmptyImpl<T>) then) =
-      __$$TaskEmptyImplCopyWithImpl<T, $Res>;
+abstract class _$$CheckedTaskImplCopyWith<$Res> {
+  factory _$$CheckedTaskImplCopyWith(
+          _$CheckedTaskImpl value, $Res Function(_$CheckedTaskImpl) then) =
+      __$$CheckedTaskImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$TaskEmptyImplCopyWithImpl<T, $Res>
-    extends _$TaskStateCopyWithImpl<T, $Res, _$TaskEmptyImpl<T>>
-    implements _$$TaskEmptyImplCopyWith<T, $Res> {
-  __$$TaskEmptyImplCopyWithImpl(
-      _$TaskEmptyImpl<T> _value, $Res Function(_$TaskEmptyImpl<T>) _then)
+class __$$CheckedTaskImplCopyWithImpl<$Res>
+    extends _$TaskStateCopyWithImpl<$Res, _$CheckedTaskImpl>
+    implements _$$CheckedTaskImplCopyWith<$Res> {
+  __$$CheckedTaskImplCopyWithImpl(
+      _$CheckedTaskImpl _value, $Res Function(_$CheckedTaskImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of TaskState
@@ -680,18 +1336,18 @@ class __$$TaskEmptyImplCopyWithImpl<T, $Res>
 
 /// @nodoc
 
-class _$TaskEmptyImpl<T> implements _TaskEmpty<T> {
-  const _$TaskEmptyImpl();
+class _$CheckedTaskImpl implements _CheckedTask {
+  const _$CheckedTaskImpl();
 
   @override
   String toString() {
-    return 'TaskState<$T>.empty()';
+    return 'TaskState.checkedTask()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$TaskEmptyImpl<T>);
+        (other.runtimeType == runtimeType && other is _$CheckedTaskImpl);
   }
 
   @override
@@ -702,11 +1358,16 @@ class _$TaskEmptyImpl<T> implements _TaskEmpty<T> {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(T data) success,
-    required TResult Function(String message) failed,
-    required TResult Function() empty,
+    required TResult Function(List<TaskEntity> tasks) tasksLoaded,
+    required TResult Function() tasksEmpty,
+    required TResult Function() addingTask,
+    required TResult Function(List<TaskEntity> updatedTasks) taskAdded,
+    required TResult Function(String message) error,
+    required TResult Function() checkedTask,
+    required TResult Function(TaskEntity? task) taskChecked,
+    required TResult Function(String message) errorChecked,
   }) {
-    return empty();
+    return checkedTask();
   }
 
   @override
@@ -714,11 +1375,16 @@ class _$TaskEmptyImpl<T> implements _TaskEmpty<T> {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(T data)? success,
-    TResult? Function(String message)? failed,
-    TResult? Function()? empty,
+    TResult? Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult? Function()? tasksEmpty,
+    TResult? Function()? addingTask,
+    TResult? Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult? Function(String message)? error,
+    TResult? Function()? checkedTask,
+    TResult? Function(TaskEntity? task)? taskChecked,
+    TResult? Function(String message)? errorChecked,
   }) {
-    return empty?.call();
+    return checkedTask?.call();
   }
 
   @override
@@ -726,13 +1392,18 @@ class _$TaskEmptyImpl<T> implements _TaskEmpty<T> {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(T data)? success,
-    TResult Function(String message)? failed,
-    TResult Function()? empty,
+    TResult Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult Function()? tasksEmpty,
+    TResult Function()? addingTask,
+    TResult Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult Function(String message)? error,
+    TResult Function()? checkedTask,
+    TResult Function(TaskEntity? task)? taskChecked,
+    TResult Function(String message)? errorChecked,
     required TResult orElse(),
   }) {
-    if (empty != null) {
-      return empty();
+    if (checkedTask != null) {
+      return checkedTask();
     }
     return orElse();
   }
@@ -740,44 +1411,435 @@ class _$TaskEmptyImpl<T> implements _TaskEmpty<T> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_TaskInitial<T> value) initial,
-    required TResult Function(_TaskLoading<T> value) loading,
-    required TResult Function(_TaskSuccess<T> value) success,
-    required TResult Function(_TaskFailed<T> value) failed,
-    required TResult Function(_TaskEmpty<T> value) empty,
+    required TResult Function(_TaskInitial value) initial,
+    required TResult Function(_TaskLoading value) loading,
+    required TResult Function(_TasksLoaded value) tasksLoaded,
+    required TResult Function(_TasksEmpty value) tasksEmpty,
+    required TResult Function(_AddingTask value) addingTask,
+    required TResult Function(_TaskAdded value) taskAdded,
+    required TResult Function(_TaskError value) error,
+    required TResult Function(_CheckedTask value) checkedTask,
+    required TResult Function(_TaskChecked value) taskChecked,
+    required TResult Function(_ErrorChecked value) errorChecked,
   }) {
-    return empty(this);
+    return checkedTask(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_TaskInitial<T> value)? initial,
-    TResult? Function(_TaskLoading<T> value)? loading,
-    TResult? Function(_TaskSuccess<T> value)? success,
-    TResult? Function(_TaskFailed<T> value)? failed,
-    TResult? Function(_TaskEmpty<T> value)? empty,
+    TResult? Function(_TaskInitial value)? initial,
+    TResult? Function(_TaskLoading value)? loading,
+    TResult? Function(_TasksLoaded value)? tasksLoaded,
+    TResult? Function(_TasksEmpty value)? tasksEmpty,
+    TResult? Function(_AddingTask value)? addingTask,
+    TResult? Function(_TaskAdded value)? taskAdded,
+    TResult? Function(_TaskError value)? error,
+    TResult? Function(_CheckedTask value)? checkedTask,
+    TResult? Function(_TaskChecked value)? taskChecked,
+    TResult? Function(_ErrorChecked value)? errorChecked,
   }) {
-    return empty?.call(this);
+    return checkedTask?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_TaskInitial<T> value)? initial,
-    TResult Function(_TaskLoading<T> value)? loading,
-    TResult Function(_TaskSuccess<T> value)? success,
-    TResult Function(_TaskFailed<T> value)? failed,
-    TResult Function(_TaskEmpty<T> value)? empty,
+    TResult Function(_TaskInitial value)? initial,
+    TResult Function(_TaskLoading value)? loading,
+    TResult Function(_TasksLoaded value)? tasksLoaded,
+    TResult Function(_TasksEmpty value)? tasksEmpty,
+    TResult Function(_AddingTask value)? addingTask,
+    TResult Function(_TaskAdded value)? taskAdded,
+    TResult Function(_TaskError value)? error,
+    TResult Function(_CheckedTask value)? checkedTask,
+    TResult Function(_TaskChecked value)? taskChecked,
+    TResult Function(_ErrorChecked value)? errorChecked,
     required TResult orElse(),
   }) {
-    if (empty != null) {
-      return empty(this);
+    if (checkedTask != null) {
+      return checkedTask(this);
     }
     return orElse();
   }
 }
 
-abstract class _TaskEmpty<T> implements TaskState<T> {
-  const factory _TaskEmpty() = _$TaskEmptyImpl<T>;
+abstract class _CheckedTask implements TaskState {
+  const factory _CheckedTask() = _$CheckedTaskImpl;
+}
+
+/// @nodoc
+abstract class _$$TaskCheckedImplCopyWith<$Res> {
+  factory _$$TaskCheckedImplCopyWith(
+          _$TaskCheckedImpl value, $Res Function(_$TaskCheckedImpl) then) =
+      __$$TaskCheckedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({TaskEntity? task});
+}
+
+/// @nodoc
+class __$$TaskCheckedImplCopyWithImpl<$Res>
+    extends _$TaskStateCopyWithImpl<$Res, _$TaskCheckedImpl>
+    implements _$$TaskCheckedImplCopyWith<$Res> {
+  __$$TaskCheckedImplCopyWithImpl(
+      _$TaskCheckedImpl _value, $Res Function(_$TaskCheckedImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? task = freezed,
+  }) {
+    return _then(_$TaskCheckedImpl(
+      freezed == task
+          ? _value.task
+          : task // ignore: cast_nullable_to_non_nullable
+              as TaskEntity?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$TaskCheckedImpl implements _TaskChecked {
+  const _$TaskCheckedImpl(this.task);
+
+  @override
+  final TaskEntity? task;
+
+  @override
+  String toString() {
+    return 'TaskState.taskChecked(task: $task)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TaskCheckedImpl &&
+            (identical(other.task, task) || other.task == task));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, task);
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TaskCheckedImplCopyWith<_$TaskCheckedImpl> get copyWith =>
+      __$$TaskCheckedImplCopyWithImpl<_$TaskCheckedImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(List<TaskEntity> tasks) tasksLoaded,
+    required TResult Function() tasksEmpty,
+    required TResult Function() addingTask,
+    required TResult Function(List<TaskEntity> updatedTasks) taskAdded,
+    required TResult Function(String message) error,
+    required TResult Function() checkedTask,
+    required TResult Function(TaskEntity? task) taskChecked,
+    required TResult Function(String message) errorChecked,
+  }) {
+    return taskChecked(task);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult? Function()? tasksEmpty,
+    TResult? Function()? addingTask,
+    TResult? Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult? Function(String message)? error,
+    TResult? Function()? checkedTask,
+    TResult? Function(TaskEntity? task)? taskChecked,
+    TResult? Function(String message)? errorChecked,
+  }) {
+    return taskChecked?.call(task);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult Function()? tasksEmpty,
+    TResult Function()? addingTask,
+    TResult Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult Function(String message)? error,
+    TResult Function()? checkedTask,
+    TResult Function(TaskEntity? task)? taskChecked,
+    TResult Function(String message)? errorChecked,
+    required TResult orElse(),
+  }) {
+    if (taskChecked != null) {
+      return taskChecked(task);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_TaskInitial value) initial,
+    required TResult Function(_TaskLoading value) loading,
+    required TResult Function(_TasksLoaded value) tasksLoaded,
+    required TResult Function(_TasksEmpty value) tasksEmpty,
+    required TResult Function(_AddingTask value) addingTask,
+    required TResult Function(_TaskAdded value) taskAdded,
+    required TResult Function(_TaskError value) error,
+    required TResult Function(_CheckedTask value) checkedTask,
+    required TResult Function(_TaskChecked value) taskChecked,
+    required TResult Function(_ErrorChecked value) errorChecked,
+  }) {
+    return taskChecked(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_TaskInitial value)? initial,
+    TResult? Function(_TaskLoading value)? loading,
+    TResult? Function(_TasksLoaded value)? tasksLoaded,
+    TResult? Function(_TasksEmpty value)? tasksEmpty,
+    TResult? Function(_AddingTask value)? addingTask,
+    TResult? Function(_TaskAdded value)? taskAdded,
+    TResult? Function(_TaskError value)? error,
+    TResult? Function(_CheckedTask value)? checkedTask,
+    TResult? Function(_TaskChecked value)? taskChecked,
+    TResult? Function(_ErrorChecked value)? errorChecked,
+  }) {
+    return taskChecked?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_TaskInitial value)? initial,
+    TResult Function(_TaskLoading value)? loading,
+    TResult Function(_TasksLoaded value)? tasksLoaded,
+    TResult Function(_TasksEmpty value)? tasksEmpty,
+    TResult Function(_AddingTask value)? addingTask,
+    TResult Function(_TaskAdded value)? taskAdded,
+    TResult Function(_TaskError value)? error,
+    TResult Function(_CheckedTask value)? checkedTask,
+    TResult Function(_TaskChecked value)? taskChecked,
+    TResult Function(_ErrorChecked value)? errorChecked,
+    required TResult orElse(),
+  }) {
+    if (taskChecked != null) {
+      return taskChecked(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _TaskChecked implements TaskState {
+  const factory _TaskChecked(final TaskEntity? task) = _$TaskCheckedImpl;
+
+  TaskEntity? get task;
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TaskCheckedImplCopyWith<_$TaskCheckedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$ErrorCheckedImplCopyWith<$Res> {
+  factory _$$ErrorCheckedImplCopyWith(
+          _$ErrorCheckedImpl value, $Res Function(_$ErrorCheckedImpl) then) =
+      __$$ErrorCheckedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String message});
+}
+
+/// @nodoc
+class __$$ErrorCheckedImplCopyWithImpl<$Res>
+    extends _$TaskStateCopyWithImpl<$Res, _$ErrorCheckedImpl>
+    implements _$$ErrorCheckedImplCopyWith<$Res> {
+  __$$ErrorCheckedImplCopyWithImpl(
+      _$ErrorCheckedImpl _value, $Res Function(_$ErrorCheckedImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$ErrorCheckedImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$ErrorCheckedImpl implements _ErrorChecked {
+  const _$ErrorCheckedImpl(this.message);
+
+  @override
+  final String message;
+
+  @override
+  String toString() {
+    return 'TaskState.errorChecked(message: $message)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ErrorCheckedImpl &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ErrorCheckedImplCopyWith<_$ErrorCheckedImpl> get copyWith =>
+      __$$ErrorCheckedImplCopyWithImpl<_$ErrorCheckedImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(List<TaskEntity> tasks) tasksLoaded,
+    required TResult Function() tasksEmpty,
+    required TResult Function() addingTask,
+    required TResult Function(List<TaskEntity> updatedTasks) taskAdded,
+    required TResult Function(String message) error,
+    required TResult Function() checkedTask,
+    required TResult Function(TaskEntity? task) taskChecked,
+    required TResult Function(String message) errorChecked,
+  }) {
+    return errorChecked(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult? Function()? tasksEmpty,
+    TResult? Function()? addingTask,
+    TResult? Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult? Function(String message)? error,
+    TResult? Function()? checkedTask,
+    TResult? Function(TaskEntity? task)? taskChecked,
+    TResult? Function(String message)? errorChecked,
+  }) {
+    return errorChecked?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<TaskEntity> tasks)? tasksLoaded,
+    TResult Function()? tasksEmpty,
+    TResult Function()? addingTask,
+    TResult Function(List<TaskEntity> updatedTasks)? taskAdded,
+    TResult Function(String message)? error,
+    TResult Function()? checkedTask,
+    TResult Function(TaskEntity? task)? taskChecked,
+    TResult Function(String message)? errorChecked,
+    required TResult orElse(),
+  }) {
+    if (errorChecked != null) {
+      return errorChecked(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_TaskInitial value) initial,
+    required TResult Function(_TaskLoading value) loading,
+    required TResult Function(_TasksLoaded value) tasksLoaded,
+    required TResult Function(_TasksEmpty value) tasksEmpty,
+    required TResult Function(_AddingTask value) addingTask,
+    required TResult Function(_TaskAdded value) taskAdded,
+    required TResult Function(_TaskError value) error,
+    required TResult Function(_CheckedTask value) checkedTask,
+    required TResult Function(_TaskChecked value) taskChecked,
+    required TResult Function(_ErrorChecked value) errorChecked,
+  }) {
+    return errorChecked(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_TaskInitial value)? initial,
+    TResult? Function(_TaskLoading value)? loading,
+    TResult? Function(_TasksLoaded value)? tasksLoaded,
+    TResult? Function(_TasksEmpty value)? tasksEmpty,
+    TResult? Function(_AddingTask value)? addingTask,
+    TResult? Function(_TaskAdded value)? taskAdded,
+    TResult? Function(_TaskError value)? error,
+    TResult? Function(_CheckedTask value)? checkedTask,
+    TResult? Function(_TaskChecked value)? taskChecked,
+    TResult? Function(_ErrorChecked value)? errorChecked,
+  }) {
+    return errorChecked?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_TaskInitial value)? initial,
+    TResult Function(_TaskLoading value)? loading,
+    TResult Function(_TasksLoaded value)? tasksLoaded,
+    TResult Function(_TasksEmpty value)? tasksEmpty,
+    TResult Function(_AddingTask value)? addingTask,
+    TResult Function(_TaskAdded value)? taskAdded,
+    TResult Function(_TaskError value)? error,
+    TResult Function(_CheckedTask value)? checkedTask,
+    TResult Function(_TaskChecked value)? taskChecked,
+    TResult Function(_ErrorChecked value)? errorChecked,
+    required TResult orElse(),
+  }) {
+    if (errorChecked != null) {
+      return errorChecked(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _ErrorChecked implements TaskState {
+  const factory _ErrorChecked(final String message) = _$ErrorCheckedImpl;
+
+  String get message;
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ErrorCheckedImplCopyWith<_$ErrorCheckedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

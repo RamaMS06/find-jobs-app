@@ -5,10 +5,14 @@ class RCheckbox extends StatelessWidget {
     super.key,
     required this.value,
     required this.onChanged,
+    this.fillColor,
+    this.checkColor,
   });
 
   final bool value;
   final void Function(bool?)? onChanged;
+  final Color? fillColor;
+  final Color? checkColor;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +24,8 @@ class RCheckbox extends StatelessWidget {
         child: Checkbox(
           value: value,
           onChanged: onChanged,
+          fillColor: MaterialStateProperty.all(fillColor),
+          checkColor: checkColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),

@@ -81,13 +81,11 @@ class _RTextFieldState extends State<RTextField> {
   String? _errorText;
   bool get _isError => _errorText != null && _errorText!.isNotEmpty;
 
-  // Remove setState from validator to avoid calling setState during build
   String? _setupValidator(String? val) {
     String? isValid = widget.validator?.call(val);
-    // Only update _errorText if it has changed, and schedule setState after build
+    print('isValid: $isValid');
     if (_errorText != isValid) {
       _errorText = isValid;
-      // Schedule setState after build phase to avoid exception
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) setState(() {});
       });
