@@ -1,3 +1,4 @@
+import 'package:find_job_app/core/common/tokens/color/color.token.dart';
 import 'package:flutter/material.dart';
 
 class RCheckbox extends StatelessWidget {
@@ -24,10 +25,14 @@ class RCheckbox extends StatelessWidget {
         child: Checkbox(
           value: value,
           onChanged: onChanged,
-          fillColor: MaterialStateProperty.all(fillColor),
+          fillColor: WidgetStateProperty.all(fillColor),
           checkColor: checkColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
+            side: BorderSide(
+              color: RColor.background.dark,
+              width: 1,
+            ),
           ),
         ),
       ),

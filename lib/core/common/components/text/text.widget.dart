@@ -9,7 +9,9 @@ class RText extends StatelessWidget {
   final TextAlign? textAlign;
   final int? maxLength;
   final int? maxLines;
-  
+  final bool hasLineThrough;
+  final Color? decorationColor;
+
   const RText(
     this.text, {
     super.key,
@@ -19,6 +21,8 @@ class RText extends StatelessWidget {
     this.textAlign,
     this.maxLength,
     this.maxLines,
+    this.hasLineThrough = false,
+    this.decorationColor,
   });
 
   @override
@@ -31,6 +35,10 @@ class RText extends StatelessWidget {
       style: (style ?? RFont.body.bold).copyWith(
         color: color ?? RColor.text.dark,
         overflow: overflow,
+        decoration:
+            hasLineThrough ? TextDecoration.lineThrough : TextDecoration.none,
+        decorationColor: decorationColor ?? RColor.text.dark,
+        decorationThickness: 1,
       ),
       maxLines: maxLines,
     );

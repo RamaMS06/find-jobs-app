@@ -5,7 +5,9 @@ import 'package:find_job_app/config/router/provider.dart';
 import 'package:find_job_app/core/common/components/component.dart';
 import 'package:find_job_app/core/common/tokens/color/color.token.dart';
 import 'package:find_job_app/core/common/tokens/fonts/font.token.dart';
+import 'package:find_job_app/core/common/utils/util.dart';
 import 'package:find_job_app/features/task/domain/entities/add.task.entity.dart';
+import 'package:find_job_app/features/task/domain/entities/task.entity.dart';
 import 'package:find_job_app/features/task/presentation/controller/task.controller.dart';
 import 'package:find_job_app/features/task/presentation/providers/task.provider.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +17,12 @@ import 'package:flutter/cupertino.dart';
 
 class BottomSheetTask extends ConsumerStatefulWidget {
   final ScrollController scrollController;
-  const BottomSheetTask({super.key, required this.scrollController});
+  final TaskEntity? task;
+  const BottomSheetTask({
+    super.key,
+    required this.scrollController,
+    this.task,
+  });
 
   @override
   ConsumerState<BottomSheetTask> createState() => _BottomSheetTaskState();
@@ -33,9 +40,49 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
   @override
   void initState() {
     super.initState();
-    final now = TimeOfDay.now();
-    _selectStartTime = now;
-    _startTimeController.text = _formatTimeOfDay(_selectStartTime);
+    _initTask();
+  }
+
+  /// Helper to parse a string like "08:18" to TimeOfDay, returns null if invalid
+  TimeOfDay? _parseTimeOfDay(String? timeString) {
+    if (timeString == null || timeString.isEmpty) return null;
+    try {
+      final parts = timeString.split(':');
+      if (parts.length != 2) return null;
+      final hour = int.tryParse(parts[0]);
+      final minute = int.tryParse(parts[1]);
+      if (hour == null || minute == null) return null;
+      return TimeOfDay(hour: hour, minute: minute);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  void _initTask() {
+    if (widget.task != null) {
+      _titleController.text = widget.task!.title ?? '';
+      _descriptionController.text = widget.task!.description ?? '';
+      _startTimeController.text = widget.task!.startTime ?? '';
+      _estimatedInMinutesController.text = widget.task!.estimatedTime ?? '';
+      // Try to parse as "HH:mm" first, fallback to DateTime.parse if needed
+      TimeOfDay? parsedTime = _parseTimeOfDay(widget.task!.startTime ?? '');
+      if (parsedTime != null) {
+        _selectStartTime = parsedTime;
+      } else {
+        try {
+          final dt = DateTime.parse(widget.task!.startTime ?? '');
+          _selectStartTime = TimeOfDay.fromDateTime(dt);
+        } catch (_) {
+          _selectStartTime = TimeOfDay.now();
+        }
+      }
+      // Update the controller text to formatted time
+      _startTimeController.text = _formatTimeOfDay(_selectStartTime);
+    } else {
+      final now = TimeOfDay.now();
+      _selectStartTime = now;
+      _startTimeController.text = _formatTimeOfDay(_selectStartTime);
+    }
   }
 
   Future<void> _pickTime(BuildContext context) async {
@@ -66,8 +113,7 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
                   ),
                   onPressed: () {
                     setState(() {
-                      _startTimeController.text =
-                          _formatTimeOfDay(TimeOfDay(
+                      _startTimeController.text = _formatTimeOfDay(TimeOfDay(
                         hour: tempDateTime.hour,
                         minute: tempDateTime.minute,
                       ));
@@ -124,16 +170,36 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
             final currentDate = ref.watch(selectableDateProvider);
-            await ref.read(taskControllerProvider.notifier).addTask(
-                currentDate,
-                AddTaskEntity(
-                  id: DateTime.now().millisecondsSinceEpoch.toString(),
-                  title: _titleController.text,
-                  desc: _descriptionController.text,
-                  startTime: _formatTimeOfDay(_selectStartTime),
-                  estimatedInMinutes: _estimatedInMinutesController.text,
-                ),
-                ref.read(currentUserProvider)!.id ?? '');
+            if (widget.task != null) {
+              await ref.read(taskControllerProvider.notifier).updateTask(
+                    ref.read(currentUserProvider)!.id ?? '',
+                    widget.task!.id ?? '',
+                    widget.task!.copyWith(
+                      id: widget.task!.id,
+                      title: _titleController.text,
+                      description: _descriptionController.text,
+                      startTime: _formatTimeOfDay(_selectStartTime),
+                      estimatedTime: _estimatedInMinutesController.text,
+                      finishTime: calculateFinishTime(
+                          _formatTimeOfDay(_selectStartTime),
+                          _estimatedInMinutesController.text),
+                    ),
+                  );
+            } else {
+              await ref.read(taskControllerProvider.notifier).addTask(
+                  currentDate,
+                  AddTaskEntity(
+                    id: DateTime.now().millisecondsSinceEpoch.toString(),
+                    title: _titleController.text,
+                    desc: _descriptionController.text,
+                    startTime: _formatTimeOfDay(_selectStartTime),
+                    estimatedInMinutes: _estimatedInMinutesController.text,
+                    finishTime: calculateFinishTime(
+                        _formatTimeOfDay(_selectStartTime),
+                        _estimatedInMinutesController.text),
+                  ),
+                  ref.read(currentUserProvider)!.id ?? '');
+            }
 
             // No need to manually refresh - StreamBuilder will handle real-time updates
             Navigator.of(context).pop();
@@ -221,8 +287,18 @@ class _BottomSheetTaskState extends ConsumerState<BottomSheetTask> {
                         controller: _startTimeController,
                         onChanged: (value) {
                           setState(() {
-                            _selectStartTime =
-                                TimeOfDay.fromDateTime(DateTime.parse(value));
+                            // Try to parse as "HH:mm" first, fallback to DateTime.parse if needed
+                            TimeOfDay? parsedTime = _parseTimeOfDay(value);
+                            if (parsedTime != null) {
+                              _selectStartTime = parsedTime;
+                            } else {
+                              try {
+                                final dt = DateTime.parse(value);
+                                _selectStartTime = TimeOfDay.fromDateTime(dt);
+                              } catch (_) {
+                                // If parsing fails, do not update _selectStartTime
+                              }
+                            }
                           });
                         },
                         // suffixIcon: const Icon(Icons.access_time),

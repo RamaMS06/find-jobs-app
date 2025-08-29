@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:find_job_app/core/services/injection.container.dart';
 import 'package:find_job_app/features/task/data/datasources/task.datasource.dart';
 import 'package:find_job_app/features/task/data/models/task.model.dart';
 import 'package:find_job_app/features/task/domain/entities/add.task.entity.dart';
+import 'package:find_job_app/features/task/domain/entities/task.entity.dart';
 import 'package:intl/intl.dart';
 
 class TaskDataSourceImpl implements TaskDataSource {
@@ -68,6 +71,7 @@ class TaskDataSourceImpl implements TaskDataSource {
         desc: task.desc,
         startTime: task.startTime,
         estimatedInMinutes: task.estimatedInMinutes,
+        finishTime: task.finishTime,
         isDone: task.isDone ?? false,
       );
 
@@ -93,16 +97,15 @@ class TaskDataSourceImpl implements TaskDataSource {
 
   // Updates the task status in Firestore
   @override
-  Future<void> updateTaskStatus(
-      String userId, String taskId, bool isDone) async {
+  Future<void> updateTask(String userId, String taskId, TaskEntity task) async {
     final docRef = _firestore
         .collection('users')
         .doc(userId)
         .collection('tasks')
         .doc(taskId);
-
     try {
-      await docRef.update({'isDone': isDone});
+      inspect(task.toJson());
+      await docRef.update(task.toJson());
     } catch (e) {
       throw Exception('Failed to update task: $e');
     }

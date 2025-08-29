@@ -21,9 +21,8 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-  Future<void> updateTaskStatus(
-      String userId, String taskId, bool isDone) async {
-    await _source.updateTaskStatus(userId, taskId, isDone);
+  Future<void> updateTask(String userId, String taskId, TaskEntity task) async {
+    await _source.updateTask(userId, taskId, task);
   }
 
   @override

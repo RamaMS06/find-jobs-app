@@ -6,6 +6,6 @@ abstract class TaskRepository {
   Stream<List<DateTime>> getDates(String userId);
   Stream<String> addTask(
       DateTime currentDate, AddTaskEntity task, String userId);
-  Future<void> updateTaskStatus(String userId, String taskId, bool isDone);
+  Future<void> updateTask(String userId, String taskId, TaskEntity task);
   Future<void> deleteTask(String userId, String taskId);
 }

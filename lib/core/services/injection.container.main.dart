@@ -63,8 +63,8 @@ Future<void> _authInit() async {
     ..registerLazySingleton<GetDatesUseCase>(
       () => GetDatesUseCase(sl()),
     )
-    ..registerLazySingleton<CheckedTaskUseCase>(
-      () => CheckedTaskUseCase(sl()),
+    ..registerLazySingleton<UpdateTaskUseCase>(
+      () => UpdateTaskUseCase(sl()),
     )
     ..registerLazySingleton<DeleteTaskUseCase>(
       () => DeleteTaskUseCase(sl()),

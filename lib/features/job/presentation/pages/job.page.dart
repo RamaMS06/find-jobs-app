@@ -95,7 +95,7 @@ class _HomePageState extends ConsumerState<HomePage>
 
   // Convert to SliverList for better integration with CustomScrollView
   Widget _buildJobCard(BuildContext context, job,
-      {bool isGrid = false, double? height}) {
+      {bool isGrid = false}) {
     return RContainerShadow(
       onTap: () {
         ref.read(selectedJobProvider.notifier).state = job;
@@ -112,7 +112,6 @@ class _HomePageState extends ConsumerState<HomePage>
         );
       },
       width: MediaQuery.of(context).size.width,
-      height: height ?? 50,
       color: RColor.background.white,
       borderRadius: 5,
       shadowColor: RColor.background.lightdark,
@@ -185,11 +184,11 @@ class _HomePageState extends ConsumerState<HomePage>
                         child: RText(
                           job.company ?? '',
                           textAlign: TextAlign.center,
-                          color: RColor.background.white,
                           style: GoogleFonts.aBeeZee(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
+                          color: RColor.background.white,
                           maxLength: 5,
                         ),
                       ),
@@ -323,7 +322,6 @@ class _HomePageState extends ConsumerState<HomePage>
                   context,
                   jobList[index],
                   isGrid: true,
-                  height: 100,
                 ),
               ),
               childCount: jobList.length,
@@ -400,7 +398,6 @@ class _HomePageState extends ConsumerState<HomePage>
                 child: _buildJobCard(
                   context,
                   jobList[index],
-                  height: 75,
                 ),
               ),
             ),

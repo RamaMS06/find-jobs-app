@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:find_job_app/core/common/tokens/color/color.token.dart';
 import 'package:find_job_app/core/util/extension.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,13 @@ class RContainerShadow extends StatefulWidget {
 
 class _RContainerShadowState extends State<RContainerShadow> {
   bool isPressed = false;
+  Timer? _timer;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +48,12 @@ class _RContainerShadowState extends State<RContainerShadow> {
                 setState(() {
                   isPressed = true;
                 });
-                Future.delayed(const Duration(milliseconds: 125), () {
-                  setState(() {
-                    isPressed = false;
+
+                _timer = Timer(const Duration(milliseconds: 125), () {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    setState(() {
+                      isPressed = false;
+                    });
                   });
                 });
                 widget.onTap?.call();

@@ -145,7 +145,6 @@ class _RButtonState extends State<RButton> {
                         ),
                         RText(
                           'Loading...',
-                          color: widget.textColor ?? RColor.text.white,
                           style: RFont.subheading.h5,
                         )
                       ],

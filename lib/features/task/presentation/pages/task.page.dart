@@ -182,9 +182,6 @@ class _MyWidgetState extends ConsumerState<TaskPage>
 
             return dateAsync.when(
               data: (listDate) {
-                if (listDate.isEmpty) {
-                  return const RText('No dates');
-                }
                 return _buildCalendarWidget(selectableDate, listDate);
               },
               loading: () => const Center(child: RLoading()),
@@ -356,7 +353,7 @@ class _MyWidgetState extends ConsumerState<TaskPage>
             Column(
               children: [
                 Icon(EvaIcons.alertCircleOutline,
-                    color: RColor.background.danger, size: 64),
+                    color: RColor.background.info, size: 64),
                 const SizedBox(height: 8),
                 const RText('No Task on this date'),
               ],
@@ -422,6 +419,7 @@ class _MyWidgetState extends ConsumerState<TaskPage>
                   RText(
                     task.startTime ?? '',
                     color: RColor.text.lightdark,
+                    hasLineThrough: task.isDone ?? false,
                   ),
                   Expanded(
                     child: Padding(
@@ -435,7 +433,8 @@ class _MyWidgetState extends ConsumerState<TaskPage>
                   RText(
                     task.finishTime ?? '',
                     color: RColor.text.lightdark,
-                  )
+                    hasLineThrough: task.isDone ?? false,
+                  ),
                 ],
               ),
               const SizedBox(
@@ -445,10 +444,17 @@ class _MyWidgetState extends ConsumerState<TaskPage>
                 child: RContainerShadow(
                   width: MediaQuery.of(context).size.width,
                   borderRadius: 10,
-                  padding: const EdgeInsets.all(16),
-                  color: task.isDone ?? false
-                      ? RColor.shades.blue[300]
-                      : RColor.background.light,
+                  onTap: () {
+                    final newStatus = !(task.isDone ?? false);
+                    ref.read(taskControllerProvider.notifier).updateTask(
+                          _userId,
+                          task.id ?? '',
+                          task.copyWith(isDone: newStatus),
+                        );
+                  },
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+                  color: RColor.background.light,
                   border: Border.all(
                     color: RColor.background.lightdark,
                     width: 0.15,
@@ -458,16 +464,18 @@ class _MyWidgetState extends ConsumerState<TaskPage>
                     children: [
                       RCheckbox(
                         value: task.isDone ?? false,
-                        fillColor: RColor.background.white,
-                        checkColor: RColor.background.dark,
+                        fillColor: task.isDone ?? false
+                            ? RColor.background.dark
+                            : RColor.background.white,
+                        checkColor: RColor.background.white,
                         onChanged: (bool? value) {
                           // Toggle the task status - use the new value from checkbox
                           final newStatus = value ?? false;
 
-                          ref.read(taskControllerProvider.notifier).checkedTask(
+                          ref.read(taskControllerProvider.notifier).updateTask(
                                 _userId,
                                 task.id ?? '',
-                                newStatus,
+                                task.copyWith(isDone: newStatus),
                               );
                         },
                       ),
@@ -482,21 +490,39 @@ class _MyWidgetState extends ConsumerState<TaskPage>
                             RText(
                               task.title ?? '',
                               style: RFont.subheading.h5,
-                              color: task.isDone ?? false
-                                  ? RColor.text.white
-                                  : RColor.text.dark,
+                              hasLineThrough: task.isDone ?? false,
+                              color: RColor.text.dark,
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 4),
                             RText(
                               task.description ?? 'No description',
                               style: RFont.body,
-                              color: task.isDone ?? false
-                                  ? RColor.text.white
-                                  : RColor.text.dark,
+                              hasLineThrough: task.isDone ?? false,
+                              color: RColor.text.dark,
                             ),
                           ],
                         ),
                       ),
+                      IconButton(
+                        onPressed: () {
+                          RBottomSheet.show(
+                            context: context,
+                            title: 'Edit Task',
+                            initialChildSize: 0.8,
+                            minChildSize: 0.8,
+                            maxChildSize: 1,
+                            builder: (context, scrollController) =>
+                                BottomSheetTask(
+                                    scrollController: scrollController,
+                                    task: task),
+                          );
+                        },
+                        icon: Icon(
+                          EvaIcons.edit,
+                          color: RColor.background.dark,
+                          size: 24,
+                        ),
+                      )
                     ],
                   ),
                 ),
