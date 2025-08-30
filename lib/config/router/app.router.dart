@@ -6,14 +6,13 @@ typedef GoRouterRedirect = FutureOr<String?> Function(
 );
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final authUser = ref.read(currentUserProvider);
   final authRole = ref.read(currentRoleProvider);
+  final authUser = ref.read(authControllerProvider.notifier).currentUser;
   return _routeConfig(redirect: (context, state) {
-    final isUserReady = authUser?.name != null;
     final isGuest = authRole?.role == UserRoleEnum.guest;
     final location = state.uri.toString();
 
-    if (isUserReady && !isGuest && location == '/') {
+    if (authUser != null && !isGuest && location == '/') {
       return '/home';
     }
     if (isGuest) {

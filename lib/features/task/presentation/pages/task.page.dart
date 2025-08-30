@@ -97,7 +97,7 @@ class _MyWidgetState extends ConsumerState<TaskPage>
   void _setupInitialData() {
     if (!mounted) return;
     _hasAutoScrolledToToday = false;
-    _userId = ref.read(currentUserProvider)!.id ?? '';
+    _userId = ref.read(currentUserProvider)?.id ?? '';
   }
 
   @override
@@ -184,7 +184,10 @@ class _MyWidgetState extends ConsumerState<TaskPage>
               data: (listDate) {
                 return _buildCalendarWidget(selectableDate, listDate);
               },
-              loading: () => const Center(child: RLoading()),
+              loading: () => const Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Center(child: RLoading()),
+              ),
               error: (error, stack) => RText('Error: $error'),
             );
           },

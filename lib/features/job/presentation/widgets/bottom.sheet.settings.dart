@@ -63,6 +63,7 @@ class _BottomSheetSettingsState extends ConsumerState<BottomSheetSettings> {
               bgColor: RColor.background.danger,
               onPressed: () {
                 ref.read(authControllerProvider.notifier).signOut();
+                context.push('/');
               },
             ),
           )

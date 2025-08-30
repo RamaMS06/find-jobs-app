@@ -15,47 +15,69 @@ class TaskDataSourceImpl implements TaskDataSource {
   @override
   Stream<List<TaskModel?>> getTasks(DateTime date, String userId) {
     final dateKey = DateFormat('yyyy-MM-dd').format(date);
-    return _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('tasks')
-        .where('dateKey', isEqualTo: dateKey)
-        .snapshots()
-        .map((snapshot) {
-      final tasks = snapshot.docs
-          .map<TaskModel?>((doc) => TaskModel.fromJson(doc.data()))
-          .toList();
+    try {
+      return _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('tasks')
+          .where('dateKey', isEqualTo: dateKey)
+          .snapshots()
+          .map((snapshot) {
+        try {
+          final tasks = snapshot.docs
+              .map<TaskModel?>((doc) => TaskModel.fromJson(doc.data()))
+              .toList();
 
-      // Sort ascending by the startTime (or another datetime field)
-      tasks.sort((a, b) {
-        final aTime = a?.startTime;
-        final bTime = b?.startTime;
-        if (aTime == null && bTime == null) return 0;
-        if (aTime == null) return 1;
-        if (bTime == null) return -1;
-        return aTime.compareTo(bTime);
+          // Sort ascending by the startTime (or another datetime field)
+          tasks.sort((a, b) {
+            final aTime = a?.startTime;
+            final bTime = b?.startTime;
+            if (aTime == null && bTime == null) return 0;
+            if (aTime == null) return 1;
+            if (bTime == null) return -1;
+            return aTime.compareTo(bTime);
+          });
+
+          return tasks;
+        } catch (e, stack) {
+          log('Error in getTasks: $e\n$stack');
+          return <TaskModel?>[];
+        }
       });
-
-      return tasks;
-    });
+    } catch (e, stack) {
+      log('Error in getTasks stream: $e\n$stack');
+      // Return an empty stream in case of error
+      return Stream.value(<TaskModel?>[]);
+    }
   }
 
   // Returns a stream of all unique dates that have tasks for a user
   @override
   Stream<List<DateTime>> getDates(String userId) {
-    return _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('tasks')
-        .snapshots()
-        .map((snapshot) {
-      final dateKeys = snapshot.docs
-          .map((doc) => doc.data()['dateKey'] as String?)
-          .where((dateKey) => dateKey != null)
-          .toSet()
-          .toList();
-      return dateKeys.map<DateTime>((key) => DateTime.parse(key!)).toList();
-    });
+    try {
+      return _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('tasks')
+          .snapshots()
+          .map((snapshot) {
+        try {
+          final dateKeys = snapshot.docs
+              .map((doc) => doc.data()['dateKey'] as String?)
+              .where((dateKey) => dateKey != null)
+              .toSet()
+              .toList();
+          return dateKeys.map<DateTime>((key) => DateTime.parse(key!)).toList();
+        } catch (e, stack) {
+          log('Error in getDates: $e\n$stack');
+          return <DateTime>[];
+        }
+      });
+    } catch (e, stack) {
+      log('Error in getDates stream: $e\n$stack');
+      // Return an empty stream in case of error
+      return Stream.value(<DateTime>[]);
+    }
   }
 
   // Adds a task and returns a stream with the task id (or error)
@@ -104,7 +126,6 @@ class TaskDataSourceImpl implements TaskDataSource {
         .collection('tasks')
         .doc(taskId);
     try {
-      inspect(task.toJson());
       await docRef.update(task.toJson());
     } catch (e) {
       throw Exception('Failed to update task: $e');
@@ -119,6 +140,10 @@ class TaskDataSourceImpl implements TaskDataSource {
         .collection('tasks')
         .doc(taskId);
 
-    await docRef.delete();
+    try {
+      await docRef.delete();
+    } catch (e) {
+      throw Exception('Failed to delete task: $e');
+    }
   }
 }

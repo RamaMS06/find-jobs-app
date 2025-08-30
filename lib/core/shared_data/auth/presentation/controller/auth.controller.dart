@@ -1,3 +1,4 @@
+import 'package:find_job_app/config/router/provider.dart';
 import 'package:find_job_app/core/services/injection.container.dart';
 import 'package:find_job_app/core/shared_data/auth/domain/entities/user.entity.dart';
 import 'package:find_job_app/core/shared_data/auth/domain/entities/user.role.entitiy.dart';
@@ -56,6 +57,8 @@ class AuthController extends _$AuthController {
   Future<void> signOut() async {
     state = const AuthState.loading();
     _signOut.call();
+    ref.invalidate(currentUserProvider);
+    ref.invalidate(currentRoleProvider);
     state = const AuthState.signOutSuccess();
   }
 
