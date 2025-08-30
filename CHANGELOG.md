@@ -1,3 +1,6 @@
+# 1.0.1-beta.1+4
+- Adding more features kind of to do list app
+
 # 1.0.1-beta.1+3
 - Handling CI/CD
 - Adding FirebaseAuth into project
